@@ -1,40 +1,43 @@
 import { Piece } from "./models.js"
 import { randomNbr } from "./utils.js"
+import { IPosition } from "./piecePosition.js"
 
-var field = []
+export class Game {
+	constructor(columns, rows) {
+		this.COLUMNS = columns
+		this.ROWS = rows
+		this.field = []
+		this.pieces = [
+			new Piece(0, 0, "I"),
+			new Piece(0, 0, "T"),
+			new Piece(0, 0, "O"),
+			new Piece(0, 0, "J"),
+			new Piece(0, 0, "L"),
+			new Piece(0, 0, "S"),
+			new Piece(0, 0, "Z"),
+		]
 
-const pieces = [
-	new Piece(1, 4, "I"),
-	new Piece(2, 3, "T"),
-	new Piece(2, 2, "O"),
-	new Piece(2, 3, "J"),
-	new Piece(2, 3, "L"),
-	new Piece(2, 4, "S"),
-	new Piece(2, 4, "Z"),
-]
-
-const MAX_COLUMN = 10
-const MAX_ROWS = 20
-
-var currColumn = 5
-var currRow = 20
-
-function tetrisBag(pieces) {
-	
-	for (let i = pieces.length - 1; i > 0 ; i--) {
-		const nbr = randomNbr(i)
-		if (i === nbr) {
-			continue
+		for (let i = 0; i < this.ROWS; i++) {
+			let arr = []
+			for (let j = 0; j < this.COLUMNS; j++) {
+				arr[j] = 0
+			}
+			this.field[i] = arr
 		}
-		const tmp = pieces[i]
-		pieces[i] = pieces[nbr]
-		pieces[nbr] = tmp
 	}
-	pieces.forEach(element => {
-		console.log(element)
-	});
-}
 
-export function startGame() {
-	//tetrisBag(pieces)
+	makeNewBag() {
+		for (let i = this.pieces.length - 1; i > 0 ; i--) {
+			const nbr = randomNbr(i)
+			if (i === nbr) {
+				continue
+			}
+			const tmp = this.pieces[i]
+			this.pieces[i] = this.pieces[nbr]
+			this.pieces[nbr] = tmp
+		}
+		this.pieces.forEach(element => {
+			console.log(element)
+		});
+	}
 }
