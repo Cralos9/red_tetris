@@ -1,6 +1,7 @@
 import { createServer } from "node:http"
 import next from "next"
 import { Server } from "socket.io"
+import { startGame } from "./game.js"
 
 const hostname = "localhost"
 const port = 3000
@@ -19,7 +20,9 @@ app.prepare().then(() => {
 		})
 	})
 
+	startGame()
 	server.listen(port, () => {
 		console.log(`Server running on port: ${port}`)
 	})
+	
 })

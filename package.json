@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "srv-dev": "nodemon server.js",
+    "srv-dev": "nodemon server/server.js",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
