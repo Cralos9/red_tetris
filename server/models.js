@@ -9,10 +9,11 @@ export class Player {
 }
 
 export class Piece {
-	constructor(height, width, piece) {
+	constructor(height, width, position, piece) {
 		this.height = height
 		this.width = width
 		this.piece = piece
+		this.position = position
 	}
 
 	toString() {
