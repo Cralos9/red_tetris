@@ -13,9 +13,12 @@ app.prepare().then(() => {
 	const io = new Server(server)
 
 	io.on("connection", (socket) => {
-		console.log("A user connected")
+		console.log("User connected: ", socket.id)
+		socket.on('action', (msg) => {
+			console.log("Msg: ", msg)
+		})
 	})
-	
+
 	server.listen(port, () => {
 		console.log(`Server running on port: ${port}`)
 	})
