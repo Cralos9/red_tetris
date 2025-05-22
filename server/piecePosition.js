@@ -1,4 +1,6 @@
-export const IPosition = [
+// Clockwise Rotations
+// const arr[3][4][4], 3 4x4 rotations
+export const I = [
 	[
 		[0,0,0,0],
 		[1,1,1,1],
@@ -18,3 +20,53 @@ export const IPosition = [
 		[0,0,0,0],
 	]
 ]
+
+// const arr[1][3][3]
+export const T = [
+	[
+		[0,1,0],
+		[1,1,1],
+		[0,0,0],
+	],
+]
+
+export const J = [
+	[
+		[1,0,0],
+		[1,1,1],
+		[0,0,0],
+	]
+]
+
+export const L = [
+	[
+		[0,0,1],
+		[1,1,1],
+		[0,0,0],
+	]
+]
+
+export const O = [
+	[
+		[0,1,1,0],
+		[0,1,1,0],
+		[0,0,0,0],
+	]
+]
+
+export const S = [
+	[
+		[0,1,1],
+		[1,1,0],
+		[0,0,0],
+	]
+]
+
+export const Z = [
+	[
+		[1,1,0],
+		[0,1,1],
+		[0,0,0],
+	]
+]
+
