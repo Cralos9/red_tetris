@@ -7,11 +7,73 @@
   position: relative;
 }
 
+.input {
+    width: 100%;
+    padding: .7em;
+    font-weight: lighter;
+    border-radius: 1.5px;
+    text-align: center;
+    background: rgb(143, 143, 143);
+    outline: none;
+    transition: .4s;
+}
+
+.input::placeholder
+{
+  font-family: 'Press Start 2P';
+}
+
+.userTitle
+{
+  display: flex;
+  align-self: center;
+  color: rgb(255, 255, 255);
+  font-family: 'Press Start 2P';
+  margin-left: 0px;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+}
+
+.usercard
+{
+    border-radius: 10px;
+    background: rgba(34, 34, 34, 0.964);
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
+    display: flex;
+    flex-direction: column;
+    padding: 60px;
+    gap: 20px;
+    text-align: center;
+}
+
+
+.main-container {
+  top: 5vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.centerButton {
+  align-content: center;
+  background-color: #1c1f1e;
+  color: white;
+  font-family: 'Press Start 2P';
+  padding: 40px 40px;
+  font-size: 18px;
+  width: 25%;
+  text-align: center;
+}
+
 .logButton-cont {
   position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 20px;
+/*   top: 50%; */
 }
 
 .logButton
@@ -20,7 +82,7 @@
   color: white;
   font-family: 'Press Start 2P';
   padding: 15px 40px;
-  margin-right: 10px;
+  margin-left: 0px;
   font-size: 18px;
   border: none;
   cursor: pointer;
@@ -43,7 +105,7 @@
 }
 
 .title {
-  font-family: 'Comic Sans MS', 'Press Start 2P';
+  font-family: 'Press Start 2P';
   font-weight: bold;
   font-size: 80px;
   text-align: center;

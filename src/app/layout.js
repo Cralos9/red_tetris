@@ -1,27 +1,27 @@
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import './globals.css';
+import Link from 'next/link';
 
 export const metadata = {
-  title: "Red Tetris",
-  description: "Tetris but red?",
+  title: 'Dr Tetris',
 };
 
-export default function RootLayout({ children }) {
+export default function Page({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>
+        <div className="header">
+          <div className="logButton-cont">
+            <Link href="/" className="logButton">Home</Link>
+          </div>
+          <h1 className="title">Dr.Tetris</h1>
+        </div>
+        <img className="image" src="/images/images.png" alt="Mario" />
         {children}
       </body>
     </html>
