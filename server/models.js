@@ -9,7 +9,7 @@ export class Player {
 }
 
 export class Piece {
-	constructor(height, width, position, piece) {
+	constructor(height, width, piece, position) {
 		this.height = height
 		this.width = width
 		this.piece = piece
