@@ -14,6 +14,19 @@ export class Piece {
 		this.width = width
 		this.piece = piece
 		this.position = position
+		this.currPosition = 0
+	}
+
+	rotateRight() {
+		this.currPosition += 1
+	}
+
+	rotateLeft() {
+		this.currPosition -= 1
+	}
+
+	getCurrPosition() {
+		return this.position[this.currPosition]
 	}
 
 	toString() {

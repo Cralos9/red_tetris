@@ -22,6 +22,10 @@ app.prepare().then(() => {
 
 	const game = new Game(10, 20)
 
+	for (let i = 0; i < 5; i++) {
+		game.update()
+	}
+
 	server.listen(port, () => {
 		console.log(`Server running on port: ${port}`)
 	})
