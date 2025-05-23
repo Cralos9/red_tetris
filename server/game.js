@@ -5,8 +5,8 @@ export class Game {
 		this.COLUMNS = columns
 		this.ROWS = rows
 		this.Bag = new Bag()
-		this.currRow = 0
-		this.currColumn = this.COLUMNS / 2
+		this.row = 0
+		this.column = this.COLUMNS / 2
 		this.field = []
 
 		for (let i = 0; i < this.ROWS; i++) {
@@ -18,33 +18,62 @@ export class Game {
 		}
 
 		this.Bag.makeNewOrder()
-		this.currPiece = this.Bag.getCurrentPiece()
-		console.log(this.currPiece.toString())
-		// Piece in the middle: (COLUMNS - piece.length) / 2
+		this.Piece = this.Bag.getCurrentPiece()
+		console.log(this.Piece.toString())
+	}
+
+	checkCollision(pattern) {
+		if (this.Piece.row === this.ROWS - 1) {
+			console.log("Collision")
+			return (1)
+		}
+		for (let x = 0; x < pattern[0].length; x++) {
+			if (this.field[this.Piece.row + 1][this.column + x] == 1) {
+				console.log("Piece Collision")
+				return (1)
+			}
+		}
+		return (0)
 	}
 
 	update() {
-		const piece = this.Bag.getCurrentPiece()
-		//console.log(piece.toString())
-		const pos = piece.getCurrPosition()
-		//console.log(pos)
+		const pattern = this.Piece.getCurrPattern()
+		console.log("Currrent Row:", this.row)
+		console.log("Current Piece Row:", this.Piece.row)
 		
-		if (this.currRow != 0) {
-			for (let i = 0; i < this.COLUMNS; i++) {
-				const index = this.currRow - 1
-				this.field[index][i] = 0
+		for (let row = 0; row < pattern.length; row++) {
+			const rIndex = this.row + row
+			const pieceLength = pattern[row].length
+			if (rIndex > -1 && rIndex < this.ROWS) {
+				for (let column = 0; column < pieceLength; column++) {
+					const cIndex = this.column + column
+					this.field[rIndex][cIndex] = 0
+				}
 			}
 		}
-		
-		for (let row = 0; row < pos.length; row++) {
-			const rIndex = this.currRow + row
-			const pieceLength = pos[row].length
-			for (let column = 0; column < pieceLength; column++) {
-				const cIndex = this.currColumn + column
-				this.field[rIndex][cIndex] = pos[row][column]
+
+		this.row++;
+
+		for (let row = 0; row < pattern.length; row++) {
+			const rIndex = this.row + row
+			const pieceLength = pattern[row].length
+			if (rIndex > -1 && rIndex < this.ROWS) {
+				for (let column = 0; column < pieceLength; column++) {
+					if (pattern[row][column] === 1) {
+						const cIndex = this.column + column
+						this.field[rIndex][cIndex] = pattern[row][column]
+					}
+				}
 			}
 		}
-		console.table(this.field)
-		this.currRow++
+
+		if (this.checkCollision(pattern)) {
+			this.Piece.row = 0
+			this.row = 0
+			this.Piece = this.Bag.getNextPiece()
+		}
+		else {
+			this.Piece.row++
+		}
 	}
 }
