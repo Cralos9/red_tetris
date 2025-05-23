@@ -1,147 +1,255 @@
 @import "tailwindcss";
 
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
 }
 
 .input {
-    width: 100%;
-    padding: .7em;
-    font-weight: lighter;
-    border-radius: 1.5px;
-    text-align: center;
-    background: rgb(143, 143, 143);
-    outline: none;
-    transition: .4s;
+	font-family: 'Press Start 2P';
+	width: 100%;
+	padding: .7em;
+	font-weight: lighter;
+	border-radius: 2px;
+	text-align: center;
+	border-width: 5px;
+	border-style: solid;
+	border-color: #686868;
+	background: rgb(143, 143, 143);
+	outline: none;
+	transition: .4s;
 }
+
 
 .input::placeholder
 {
-  font-family: 'Press Start 2P';
+	font-family: 'Press Start 2P';
 }
 
 .userTitle
 {
-  display: flex;
-  align-self: center;
-  color: rgb(255, 255, 255);
-  font-family: 'Press Start 2P';
-  margin-left: 0px;
-  font-size: 18px;
-  border: none;
-  cursor: pointer;
+	display: flex;
+	align-self: center;
+	color: rgb(255, 255, 255);
+	font-family: 'Press Start 2P';
+	margin-left: 0px;
+	font-size: 40px;
+	border: none;
+	cursor: pointer;
 }
 
 .usercard
 {
-    border-radius: 10px;
-    background: rgba(34, 34, 34, 0.964);
-    width: 100%;
-    max-width: 600px;
-    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
-    display: flex;
-    flex-direction: column;
-    padding: 60px;
-    gap: 20px;
-    text-align: center;
+		border-radius: 10px;
+		background: rgba(34, 34, 34, 0.964);
+		width: 100%;
+		max-width: 40%;
+		box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
+		display: flex;
+		flex-direction: column;
+		padding: 60px;
+		gap: 20px;
+		text-align: center;
+		z-index: 1;
 }
 
 
 .main-container {
-  top: 5vh;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+	top: 5vh;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
 }
 
 .centerButton {
-  align-content: center;
-  background-color: #1c1f1e;
-  color: white;
-  font-family: 'Press Start 2P';
-  padding: 40px 40px;
-  font-size: 18px;
-  width: 25%;
-  text-align: center;
+	align-content: center;
+	background-color: #1c1f1e;
+	color: white;
+	font-family: 'Press Start 2P';
+	padding: 40px 40px;
+	font-size: 18px;
+	width: 25%;
+	text-align: center;
 }
 
 .logButton-cont {
-  position: absolute;
-  left: 20px;
+	position: absolute;
+	left: 20px;
 /*   top: 50%; */
 }
 
 .logButton
 {
-  background-color: #1c1f1e;
-  color: white;
-  font-family: 'Press Start 2P';
-  padding: 15px 40px;
-  margin-left: 0px;
-  font-size: 18px;
-  border: none;
-  cursor: pointer;
+	background-color: #1c1f1e;
+	color: white;
+	font-family: 'Press Start 2P';
+	padding: 15px 40px;
+	margin-left: 0px;
+	font-size: 18px;
+	border: none;
+	cursor: pointer;
 }
+
 
 .button-container {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+ }
+
+ button {
+	position: relative;
+	overflow: hidden;
+	background-color: #1c1f1e;
+	color: white;
+	font-family: 'Press Start 2P', cursive;
+	padding: 15px 40px;
+	font-size: 18px;
+	border: none;
+	cursor: pointer;
 }
 
-.button {
-  background-color: #1c1f1e;
-  color: white;
-  font-family: 'Press Start 2P';
-  padding: 15px 40px;
-  font-size: 18px;
-  border: none;
-  cursor: pointer;
+.goomba {
+	z-index: 1;
+	position: absolute;
+	top: 75%;
+	left: -10px;
+	transform: translateY(-50%);
+	height: 50px;
+	opacity: 0;
+	pointer-events: none;
+}
+	
+
+.button:hover
+{
+	color: #000000;
+	background-color: white;
+}
+
+.button:hover .goomba {
+	animation: goomba-walk 1.7s linear forwards;
+	opacity: 1;
+}
+
+@keyframes goomba-walk {
+	0% {
+		left: -10px;
+		opacity: 1;
+	}
+	100% {
+		left: 100%;
+		opacity: 1;
+	}
+}
+
+.mario {
+	z-index: 1;
+	position: absolute;
+	top: 70%;
+	left: -40px;
+	transform: translateY(-50%);
+	height: 50px;
+	opacity: 0;
+	pointer-events: none;
+}
+	
+
+.button:hover
+{
+	color: #000000;
+	background-color: rgb(255, 255, 255);
+}
+
+.button:hover .mario {
+	animation: mario-walk 2s linear forwards;
+	opacity: 1;
+}
+
+@keyframes mario-walk {
+	0% {
+		left: -40px;
+		opacity: 1;
+	}
+	100% {
+		left: 100%;
+		opacity: 1;
+	}
+}
+  
+.text-container
+{
+	position: relative;
+	z-index: 2;
 }
 
 .title {
-  font-family: 'Press Start 2P';
-  font-weight: bold;
-  font-size: 80px;
-  text-align: center;
-  color: #2c2c2c;
+	font-family: 'Press Start 2P';
+	font-weight: bold;
+	font-size: 80px;
+	text-align: center;
+	color: #2c2c2c;
 }
 
-.image{
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 20%;
-  height: 40%;
-  z-index: 0;
+.virus-img
+{
+	position: absolute;
+	left: 30%;
+	bottom: 25%;
+	width: 40%;
+	height: 40%;
+	z-index: 0;
+	/* transform: rotate(-20deg) scaleX(-1); */
+
 }
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+.piranha-img
+{
+	position: absolute;
+	left: 84%;
+	bottom: -3%;
+	width: 20%;
+	height: 40%;
+	z-index: 0;
+	transform: rotate(-20deg) scaleX(-1);
+
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.mario-img{
+	position: absolute;
+	left: -5%;
+	bottom: 0;
+	width: 30%;
+	height: 50%;
+	z-index: 0;
+	transform: rotatey(180deg)
 }
+
+/* :root {
+	--background: #ffffff;
+	--foreground: #171717;
+} */
+
+/* @theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
+} */
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #cecece;
-    --foreground: #000000;
-  }
+	:root {
+		--background: #cecece;
+		--foreground: #000000;
+	}
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+	background: var(--background);
+	color: var(--foreground);
+	font-family: 'Press Start 2P', Arial, Helvetica, sans-serif;
 }
