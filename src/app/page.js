@@ -11,13 +11,16 @@ export default function Home() {
   function handleButton(e)
   {
     e.preventDefault();
-    const name = document.getElementById('username').value
-    if(!name)
+    const name = document.getElementById('username')
+    if(!name.value)
     {
-      alert("must have user");
+      name.placeholder = "Must have a user";
+      name.classList.add("error-placeholder");
+      name.classList.add("shake")
+      name.value = "";
       return;
     }
-    localStorage.setItem("username", name);
+    localStorage.setItem("username", name.value);
     router.push('/game');
   }
 

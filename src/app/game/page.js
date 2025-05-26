@@ -1,16 +1,35 @@
 'use client';
 import Link from 'next/link';
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import { useRouter } from 'next/navigation';
 
 export default function Game() {
   const router = useRouter();
-  
+  const [scores, setScores] = useState([]);
+
+  useEffect(() => {
+    const foundScores = [];
+    for (let i = 0; i < localStorage.length && i < 8; i++) {
+      const key = localStorage.key(i);
+      if (key && key.includes("Score")) {
+        const value = localStorage.getItem(key);
+        if (value) foundScores.push(value);
+      }
+    }
+    setScores(foundScores);
+  }, []);
+
   function enterRooms(e) {
     e.preventDefault();
-    const room = document.getElementById('room').value;
-    if(!room)
-        return;
+    const input = document.getElementById('input');
+    const room = input.value;
+    if (!room) {
+      input.placeholder = "Must input a room code";
+      input.classList.add("error-placeholder");
+      input.classList.add("shake")
+      input.value = "";
+      return;
+    }
     const user = localStorage.getItem("username");
     router.push(`/${room}/${user}`);
   }
@@ -20,7 +39,7 @@ export default function Game() {
       <form className="usercard" onSubmit={enterRooms}>
         <h2 className="userTitle">Game Code</h2>
         <div>
-          <input className="input" placeholder="Enter game code" maxLength={16} id="room" />
+          <input className="input" placeholder="Enter game code" maxLength={16} id="input" />
         </div>
             <button className="button">
               <img className="mario-run" src="/images/mario.gif" />
@@ -28,6 +47,13 @@ export default function Game() {
               <span className='text-container'>Play</span>
         </button>
       </form>
+      <div className="usercard">
+        <h2 className='userTitle'>YOUR SCORES</h2>
+        <h3 style={{ color: 'white' }}>USER SCORE</h3>
+        {scores.map((s, idx) => (
+          <h3 key={idx} style={{ color: 'white' }}>{s}</h3>
+        ))}
+      </div>
     </div>
   );
 }
