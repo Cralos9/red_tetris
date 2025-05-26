@@ -19,6 +19,18 @@ export default function RoomPage() {
     <div>
       <h1>Room: {roomCode}</h1>
       <h1>Name: {username}</h1>
+      <div className='game-bottle'>
+      </div>
+        <div className='secondary-games'>
+          <div className='secondary-game'></div>
+          <div className='secondary-game'></div>
+          <div className='secondary-game'></div>
+          <div className='secondary-game'></div>
+          <div className='secondary-game'></div>
+          <div className='secondary-game'></div>
+        </div>
+
+      {/* <img className="virus-img" src="/images/Dr_Mario.png" alt="Virus" /> */}
     </div>
   );
 }

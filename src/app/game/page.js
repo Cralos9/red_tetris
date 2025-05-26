@@ -23,8 +23,8 @@ export default function Game() {
           <input className="input" placeholder="Enter game code" maxLength={16} id="room" />
         </div>
             <button className="button">
-              <img className="mario" src="images/mario.gif" alt="Mario" />
-              <img className="goomba" src="images/goomba2.gif" alt="Goomba" />
+              <img className="mario-run" src="/images/mario.gif" />
+              <img className="goomba-run" src="/images/goomba2.gif"  />
               <span className='text-container'>Play</span>
         </button>
       </form>

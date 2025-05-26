@@ -40,6 +40,63 @@
 	cursor: pointer;
 }
 
+
+.container {
+	display: grid;
+  }
+
+.secondary-games {
+	display: grid;
+	grid-template-columns: auto auto auto;
+	padding: 20px;
+	width: 30%;
+	height: 60%;
+	position: absolute;
+	right: 2%;
+	top: 5%;
+	background: rgba(126, 126, 126, 0.964);
+	border: 20px solid #0d0e0d;
+	border-radius: 20px;
+	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
+	overflow-y: auto;
+}
+
+.secondary-game {
+	display: flex;
+	align-self: center;
+	padding: 50px;
+	left: 1.5vw;
+	width: 100%;
+	gap: 10%;
+	position: relative;
+	max-width: 140px;
+	aspect-ratio: 4 / 7;
+	border-radius: 10px;
+	background: rgba(34, 34, 34, 0.964);
+	border: 4px solid #0d0e0d;
+}
+
+
+
+.game-bottle {
+	gap: 20%;
+	border-radius: 10px;
+	background: rgba(126, 126, 126, 0.964);
+	width: 22%;
+	height: 80%;
+	border-width: 20px;
+	border-color: #0d0e0d;
+	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
+	display: flex;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 60px;
+	gap: 20px;
+	text-align: center;
+	z-index: 1;
+}
+
 .usercard
 {
 		border-radius: 10px;
@@ -113,7 +170,7 @@
 	cursor: pointer;
 }
 
-.goomba {
+.goomba-run {
 	z-index: 1;
 	position: absolute;
 	top: 75%;
@@ -131,7 +188,7 @@
 	background-color: white;
 }
 
-.button:hover .goomba {
+.button:hover .goomba-run {
 	animation: goomba-walk 1.7s linear forwards;
 	opacity: 1;
 }
@@ -147,7 +204,7 @@
 	}
 }
 
-.mario {
+.mario-run {
 	z-index: 1;
 	position: absolute;
 	top: 70%;
@@ -165,7 +222,7 @@
 	background-color: rgb(255, 255, 255);
 }
 
-.button:hover .mario {
+.button:hover .mario-run {
 	animation: mario-walk 2s linear forwards;
 	opacity: 1;
 }
@@ -198,10 +255,10 @@
 .virus-img
 {
 	position: absolute;
-	left: 30%;
-	bottom: 25%;
-	width: 40%;
-	height: 40%;
+	left: 0;
+	bottom: 0;
+	width: 50%;
+	height: 20%;
 	z-index: 0;
 	/* transform: rotate(-20deg) scaleX(-1); */
 
@@ -210,10 +267,10 @@
 .piranha-img
 {
 	position: absolute;
-	left: 84%;
-	bottom: -3%;
-	width: 20%;
-	height: 40%;
+	left: 77%;
+	bottom: -5%;
+	width: 30%;
+	height: 50%;
 	z-index: 0;
 	transform: rotate(-20deg) scaleX(-1);
 

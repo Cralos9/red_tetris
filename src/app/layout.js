@@ -23,7 +23,7 @@ export default function Page({ children }) {
         </div>
         <img className="piranha-img" src="/images/piranha.png" alt="Piranha" />
         <img className="mario-img" src="/images/images.png" alt="Mario" />
-        <img className="virus-img" src="/images/Virus.png" alt="Virus" />
+        {/* <img className="virus-img" src="/images/Virus.png" alt="Virus" /> */}
         {children}
       </body>
     </html>
