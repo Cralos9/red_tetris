@@ -6,7 +6,6 @@ export class Game {
 		this.ROWS = rows
 		this.Bag = new Bag()
 		this.row = -1
-		this.column = this.COLUMNS / 2
 		this.field = []
 
 		for (let i = 0; i < this.ROWS; i++) {
@@ -26,16 +25,16 @@ export class Game {
 		console.log("Last Row:", this.row)
 		console.log("Current Piece Row:", this.Piece.row)
 		
-		if (this.Piece.checkCollision(this.field, this.ROWS, this.column)) {
+		if (this.Piece.checkCollision(this.field, this.ROWS)) {
 			this.Piece.row = 0
 			this.row = -1
 			this.Piece = this.Bag.getNextPiece()
 		} else {
-			this.Piece.drawPiece(this.field, this.ROWS, this.row, this.column, 0)
+			this.Piece.drawPiece(this.field, this.ROWS, this.row, 0)
 			this.row++;
 			this.Piece.row++
 			console.log("Draw Row:", this.row)
-			this.Piece.drawPiece(this.field, this.ROWS, this.row, this.column, 1)
+			this.Piece.drawPiece(this.field, this.ROWS, this.row, 1)
 		}
 	}
 }
