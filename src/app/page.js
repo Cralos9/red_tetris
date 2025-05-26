@@ -1,22 +1,16 @@
 "use client"
 
 import Image from "next/image";
-import { useEffect } from "react"
-import { socket } from "../socket"
+import { useEffect, useRef } from "react"
+import { Canvas } from "./Canvas.js"
 
 export default function Home() {
-
-  useEffect(() => {
-	socket.on("connect", () => {
-	  console.log("Connected to the websocket")
-	})
-
-	socket.emit("action", "Hello")
-  }, [])
-
   return (
-    <h1>
-      Teste
-    </h1>
+	<div>
+	  <Canvas/>
+      <h1>
+        Teste
+      </h1>
+	</div>
   );
 }

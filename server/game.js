@@ -1,12 +1,14 @@
 import { Bag } from "./Bag.js"
 
 export class Game {
-	constructor(columns, rows) {
+	constructor(columns, rows, socket) {
 		this.COLUMNS = columns
 		this.ROWS = rows
 		this.Bag = new Bag()
 		this.row = -1
 		this.field = []
+
+		this.socket = socket
 
 		for (let i = 0; i < this.ROWS; i++) {
 			let arr = []
@@ -22,8 +24,8 @@ export class Game {
 	}
 
 	update() {
-		console.log("Last Row:", this.row)
-		console.log("Current Piece Row:", this.Piece.row)
+		//console.log("Last Row:", this.row)
+		//console.log("Current Piece Row:", this.Piece.row)
 		
 		if (this.Piece.checkCollision(this.field, this.ROWS)) {
 			this.Piece.row = 0
@@ -33,8 +35,9 @@ export class Game {
 			this.Piece.drawPiece(this.field, this.ROWS, this.row, 0)
 			this.row++;
 			this.Piece.row++
-			console.log("Draw Row:", this.row)
+			//console.log("Draw Row:", this.row)
 			this.Piece.drawPiece(this.field, this.ROWS, this.row, 1)
 		}
+		this.socket.emit('action', {field: this.field})
 	}
 }

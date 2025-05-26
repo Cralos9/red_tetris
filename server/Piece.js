@@ -17,14 +17,14 @@ export class Piece {
 			console.log("Collision")
 			return (1)
 		}
-		console.log("Checking Row:", this.row + 1)
+		//console.log("Checking Row:", this.row + 1)
 		for (let y = 0; y < pattern.length; y++) {
 			if (pattern[y].find(element => element === 1)) {
 				line = y
 			}
 		}
 
-		console.log("Last Line:", line)
+		//console.log("Last Line:", line)
 		for (let x = 0; x < pattern[line].length; x++) {
 			if (pattern[line][x] === 1 && field[checkRow][this.column + x] === 1) {
 				console.log("Piece Collision")
@@ -63,14 +63,24 @@ export class Piece {
 		return (height)
 	}
 
+	moveRight() {
+		console.log("Moved Right")
+		this.column++
+	}
+
+	moveLeft() {
+		console.log("Moved Left")
+		this.column--
+	}
+
 	rotateRight() {
 		this.pattern += 1
 		this.pattern = this.pattern % 2
-		console.log("Before height:", this.height)
+		//console.log("Before height:", this.height)
 		const height = Math.abs(this.height - this.getHeight())
 		this.row = this.row + height
 		this.height = height
-		console.log("After height:", this.height)
+		//console.log("After height:", this.height)
 	}
 
 	rotateLeft() {
