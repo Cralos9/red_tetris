@@ -9,15 +9,28 @@ export default function Game() {
 
   useEffect(() => {
     const foundScores = [];
-    for (let i = 0; i < localStorage.length && i < 8; i++) {
+  
+    for (let i = 0; i < localStorage.length; i++) 
+    {
       const key = localStorage.key(i);
-      if (key && key.includes("Score")) {
+      if (key && key.startsWith("Score")) {
         const value = localStorage.getItem(key);
-        if (value) foundScores.push(value);
+        if (value) {
+          const [name, scoreStr] = value.split(" ");
+          const score = parseInt(scoreStr, 10);
+          if (!isNaN(score)) {
+            foundScores.push({ name, score });
+          }
+        }
       }
     }
-    setScores(foundScores);
-  }, []);
+  
+    foundScores.sort((a, b) => b.score - a.score);
+    const topFormatted = foundScores.slice(0, 5).map(entry => `${entry.name} ${entry.score}`);
+  
+    setScores(topFormatted);
+    }, []);
+  
 
   function enterRooms(e) {
     e.preventDefault();
@@ -51,7 +64,7 @@ export default function Game() {
         <h2 className='userTitle'>YOUR SCORES</h2>
         <h3 style={{ color: 'white' }}>USER SCORE</h3>
         {scores.map((s, idx) => (
-          <h3 key={idx} style={{ color: 'white' }}>{s}</h3>
+          <h3 key={idx} style={{ color: 'white' }}>{idx + 1} {s}</h3>
         ))}
       </div>
     </div>

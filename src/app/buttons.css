@@ -1,0 +1,135 @@
+.centerButton {
+	align-content: center;
+	background-color: #1c1f1e;
+	color: white;
+	font-family: 'Press Start 2P';
+	padding: 40px 40px;
+	font-size: 18px;
+	width: 25%;
+	text-align: center;
+}
+
+.logButton-cont {
+	position: absolute;
+	left: 20px;
+}
+
+.logButton
+{
+	background-color: #1c1f1e;
+	color: white;
+	font-family: 'Press Start 2P';
+	padding: 15px 40px;
+	margin-left: 0px;
+	font-size: 18px;
+	border: none;
+	cursor: pointer;
+}
+
+.game-buttons
+{
+	position: absolute;
+	background-color: #1c1f1e;
+	color: white;
+	font-family: 'Press Start 2P', cursive;
+	padding: 15px 40px;
+	font-size: 18px;
+	border: none;
+	left: 30%;
+	bottom: 20%;
+	cursor: pointer;
+}
+
+.button-container {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+	left:30%;
+	bottom: 20%;
+ }
+
+ button {
+	position: relative;
+	overflow: hidden;
+	background-color: #1c1f1e;
+	color: white;
+	font-family: 'Press Start 2P', cursive;
+	padding: 15px 40px;
+	font-size: 18px;
+	border: none;
+	cursor: pointer;
+}
+
+
+.button:hover
+{
+	color: #000000;
+	background-color: white;
+}
+
+.button:hover .goomba-run {
+	animation: goomba-walk 1.7s linear forwards;
+	opacity: 1;
+}
+
+
+.button:hover
+{
+	color: #000000;
+	background-color: rgb(255, 255, 255);
+}
+
+.button:hover .mario-run {
+	animation: mario-walk 2s linear forwards;
+	opacity: 1;
+}
+
+
+.goomba-run {
+	z-index: 1;
+	position: absolute;
+	top: 75%;
+	left: -10px;
+	transform: translateY(-50%);
+	height: 50px;
+	opacity: 0;
+	pointer-events: none;
+}
+	
+
+
+@keyframes goomba-walk {
+	0% {
+		left: -10px;
+		opacity: 1;
+	}
+	100% {
+		left: 100%;
+		opacity: 1;
+	}
+}
+
+.mario-run {
+	z-index: 1;
+	position: absolute;
+	top: 70%;
+	left: -40px;
+	transform: translateY(-50%);
+	height: 50px;
+	opacity: 0;
+	pointer-events: none;
+}
+	
+
+@keyframes mario-walk {
+	0% {
+		left: -40px;
+		opacity: 1;
+	}
+	100% {
+		left: 100%;
+		opacity: 1;
+	}
+}
