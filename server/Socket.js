@@ -1,5 +1,6 @@
 import { Server } from "socket.io"
 import { Game } from "./game.js"
+import { moveHorizontal, rotation } from "./movement.js"
 
 var game;
 var io;
@@ -17,13 +18,13 @@ export function connectSocket(server) {
 					startGame(game)
 					break
 				case "ArrowLeft":
-					game.Piece.moveLeft()	
+					moveHorizontal(-1)
 					break
 				case "ArrowRight":
-					game.Piece.moveRight()
+					moveHorizontal(1)
 					break
 				case "ArrowUp":
-					game.Piece.rotateRight()	
+					rotation(1)
 					break
 			}
 		})
@@ -34,6 +35,6 @@ async function startGame(game) {
 	while (1) {
 		await new Promise(r => setTimeout(r, 1000))
 		game.update()
-		//console.table(game.field)
+		console.table(game.field)
 	}
 }

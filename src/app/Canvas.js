@@ -15,6 +15,11 @@ export function Canvas() {
 	  console.log("Connected to the websocket")
 	})
 
+	socket.on('color', (color) => {
+		console.log("Color Event:", color)
+		ctx.fillStyle = color
+	})
+
 	socket.on('action', (msg) => {
 		//console.log(msg.field)
 		const field = msg.field
@@ -28,6 +33,7 @@ export function Canvas() {
 			}
 		}
 	})
+
 	document.addEventListener("keydown", e => {
 		socket.emit("action", {key: e.key})
 	})

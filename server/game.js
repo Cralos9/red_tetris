@@ -1,4 +1,6 @@
 import { Bag } from "./Bag.js"
+import { log } from "./debug.js"
+import { getMoves } from "./movement.js"
 
 export class Game {
 	constructor(columns, rows, socket) {
@@ -24,18 +26,22 @@ export class Game {
 	}
 
 	update() {
-		//console.log("Last Row:", this.row)
-		//console.log("Current Piece Row:", this.Piece.row)
+		log("Last Row:", this.row)
+		log("Current Piece Row:", this.Piece.row)
 		
 		if (this.Piece.checkCollision(this.field, this.ROWS)) {
 			this.Piece.row = 0
 			this.row = -1
 			this.Piece = this.Bag.getNextPiece()
+			this.socket.emit('color', this.Piece.color)
 		} else {
 			this.Piece.drawPiece(this.field, this.ROWS, this.row, 0)
+			const moves = getMoves()
+			this.Piece.move(moves.x)
+			this.Piece.rotate(moves.r)
 			this.row++;
 			this.Piece.row++
-			//console.log("Draw Row:", this.row)
+			log("Draw Row:", this.row)
 			this.Piece.drawPiece(this.field, this.ROWS, this.row, 1)
 		}
 		this.socket.emit('action', {field: this.field})

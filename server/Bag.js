@@ -5,13 +5,13 @@ import * as pos from "./piecePosition.js"
 export class Bag {
 	constructor () {
 		this.bag = new Map()
-		this.bag.set("I", new Piece("I", pos.I))
-		this.bag.set("T", new Piece("T", pos.T))
-		this.bag.set("J", new Piece("J", pos.J))
-		this.bag.set("L", new Piece("L", pos.L))
-		this.bag.set("O", new Piece("O", pos.O))
-		this.bag.set("S", new Piece("S", pos.S))
-		this.bag.set("Z", new Piece("Z", pos.Z))
+		this.bag.set("I", new Piece("I", pos.I, "#00ffff"))
+		this.bag.set("T", new Piece("T", pos.T, "#800080"))
+		this.bag.set("J", new Piece("J", pos.J, "#0000ff"))
+		this.bag.set("L", new Piece("L", pos.L, "#ff7f00"))
+		this.bag.set("O", new Piece("O", pos.O, "#ffff00"))
+		this.bag.set("S", new Piece("S", pos.S, "#00ff00"))
+		this.bag.set("Z", new Piece("Z", pos.Z, "#ff0000"))
 		this.order = [
 			"I",
 			"T",

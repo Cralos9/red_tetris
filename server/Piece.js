@@ -1,11 +1,15 @@
+import { log } from "./debug.js"
+import { moveHorizontal, rotation } from "./movement.js"
+
 export class Piece {
-	constructor(piece, patterns) {
+	constructor(piece, patterns, color) {
 		this.piece = piece
 		this.patterns = patterns
 		this.pattern = 0
 		this.height = this.getHeight()
 		this.row = 0
 		this.column = 5
+		this.color = color
 	}
 
 	checkCollision(field, ROWS) {
@@ -17,14 +21,14 @@ export class Piece {
 			console.log("Collision")
 			return (1)
 		}
-		//console.log("Checking Row:", this.row + 1)
+		log("Checking Row:", this.row + 1)
 		for (let y = 0; y < pattern.length; y++) {
 			if (pattern[y].find(element => element === 1)) {
 				line = y
 			}
 		}
 
-		//console.log("Last Line:", line)
+		log("Last Line:", line)
 		for (let x = 0; x < pattern[line].length; x++) {
 			if (pattern[line][x] === 1 && field[checkRow][this.column + x] === 1) {
 				console.log("Piece Collision")
@@ -63,29 +67,21 @@ export class Piece {
 		return (height)
 	}
 
-	moveRight() {
-		console.log("Moved Right")
-		this.column++
+	move(x) {
+		this.column += x
+		log("Moved Piece to", this.column)
+		moveHorizontal(0)
 	}
 
-	moveLeft() {
-		console.log("Moved Left")
-		this.column--
-	}
-
-	rotateRight() {
-		this.pattern += 1
+	rotate(r) {
+		this.pattern += r
 		this.pattern = this.pattern % 2
-		//console.log("Before height:", this.height)
+		log("Before height:", this.height)
 		const height = Math.abs(this.height - this.getHeight())
 		this.row = this.row + height
 		this.height = height
-		//console.log("After height:", this.height)
-	}
-
-	rotateLeft() {
-		this.pattern -= 1
-		this.pattern = this.pattern % 4
+		rotation(0)
+		log("After height:", this.height)
 	}
 
 	getCurrPattern() {
