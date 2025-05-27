@@ -3,6 +3,16 @@ const move = {
 	r: 0
 }
 
+let time
+
+export function setTime(varTime) {
+	time = varTime
+}
+
+export function getTime() {
+	return (time)
+}
+
 export function moveHorizontal(x) {
 	move.x = x
 }

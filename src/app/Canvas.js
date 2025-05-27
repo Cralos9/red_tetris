@@ -21,7 +21,7 @@ export function Canvas() {
 	})
 
 	socket.on('action', (msg) => {
-		//console.log(msg.field)
+		console.log(msg.field)
 		const field = msg.field
 		for (let i = 0; i < 20; i++) {
 			for (let x = 0; x < 10; x++) {

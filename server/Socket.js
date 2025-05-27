@@ -33,8 +33,8 @@ export function connectSocket(server) {
 
 async function startGame(game) {
 	while (1) {
-		await new Promise(r => setTimeout(r, 1000))
+		await new Promise(r => setTimeout(r, 500))
 		game.update()
-		console.table(game.field)
+		//console.table(game.field)
 	}
 }

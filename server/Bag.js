@@ -1,17 +1,26 @@
 import { Piece } from "./Piece.js"
 import { randomNbr } from "./utils.js"
-import * as pos from "./piecePosition.js"
+import {
+	I,
+	T,
+	J,
+	L,
+	S,
+	Z,
+	O,
+	getSkirt
+} from "./piecePosition.js"
 
 export class Bag {
 	constructor () {
 		this.bag = new Map()
-		this.bag.set("I", new Piece("I", pos.I, "#00ffff"))
-		this.bag.set("T", new Piece("T", pos.T, "#800080"))
-		this.bag.set("J", new Piece("J", pos.J, "#0000ff"))
-		this.bag.set("L", new Piece("L", pos.L, "#ff7f00"))
-		this.bag.set("O", new Piece("O", pos.O, "#ffff00"))
-		this.bag.set("S", new Piece("S", pos.S, "#00ff00"))
-		this.bag.set("Z", new Piece("Z", pos.Z, "#ff0000"))
+		this.bag.set("I", new Piece("I", I, "#00ffff", getSkirt(I)))
+		this.bag.set("T", new Piece("T", T, "#800080", getSkirt(T)))
+		this.bag.set("J", new Piece("J", J, "#0000ff", getSkirt(J)))
+		this.bag.set("L", new Piece("L", L, "#ff7f00", getSkirt(L)))
+		this.bag.set("O", new Piece("O", O, "#ffff00", getSkirt(O)))
+		this.bag.set("S", new Piece("S", S, "#00ff00", getSkirt(S)))
+		this.bag.set("Z", new Piece("Z", Z, "#ff0000", getSkirt(Z)))
 		this.order = [
 			"I",
 			"T",
