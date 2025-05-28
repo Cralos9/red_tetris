@@ -1,17 +1,17 @@
 export function getSkirt(pos) {
 	let arr = []
-	let lowerY = pos[0][1]
-	let pieceX = pos[0][1];
+	let i = 0
+	let lowerY
 
-	for (let i = 0; i < pos.length; i++) {
-		if (pos[i][0] != pieceX && pos[i][1] != lowerY) {
-			arr.push(pos[i])
-			lowerY = pos[i][1]
-		} else if (pos[i][1] >= lowerY) {
-			arr.push(pos[i])
-			lowerY = pos[i][1]
+	while (i < pos.length) {
+		lowerY = pos[i]
+		while (i < pos.length && pos[i][0] === lowerY[0]) {
+			if (pos[i][1] >= lowerY[1]) {
+				lowerY = pos[i]
+			}
+			i++
 		}
-		pieceX = pos[i][0]
+		arr.push(lowerY)
 	}
 	return (arr)
 }

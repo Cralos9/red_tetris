@@ -20,8 +20,8 @@ export class Game {
 		}
 
 		this.Bag.makeNewOrder()
-		//this.Piece = this.Bag.getCurrentPiece()
-		this.Piece = this.Bag.bag.get("Z")
+		this.Piece = this.Bag.getCurrentPiece()
+		//this.Piece = this.Bag.bag.get("I")
 		console.log(this.Piece.skirt)
 		log(this.Piece.toString())
 	}
