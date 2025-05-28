@@ -1,9 +1,10 @@
 import { Server } from "socket.io"
 import { Game } from "./game.js"
-import { moveHorizontal, rotation } from "./movement.js"
+import { moveHorizontal, moveVertical, rotation, setTime } from "./movement.js"
 
-var game;
-var io;
+var game
+var running
+var io
 
 export function connectSocket(server) {
 	io = new Server(server)
@@ -15,6 +16,7 @@ export function connectSocket(server) {
 			switch (msg.key) {
 				case "Enter":
 					game = new Game(10, 20, socket)
+					running = true
 					startGame(game)
 					break
 				case "ArrowLeft":
@@ -26,15 +28,30 @@ export function connectSocket(server) {
 				case "ArrowUp":
 					rotation(1)
 					break
+				case "ArrowDown":
+					moveVertical(1)
+					break
+				case "Escape":
+					running = false
+					break
 			}
 		})
 	})
 }
 
 async function startGame(game) {
-	while (1) {
-		await new Promise(r => setTimeout(r, 500))
+	const FPS = 60
+	const timeDelay = 1000 / FPS
+	let currTime
+	let frameTime
+
+	while (running) {
+		currTime = Date.now()
 		game.update()
-		//console.table(game.field)
+		console.table(game.field)
+		frameTime = Date.now() - currTime
+		if (frameTime > -1 && frameTime < timeDelay) {
+			await new Promise(r => setTimeout(r, timeDelay - frameTime))
+		}
 	}
 }

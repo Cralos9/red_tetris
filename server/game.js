@@ -20,10 +20,10 @@ export class Game {
 		}
 
 		this.Bag.makeNewOrder()
-		this.Piece = this.Bag.getCurrentPiece()
-		//this.Piece = this.Bag.bag.get("I")
-		console.log(this.Piece.skirt)
+		//this.Piece = this.Bag.getCurrentPiece()
+		this.Piece = this.Bag.bag.get("T")
 		log(this.Piece.toString())
+		this.time = Date.now()
 	}
 
 	update() {
@@ -31,19 +31,21 @@ export class Game {
 		
 		if (this.Piece.checkCollision(this.field, this.ROWS)) {
 			log("Collision")
-			this.Piece.row = 0
+			this.Piece.row = -1
 			this.Piece = this.Bag.getNextPiece()
 			console.log(this.Piece.toString())
 			//this.socket.emit('color', this.Piece.color)
 		} else {
 			this.Piece.drawPiece(this.field, 0)
 			const moves = getMoves()
-			this.Piece.move(moves.x)
-			//this.Piece.rotate(moves.r)
-			this.Piece.row++
-			log("Row:", this.Piece.row)
+			this.Piece.move(moves.x, moves.y)
+			this.Piece.rotate(moves.r)
+			if (Date.now() - this.time >= 1000) {
+				this.Piece.row++
+				this.time = Date.now()
+			}
 			this.Piece.drawPiece(this.field, 1)
 		}
-		//this.socket.emit('action', {field: this.field})
+		this.socket.emit('action', {field: this.field})
 	}
 }

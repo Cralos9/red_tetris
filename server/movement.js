@@ -1,5 +1,6 @@
 const move = {
 	x: 0,
+	y: 0,
 	r: 0
 }
 
@@ -15,6 +16,10 @@ export function getTime() {
 
 export function moveHorizontal(x) {
 	move.x = x
+}
+
+export function moveVertical(y) {
+	move.y = y
 }
 
 export function rotation(r) {

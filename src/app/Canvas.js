@@ -21,7 +21,7 @@ export function Canvas() {
 	})
 
 	socket.on('action', (msg) => {
-		console.log(msg.field)
+		//console.log(msg.field)
 		const field = msg.field
 		for (let i = 0; i < 20; i++) {
 			for (let x = 0; x < 10; x++) {
@@ -35,11 +35,14 @@ export function Canvas() {
 	})
 
 	document.addEventListener("keydown", e => {
+		console.log("Event:", e.key)
 		socket.emit("action", {key: e.key})
 	})
   }, [])
 
   return (
-	<canvas ref={canvasRef} width={300} height={500} style={{border: "1px solid #ffffff"}}/>
+	<center>
+	  <canvas ref={canvasRef} width={300} height={500} style={{border: "1px solid #ffffff"}}/>
+	</center>
   )
 }

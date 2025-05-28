@@ -1,27 +1,27 @@
 import { log } from "./debug.js"
-import { moveHorizontal, rotation } from "./movement.js"
+import { moveHorizontal, moveVertical, rotation } from "./movement.js"
 
 export class Piece {
-	constructor(piece, patterns, color, skirt) {
+	constructor(piece, patterns, skirts) {
 		this.piece = piece
 		this.patterns = patterns
-		this.pattern = 0
+		this.skirts = skirts
+		this.index = 0
 		this.height = 0
-		this.row = -1
+		this.row = 0
 		this.column = 5
-		this.color = color
-		this.skirt = skirt
 	}
 
 	checkCollision(field, ROWS) {
+		const skirt = this.getCurrSkirt()
 		const checkRow = this.row + 1
 
 		if (checkRow === ROWS) {
 			return (1)
 		}
-		log(this.skirt)
-		for (let i = 0; i < this.skirt.length; i++) {
-			const arr = this.skirt[i]
+		console.log("Skirt:", skirt)
+		for (let i = 0; i < skirt.length; i++) {
+			const arr = skirt[i]
 			const y = this.row + (arr[1] + 1)
 			const x = this.column + arr[0]
 			log("Checking:", y, x)
@@ -33,8 +33,11 @@ export class Piece {
 	}
 
 	drawPiece(field, color) {
-		for (let y = 0; y < this.patterns.length; y++) {
-			const arr = this.patterns[y]
+		const pattern = this.getCurrPattern()
+
+		console.log("Pattern", pattern)
+		for (let y = 0; y < pattern.length; y++) {
+			const arr = pattern[y]
 			//log(y, arr)
 			if (this.row + arr[1] > -1) {
 				field[this.row + arr[1]][this.column + arr[0]] = color
@@ -42,25 +45,27 @@ export class Piece {
 		}
 	}
 
-	move(x) {
+	move(x, y) {
 		this.column += x
-		log("Moved Piece to", this.column)
+		this.row += y
+		log("Moved Piece Vertical:", this.row)
+		log("Moved Piece to column:", this.column)
+		moveVertical(0)
 		moveHorizontal(0)
 	}
 
 	rotate(r) {
-		this.pattern += r
-		this.pattern = this.pattern % 2
-		log("Before height:", this.height)
-		//const height = Math.abs(this.height - this.getHeight())
-		//this.row = this.row + height
-		//this.height = height
+		this.index += r
+		this.index = this.index % 4
 		rotation(0)
-		log("After height:", this.height)
+	}
+
+	getCurrSkirt() {
+		return this.skirts[this.index]
 	}
 
 	getCurrPattern() {
-		return this.patterns[this.pattern]
+		return this.patterns[this.index]
 	}
 
 	toString() {
