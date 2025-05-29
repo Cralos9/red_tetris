@@ -1,5 +1,6 @@
 import { log } from "./debug.js"
 import { moveHorizontal, moveVertical, rotation } from "./movement.js"
+import { ROWS, COLUMNS } from "./gameParams.js"
 
 export class Piece {
 	constructor(piece, patterns, skirts, color) {
@@ -32,7 +33,6 @@ export class Piece {
 	drawPiece(field, color) {
 		const pattern = this.getCurrPattern()
 
-		console.log("Pattern", pattern)
 		for (let y = 0; y < pattern.length; y++) {
 			const arr = pattern[y]
 			//log(y, arr)
@@ -42,7 +42,54 @@ export class Piece {
 		}
 	}
 
-	move(x, y) {
+	validMove(start, end, inc) {
+		const pattern = this.getCurrPattern()
+		let i = start
+
+		while (i < end) {
+			i += inc
+		}
+	}
+
+	move(x, y, field) {
+		const pattern = this.getCurrPattern()
+		let pX
+
+		if (x < 0) {
+			pX = pattern[0][0]
+			for (let i = 0; i < pattern.length; i++) {
+				if (pX !== pattern[i][0]) {
+					break
+				}
+				pX = pattern[i][0]
+				const check = this.column + x + pX
+				const pY = this.row + pattern[i][1]
+				console.log("H-Check:", pY, check)
+				if (check > -1 && pY > -1 && field[pY][check] != 1) {
+					x = x
+				} else {
+					x = 0
+					break
+				}
+			}
+		} else {
+			pX = pattern[pattern.length - 1][0]
+			for (let i = pattern.length - 1; i >= 0; i--) {
+				if (pX !== pattern[i][0]) {
+					break
+				}
+				pX = pattern[i][0]
+				const check = this.column + x + pX
+				const pY = this.row + pattern[i][1]
+				console.log("H+Check", pY, check)
+				if (check < COLUMNS && pY > -1 && field[pY][check] != 1) {
+					x = x
+				} else {
+					x = 0
+					break
+				}
+			}
+		}
 		this.column += x
 		this.row += y
 		log("Moved Piece Vertical:", this.row)

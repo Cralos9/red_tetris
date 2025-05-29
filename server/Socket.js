@@ -14,7 +14,7 @@ export function connectSocket(server) {
 		socket.on('action', (msg) => {
 			console.log("Event:", msg.key)
 			if(msg == "start")
-				game = new Game(10, 20, socket)
+				game = new Game(socket)
 				running = true
 				startGame(game)
 			switch (msg.key) {
