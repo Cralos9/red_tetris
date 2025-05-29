@@ -21,7 +21,7 @@ export class Game {
 
 		this.Bag.makeNewOrder()
 		//this.Piece = this.Bag.getCurrentPiece()
-		this.Piece = this.Bag.bag.get("T")
+		this.Piece = this.Bag.bag.get("Z")
 		log(this.Piece.toString())
 		this.time = Date.now()
 	}
@@ -37,7 +37,7 @@ export class Game {
 		} else {
 			this.Piece.drawPiece(this.field, 0)
 			const moves = getMoves()
-			this.Piece.move(moves.x, moves.y)
+			this.Piece.move(moves.x, moves.y, this.COLUMNS)
 			this.Piece.rotate(moves.r)
 			if (Date.now() - this.time >= 1000) {
 				this.Piece.row++

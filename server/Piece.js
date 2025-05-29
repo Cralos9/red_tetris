@@ -8,7 +8,7 @@ export class Piece {
 		this.skirts = skirts
 		this.index = 0
 		this.height = 0
-		this.row = 0
+		this.row = -1
 		this.column = 5
 		this.color = color
 	}
