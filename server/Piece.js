@@ -14,18 +14,14 @@ export class Piece {
 
 	checkCollision(field, ROWS) {
 		const skirt = this.getCurrSkirt()
-		const checkRow = this.row + 1
 
-		if (checkRow === ROWS) {
-			return (1)
-		}
 		console.log("Skirt:", skirt)
 		for (let i = 0; i < skirt.length; i++) {
 			const arr = skirt[i]
 			const y = this.row + (arr[1] + 1)
 			const x = this.column + arr[0]
 			log("Checking:", y, x)
-			if (y > -1 && field[y][x] === 1) {
+			if (y === ROWS || y > -1 && field[y][x] === 1) {
 				return (1)
 			}
 		}
@@ -57,6 +53,9 @@ export class Piece {
 	rotate(r) {
 		this.index += r
 		this.index = this.index % 4
+		if (r === 1) {
+			log("Rotated:", this.toString())
+		}
 		rotation(0)
 	}
 
