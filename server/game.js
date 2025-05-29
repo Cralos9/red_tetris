@@ -1,6 +1,10 @@
 import { Bag } from "./Bag.js"
 import { log } from "./debug.js"
 import { getMoves } from "./movement.js"
+//import { Piece } from "./Piece.js"
+//import { piecesMap } from "./piecePosition.js";
+
+const SPEED = 1;
 
 export class Game {
 	constructor(columns, rows, socket) {
@@ -20,6 +24,8 @@ export class Game {
 		}
 
 		this.Piece = this.Bag.getCurrentPiece()
+		//const piece = piecesMap["T"]
+		//this.Piece = new Piece("T", piece.patterns, piece.skirts)
 		log(this.Piece.toString())
 		this.time = Date.now()
 	}
@@ -38,10 +44,10 @@ export class Game {
 			const moves = getMoves()
 			this.Piece.move(moves.x, moves.y, this.COLUMNS)
 			this.Piece.rotate(moves.r)
-			//if (Date.now() - this.time >= 200) {
+			if (Date.now() - this.time >= 1000 / SPEED) {
 				this.Piece.row++
 				this.time = Date.now()
-			//}
+			}
 			this.Piece.drawPiece(this.field, 1)
 		}
 		this.socket.emit('action', {field: this.field, color: this.Piece.color})
