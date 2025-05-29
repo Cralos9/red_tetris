@@ -8,7 +8,7 @@ const game = new Game(10, 10)
 //	console.table(game.field)
 //}
 
-for (let i = 0; i < 13; i++) {
+for (let i = 0; i < 1; i++) {
 	game.update()
 	console.table(game.field)
 }

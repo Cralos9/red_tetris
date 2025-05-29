@@ -15,7 +15,7 @@ export function connectSocket(server) {
 			console.log("Event:", msg.key)
 			switch (msg.key) {
 				case "Enter":
-					game = new Game(10, 20, socket)
+					game = new Game(socket)
 					running = true
 					startGame(game)
 					break

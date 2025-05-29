@@ -1,23 +1,22 @@
 import { Bag } from "./Bag.js"
 import { log } from "./debug.js"
 import { getMoves } from "./movement.js"
+import { ROWS, COLUMNS } from "./gameParams.js"
 //import { Piece } from "./Piece.js"
 //import { piecesMap } from "./piecePosition.js";
 
 const SPEED = 1;
 
 export class Game {
-	constructor(columns, rows, socket) {
-		this.COLUMNS = columns
-		this.ROWS = rows
+	constructor(socket) {
 		this.Bag = new Bag()
 		this.field = []
 
 		this.socket = socket
 
-		for (let i = 0; i < this.ROWS; i++) {
+		for (let i = 0; i < ROWS; i++) {
 			let arr = []
-			for (let j = 0; j < this.COLUMNS; j++) {
+			for (let j = 0; j < COLUMNS; j++) {
 				arr[j] = 0
 			}
 			this.field[i] = arr
@@ -33,7 +32,7 @@ export class Game {
 	update() {
 		log("Current Piece Row:", this.Piece.row)
 		
-		if (this.Piece.checkCollision(this.field, this.ROWS)) {
+		if (this.Piece.checkCollision(this.field, ROWS)) {
 			log("Collision")
 			this.Piece.row = -1
 			this.Piece.column = 5
@@ -43,7 +42,7 @@ export class Game {
 		} else {
 			this.Piece.drawPiece(this.field, 0)
 			const moves = getMoves()
-			this.Piece.move(moves.x, moves.y, this.COLUMNS)
+			this.Piece.move(moves.x, moves.y, this.field)
 			this.Piece.rotate(moves.r)
 			if (Date.now() - this.time >= 1000 / SPEED) {
 				this.Piece.row++
