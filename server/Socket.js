@@ -13,12 +13,11 @@ export function connectSocket(server) {
 		console.log("User connected:", socket.id)
 		socket.on('action', (msg) => {
 			console.log("Event:", msg.key)
+			if(msg == "start")
+				game = new Game(10, 20, socket)
+				running = true
+				startGame(game)
 			switch (msg.key) {
-				case "Enter":
-					game = new Game(10, 20, socket)
-					running = true
-					startGame(game)
-					break
 				case "ArrowLeft":
 					moveHorizontal(-1)
 					break

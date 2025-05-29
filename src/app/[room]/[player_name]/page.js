@@ -1,6 +1,7 @@
 'use client';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { socket } from "../../../socket";
 
 export default function RoomPage() {
   const params = useParams();
@@ -10,6 +11,30 @@ export default function RoomPage() {
   const [username, setUsername] = useState('');
 
   useEffect(() => {
+    socket.on("connect", () => {
+        console.log("Connected to the websocket")
+      })
+
+    socket.on('action', (msg) => {
+      console.log(msg.field)
+      const cells = document.querySelectorAll('.game-bottle .cell');
+      const field = msg.field
+      for (let y = 0; y < 20; y++) {
+        for (let x = 0; x < 10; x++) {
+          const index = y * 10 + x;
+          if (field[y][x] === 1) {
+            cells[index].style.backgroundColor = 'cyan';
+          } else {
+            cells[index].style.backgroundColor = 'transparent';
+          }
+        }
+      }
+        })
+      document.addEventListener("keydown", e => {
+          	console.log("Event:", e.key)
+          	socket.emit("action", {key: e.key})
+          })
+
     const bottle = document.querySelector('.game-bottle');
     bottle.innerHTML = '';
     for (let i = 0; i < 200; i++) {
@@ -41,6 +66,7 @@ export default function RoomPage() {
   }, [name]);
   
   function scoreSave() {
+    socket.emit("action", "start");
     if (name && score !== undefined) {
       localStorage.setItem("username", name);
 
