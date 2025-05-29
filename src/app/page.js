@@ -1,6 +1,4 @@
 'use client';
-import './globals.css';
-import './buttons.css';
 import Link from 'next/link';
 import {useState} from 'react'
 import { useRouter } from 'next/navigation';
@@ -13,9 +11,16 @@ export default function Home() {
   {
     e.preventDefault();
     const name = document.getElementById('username')
-    if(!name.value)
+    if(!name.value || !name.value.match(/^[0-9a-z]+$/))
     {
-      name.placeholder = "Must have a user";
+      if (!name.value)
+        name.placeholder = "Must have a user";
+      else
+      {
+        name.placeholder = "Only alphanumeric characters";
+        name.style.fontSize = '16px';
+
+      }
       name.classList.add("error-placeholder");
       name.classList.add("shake")
       name.value = "";
@@ -35,8 +40,6 @@ export default function Home() {
           </div>
           <button onClick={handleButton} className="button">Play</button>
         </form>
-{/*         <Link href="/game" className="centerButton">Create Room</Link>
-        <Link href="/roomKey" className="centerButton">Game Room Code</Link> */}
       </div>
     </div>
   );

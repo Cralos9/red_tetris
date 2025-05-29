@@ -10,10 +10,36 @@ export default function RoomPage() {
   const [username, setUsername] = useState('');
 
   useEffect(() => {
+    const bottle = document.querySelector('.game-bottle');
+    bottle.innerHTML = '';
+    for (let i = 0; i < 200; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      bottle.appendChild(cell);
+    }
+  
+    const next = document.querySelector('.next-piece');
+    next.querySelectorAll('.cell').forEach(cell => cell.remove());
+        
+    for (let i = 0; i < 60; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      next.appendChild(cell);
+    }
+
+    const held = document.querySelector('.held-piece');
+    held.querySelectorAll('.cell').forEach(cell => cell.remove());
+  
+    for (let i = 0; i < 36; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      held.appendChild(cell);
+    }
     if (name) {
       setUsername(name);
     }
   }, [name]);
+  
   function scoreSave() {
     if (name && score !== undefined) {
       localStorage.setItem("username", name);
@@ -42,9 +68,10 @@ export default function RoomPage() {
           <span className="held-label">Held Piece</span>
         </div>
         <div className="next-piece">
-        <span className="held-label">Next Pieces</span>
+          <span className="held-label">Next Pieces</span>
         </div>
-        <div className="game-bottle"></div>
+        <div className="game-bottle">
+        </div>
       </div>
       {/* <div className='secondary-games'>
         <div className='secondary-game'></div>

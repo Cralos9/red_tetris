@@ -1,5 +1,6 @@
-import './globals.css';
-import './buttons.css';
+import './cssFiles/globals.css';
+import './cssFiles/buttons.css';
+import './cssFiles/board.css'
 import Link from 'next/link';
 
 export const metadata = {

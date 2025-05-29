@@ -1,0 +1,62 @@
+.held-label 
+{
+    position: absolute;
+    top: -2em;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgb(48, 47, 47);
+    font-size: 1.1em;
+    text-decoration:solid;
+    white-space: nowrap;
+}
+
+.cell {
+  border: 2px solid #444;
+  background-color: #222;
+}
+
+.game-bottle {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(20, 1fr);
+  background: rgba(126, 126, 126, 0.964);
+  width: 22vw;
+  height: 80vh;
+  border-left: 20px solid #0d0e0d;
+  border-right: 20px solid #0d0e0d;
+  border-bottom: 20px solid #0d0e0d;
+  border-top: none;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
+  text-align: center;
+  z-index: 1;
+}
+
+.held-piece {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  position: absolute;
+  left: -7vw;
+  width: 7vw;
+  height: 20vh;
+  background: rgba(126, 126, 126, 0.964);
+  border: 10px solid #0d0e0d;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
+  z-index: 2;
+}
+
+.next-piece {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  position: absolute;
+  right: -10vw;
+  width: 10vw;
+  height: 40vh;
+  background: rgba(126, 126, 126, 0.964);
+  border: 10px solid #0d0e0d;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
+  z-index: 2;
+}
+
+
