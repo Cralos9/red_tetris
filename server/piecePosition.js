@@ -77,10 +77,10 @@ const Z = [
 	],
 ]
 
-export const pieces = [I, T, J, L, O, S, Z]
-export const skirts = []
-for (let i = 0; i < pieces.length; i++) {
-	const piece = pieces[i]
+const patterns = [I, T, J, L, O, S, Z]
+const skirts = []
+for (let i = 0; i < patterns.length; i++) {
+	const piece = patterns[i]
 	const skirt = [getSkirt(piece[0])]
 	for (let k = 0; k < 3; k++) {
 		const tmp = getRotations(piece[k]).sort(compare)
@@ -92,4 +92,12 @@ for (let i = 0; i < pieces.length; i++) {
 	//console.log(piece)
 	//console.log("")
 }
-
+export const piecesMap = {
+	"I": {patterns: patterns[0], skirts: skirts[0]},
+	"T": {patterns: patterns[1], skirts: skirts[1]},
+	"J": {patterns: patterns[2], skirts: skirts[2]},
+	"L": {patterns: patterns[3], skirts: skirts[3]},
+	"O": {patterns: patterns[4], skirts: skirts[4]},
+	"S": {patterns: patterns[5], skirts: skirts[5]},
+	"Z": {patterns: patterns[6], skirts: skirts[6]},
+}
