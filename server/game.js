@@ -40,7 +40,6 @@ export class Game {
 				}
 			}
 			if (count === this.field[y].length) {
-				log("Marked Line Clears")
 				this.hitList.push(y)
 			}
 		}
@@ -56,12 +55,14 @@ export class Game {
 				this.field[line][i] = 0
 			}
 		})
+		log("Start:", start, this.stackHeight)
 		for (let y = start; y >= this.stackHeight; y--) {
-			console.log("Clearing Line:", y)
+			log("Clearing Line:", y)
 			for (let x = 0; x < this.field[y].length; x++) {
 				this.field[y][x] = this.field[y - linesNbr][x]
 			}
 		}
+		this.stackHeight += linesNbr
 		this.hitList = []
 	}
 
