@@ -26,9 +26,13 @@ export function connectSocket(server) {
 				case "ArrowRight":
 					moveHorizontal(1)
 					break
+				case "x":
 				case "ArrowUp":
 					rotation(1)
 					break
+				//case "z":
+				//	rotation(-1)
+				//	break
 				case "ArrowDown":
 					moveVertical(1)
 					break

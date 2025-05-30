@@ -1,6 +1,6 @@
 import { log } from "./debug.js"
 import { moveHorizontal, moveVertical, rotation } from "./movement.js"
-import { ROWS, COLUMNS } from "./gameParams.js"
+import { COLUMNS } from "./gameParams.js"
 
 export class Piece {
 	constructor(piece, patterns, skirts, color) {
