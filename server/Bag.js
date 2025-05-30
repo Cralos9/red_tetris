@@ -20,14 +20,14 @@ export class Bag {
 		]
 		for (let i = 0; i < this.order.length; i++) {
 			const piece = piecesMap[this.order[i]]
-			this.stack.push(new Piece(this.order[i], piece.patterns, piece.skirts))
+			this.stack.push(new Piece(this.order[i], piece.patterns, piece.skirts, piece.color))
 		}
 	}
 
 	getNextPiece() {
 		this.stack.pop()
 		const piece = this.order[randomNbr(this.order.length - 1)]
-		this.stack.unshift(new Piece(piece, piecesMap[piece].patterns, piecesMap[piece].skirts))
+		this.stack.unshift(new Piece(piece, piecesMap[piece].patterns, piecesMap[piece].skirts, piecesMap[piece].color))
 		return (this.stack[this.stack.length - 2])
 	}
 	

@@ -23,7 +23,7 @@ export class Piece {
 			const y = this.row + (arr[1] + 1)
 			const x = this.column + arr[0]
 			log("Checking:", y, x)
-			if (y === ROWS || y > -1 && field[y][x] === 1) {
+			if (y === ROWS || y > -1 && field[y][x] > 0) {
 				return (1)
 			}
 		}
@@ -65,7 +65,7 @@ export class Piece {
 				const check = this.column + x + pX
 				const pY = this.row + pattern[i][1]
 				console.log("H-Check:", pY, check)
-				if (check > -1 && pY > -1 && field[pY][check] != 1) {
+				if (check > -1 && pY > -1 && field[pY][check] === 0) {
 					x = x
 				} else {
 					x = 0
@@ -82,7 +82,7 @@ export class Piece {
 				const check = this.column + x + pX
 				const pY = this.row + pattern[i][1]
 				console.log("H+Check", pY, check)
-				if (check < COLUMNS && pY > -1 && field[pY][check] != 1) {
+				if (check < COLUMNS && pY > -1 && field[pY][check] === 0) {
 					x = x
 				} else {
 					x = 0
@@ -101,9 +101,7 @@ export class Piece {
 	rotate(r) {
 		this.index += r
 		this.index = this.index % 4
-		if (r === 1) {
-			log("Rotated:", this.toString())
-		}
+		log("Rotated Piece:", this.index)
 		rotation(0)
 	}
 

@@ -93,11 +93,11 @@ for (let i = 0; i < patterns.length; i++) {
 	//console.log("")
 }
 export const piecesMap = {
-	"I": {patterns: patterns[0], skirts: skirts[0]},
-	"T": {patterns: patterns[1], skirts: skirts[1]},
-	"J": {patterns: patterns[2], skirts: skirts[2]},
-	"L": {patterns: patterns[3], skirts: skirts[3]},
-	"O": {patterns: patterns[4], skirts: skirts[4]},
-	"S": {patterns: patterns[5], skirts: skirts[5]},
-	"Z": {patterns: patterns[6], skirts: skirts[6]},
+	"I": {patterns: patterns[0], skirts: skirts[0], color: 1},
+	"T": {patterns: patterns[1], skirts: skirts[1], color: 2},
+	"J": {patterns: patterns[2], skirts: skirts[2], color: 3},
+	"L": {patterns: patterns[3], skirts: skirts[3], color: 4},
+	"O": {patterns: patterns[4], skirts: skirts[4], color: 5},
+	"S": {patterns: patterns[5], skirts: skirts[5], color: 6},
+	"Z": {patterns: patterns[6], skirts: skirts[6], color: 7},
 }

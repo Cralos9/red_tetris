@@ -47,7 +47,7 @@ export class Game {
 				this.Piece.row++
 				this.time = Date.now()
 			}
-			this.Piece.drawPiece(this.field, 1)
+			this.Piece.drawPiece(this.field, this.Piece.color)
 		}
 		this.socket.emit('action', {field: this.field, color: this.Piece.color})
 	}
