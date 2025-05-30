@@ -34,7 +34,6 @@ export class Game {
 			this.Piece.row = -1
 			this.Piece = this.Bag.getNextPiece()
 			console.log(this.Piece.toString())
-			//this.socket.emit('color', this.Piece.color)
 		} else {
 			this.Piece.drawPiece(this.field, 0)
 			const moves = getMoves()
@@ -46,6 +45,6 @@ export class Game {
 			}
 			this.Piece.drawPiece(this.field, 1)
 		}
-		this.socket.emit('action', {field: this.field})
+		this.socket.emit('action', {field: this.field, color: this.Piece.color})
 	}
 }

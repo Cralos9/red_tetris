@@ -162,6 +162,18 @@
 
 }
 
+.shroom-img
+{
+	position: fixed;
+	right: 0%;
+	top: 0%;
+	width: 10%;
+	height: 20%;
+	z-index: 1;
+	transform: rotate(-20deg) scaleX(-1);
+
+}
+
 .piranha-img
 {
 	position: fixed;

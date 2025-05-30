@@ -12,57 +12,61 @@ export default function RoomPage() {
 
   useEffect(() => {
     socket.on("connect", () => {
-        console.log("Connected to the websocket")
+      console.log("Connected to the websocket")
       })
 
-    socket.on('action', (msg) => {
-      console.log(msg.field)
+    socket.on('action', (msg) => 
+    {
       const cells = document.querySelectorAll('.game-bottle .cell');
-      const field = msg.field
-      for (let y = 0; y < 20; y++) {
-        for (let x = 0; x < 10; x++) {
+      const field = msg.field;
+
+      for (let y = 0; y < 20; y++) 
+      {
+        for (let x = 0; x < 10; x++) 
+        {
           const index = y * 10 + x;
-          if (field[y][x] === 1) {
-            cells[index].style.backgroundColor = 'cyan';
-          } else {
+          const value = field[y][x];
+          if (value === 0)
             cells[index].style.backgroundColor = 'transparent';
-          }
+          else if (value === 1)
+            cells[index].style.backgroundColor = msg.color || 'cyan';
         }
       }
-        })
-      document.addEventListener("keydown", e => {
-          	console.log("Event:", e.key)
-          	socket.emit("action", {key: e.key})
-          })
+    })
 
-    const bottle = document.querySelector('.game-bottle');
-    bottle.innerHTML = '';
-    for (let i = 0; i < 200; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'cell';
-      bottle.appendChild(cell);
-    }
-  
-    const next = document.querySelector('.next-piece');
-    next.querySelectorAll('.cell').forEach(cell => cell.remove());
-        
-    for (let i = 0; i < 60; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'cell';
-      next.appendChild(cell);
-    }
+    document.addEventListener("keydown", e => {
+        // console.log("Event:", e.key)
+        socket.emit("action", {key: e.key})
+    })
 
-    const held = document.querySelector('.held-piece');
-    held.querySelectorAll('.cell').forEach(cell => cell.remove());
-  
-    for (let i = 0; i < 36; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'cell';
-      held.appendChild(cell);
-    }
-    if (name) {
-      setUsername(name);
-    }
+      const bottle = document.querySelector('.game-bottle');
+      bottle.innerHTML = '';
+      for (let i = 0; i < 200; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        bottle.appendChild(cell);
+      }
+    
+      const next = document.querySelector('.next-piece');
+      next.querySelectorAll('.cell').forEach(cell => cell.remove());
+          
+      for (let i = 0; i < 60; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        next.appendChild(cell);
+      }
+
+      const held = document.querySelector('.held-piece');
+      held.querySelectorAll('.cell').forEach(cell => cell.remove());
+    
+      for (let i = 0; i < 36; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        held.appendChild(cell);
+      }
+      if (name) {
+        setUsername(name);
+      }
   }, [name]);
   
   function scoreSave() {

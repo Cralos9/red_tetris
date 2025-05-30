@@ -2,7 +2,7 @@ import { log } from "./debug.js"
 import { moveHorizontal, moveVertical, rotation } from "./movement.js"
 
 export class Piece {
-	constructor(piece, patterns, skirts) {
+	constructor(piece, patterns, skirts, color) {
 		this.piece = piece
 		this.patterns = patterns
 		this.skirts = skirts
@@ -10,6 +10,7 @@ export class Piece {
 		this.height = 0
 		this.row = 0
 		this.column = 5
+		this.color = color
 	}
 
 	checkCollision(field, ROWS) {

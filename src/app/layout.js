@@ -23,8 +23,10 @@ export default function Page({ children }) {
           </div>
           <h1 className="title">Dr.Tetris</h1>
         </div>
+        <img className="shroom-img" src="/images/shroom.png"></img>
         <img className="piranha-img" src="/images/piranha.png" alt="Piranha" />
         <img className="mario-img" src="/images/images.png" alt="Mario" />
+        {/* <img  src="/images/gomba_tower.gif" alt="Dario" /> */}
         {/* <img className="virus-img" src="/images/Virus.png" alt="Virus" /> */}
         {children}
       </body>
