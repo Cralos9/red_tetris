@@ -42,15 +42,6 @@ export class Piece {
 		}
 	}
 
-	validMove(start, end, inc) {
-		const pattern = this.getCurrPattern()
-		let i = start
-
-		while (i < end) {
-			i += inc
-		}
-	}
-
 	move(x, y, field) {
 		const pattern = this.getCurrPattern()
 		let pX
@@ -99,7 +90,7 @@ export class Piece {
 	}
 
 	rotate(r) {
-		this.index += r
+		this.index += r + 4
 		this.index = this.index % 4
 		log("Rotated Piece:", this.index)
 		rotation(0)

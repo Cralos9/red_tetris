@@ -102,12 +102,12 @@ export class Game {
 		} else {
 			this.Piece.drawPiece(this.field, 0)
 			const moves = getMoves()
-			this.Piece.move(moves.x, moves.y, this.field)
-			this.Piece.rotate(moves.r)
 			if (Date.now() - this.time >= 1000 / SPEED) {
-				this.Piece.row++
+				moves.y = 1
 				this.time = Date.now()
 			}
+			this.Piece.move(moves.x, moves.y, this.field)
+			this.Piece.rotate(moves.r)
 			this.Piece.drawPiece(this.field, this.Piece.color)
 		}
 		this.socket.emit('action', {field: this.field})

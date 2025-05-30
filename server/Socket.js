@@ -15,6 +15,7 @@ export function connectSocket(server) {
 			switch (msg.key) {
 				case "Enter":
 					game = new Game(socket)
+					console.log("Game Started")
 					startGame(game)
 					break
 				case "ArrowLeft":
@@ -27,9 +28,9 @@ export function connectSocket(server) {
 				case "ArrowUp":
 					rotation(1)
 					break
-				//case "z":
-				//	rotation(-1)
-				//	break
+				case "z":
+					rotation(-1)
+					break
 				case "ArrowDown":
 					moveVertical(1)
 					break
