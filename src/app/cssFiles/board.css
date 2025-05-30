@@ -4,10 +4,29 @@
     top: -2em;
     left: 50%;
     transform: translateX(-50%);
-    color: rgb(48, 47, 47);
+    color: rgb(0, 0, 0);
     font-size: 1.1em;
     text-decoration:solid;
     white-space: nowrap;
+}
+
+.room-info
+{
+    font-family: 'Press Start 2P';
+    width: 100%;
+    padding: 1em;
+    border-radius: 2px;
+    position: absolute;
+    text-align: center;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #ffffff;
+    color: #ffffff;
+    background: rgb(0, 0, 0);
+    outline: none;
+    transition: .4s;
+    gap: 10%;
+  
 }
 
 .cell {

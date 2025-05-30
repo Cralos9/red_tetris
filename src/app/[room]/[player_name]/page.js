@@ -10,6 +10,21 @@ export default function RoomPage() {
   const score = 30000;
   const [username, setUsername] = useState('');
 
+  function getColor(value)
+  {
+    const colors = {
+      0: 'transparent',
+      1: 'cyan',
+      2: 'purple',
+      3: 'blue',
+      4: 'orange',
+      5: 'yellow',
+      6: 'green',
+      7: 'red',
+
+    };
+    return colors[value];
+  }
   useEffect(() => {
     socket.on("connect", () => {
       console.log("Connected to the websocket")
@@ -19,17 +34,21 @@ export default function RoomPage() {
     {
       const cells = document.querySelectorAll('.game-bottle .cell');
       const field = msg.field;
-
+      field[9][9] = 8;
       for (let y = 0; y < 20; y++) 
       {
         for (let x = 0; x < 10; x++) 
         {
           const index = y * 10 + x;
           const value = field[y][x];
-          if (value === 0)
-            cells[index].style.backgroundColor = 'transparent';
-          else if (value === 1)
-            cells[index].style.backgroundColor = msg.color || 'cyan';
+          if (value !== 8) {
+            cells[index].style.backgroundImage = 'none';
+            cells[index].style.backgroundColor = getColor(value);
+          } else {
+            cells[index].style.backgroundImage = "url('/images/blue_virus.gif')";
+            cells[index].style.backgroundSize = "cover";
+          }
+          
         }
       }
     })
@@ -91,8 +110,9 @@ export default function RoomPage() {
 
   return (
     <div>
-      <h1>Room: {roomCode}</h1>
-      <h1>Name: {username}</h1>
+        <nav>
+          <h1 className='room-info'>Room Code:{roomCode}      Username:{username}</h1>
+        </nav>
       <div className="game-wrapper">
         <div className="held-piece">
           <span className="held-label">Held Piece</span>
