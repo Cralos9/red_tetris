@@ -2,8 +2,6 @@ import { getMoves } from "./movement.js"
 import { log } from "./debug.js"
 import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
-//import { Piece } from "./Piece.js"
-//import { piecesMap } from "./piecePosition.js";
 
 const SPEED = 1;
 
@@ -12,6 +10,7 @@ export class Game {
 		this.Bag = new Bag()
 		this.field = []
 
+		this.running = true
 		this.socket = socket
 
 		for (let i = 0; i < ROWS; i++) {
@@ -85,6 +84,11 @@ export class Game {
 		log("Current Piece Row:", this.Piece.row)
 		log("Stack Height:", this.stackHeight)
 		
+		if (this.stackHeight < 0) {
+			console.log("Game Over")
+			this.running = false
+			return
+		}
 		if (this.Piece.checkCollision(this.field, ROWS)) {
 			log("Collision")
 			this.updateStackHeight()

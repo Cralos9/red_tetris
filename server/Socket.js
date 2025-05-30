@@ -3,7 +3,6 @@ import { Game } from "./game.js"
 import { moveHorizontal, moveVertical, rotation, setTime } from "./movement.js"
 
 var game
-var running
 var io
 
 export function connectSocket(server) {
@@ -16,7 +15,6 @@ export function connectSocket(server) {
 			switch (msg.key) {
 				case "Enter":
 					game = new Game(socket)
-					running = true
 					startGame(game)
 					break
 				case "ArrowLeft":
@@ -36,7 +34,7 @@ export function connectSocket(server) {
 					moveVertical(1)
 					break
 				case "Escape":
-					running = false
+					game.running = false
 					break
 			}
 		})
@@ -49,7 +47,7 @@ async function startGame(game) {
 	let currTime
 	let frameTime
 
-	while (running) {
+	while (game.running) {
 		currTime = Date.now()
 		game.update()
 		console.table(game.field)
