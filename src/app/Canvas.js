@@ -25,7 +25,7 @@ export function Canvas() {
 		const field = msg.field
 		for (let i = 0; i < 20; i++) {
 			for (let x = 0; x < 10; x++) {
-				if (field[i][x] === 1) {
+				if (field[i][x] > 0) {
 					ctx.fillRect(x * 30, i * 25, 50, 50)
 				} else {
 					ctx.clearRect(x * 30, i * 25, 50, 50)
