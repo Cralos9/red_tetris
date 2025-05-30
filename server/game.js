@@ -1,6 +1,6 @@
-import { Bag } from "./Bag.js"
-import { log } from "./debug.js"
 import { getMoves } from "./movement.js"
+import { log } from "./debug.js"
+import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
 //import { Piece } from "./Piece.js"
 //import { piecesMap } from "./piecePosition.js";
@@ -27,13 +27,68 @@ export class Game {
 		//this.Piece = new Piece("T", piece.patterns, piece.skirts)
 		log(this.Piece.toString())
 		this.time = Date.now()
+		this.hitList = []
+		this.stackHeight = ROWS
+	}
+
+	patternMatch() {
+		for (let y = ROWS - 1; y >= 0; y--) {
+			let count = 0
+			for (let x = 0; x < COLUMNS; x++) {
+				if (this.field[y][x] > 0) {
+					count++
+				}
+			}
+			if (count === this.field[y].length) {
+				log("Marked Line Clears")
+				this.hitList.push(y)
+			}
+		}
+		log("Marked Lines:", this.hitList)
+	}
+
+	lineClear() {
+		const linesNbr = this.hitList.length
+		const start = this.hitList[0]
+		
+		this.hitList.forEach(line => {
+			for (let i = 0; i < this.field[line]; i++) {
+				this.field[line][i] = 0
+			}
+		})
+		for (let y = start; y >= this.stackHeight; y--) {
+			console.log("Clearing Line:", y)
+			for (let x = 0; x < this.field[y].length; x++) {
+				this.field[y][x] = this.field[y - linesNbr][x]
+			}
+		}
+		this.hitList = []
+	}
+
+	updateStackHeight() {
+		const pattern = this.Piece.getCurrPattern()
+		let lowerY = pattern[0][1]
+
+		for (let i = 0; i < pattern.length; i++) {
+			if (lowerY > pattern[i][1]) {
+				lowerY = pattern[i][1]
+			}
+		}
+		const provHeight = this.Piece.row + lowerY
+		if (this.stackHeight > provHeight) {
+			this.stackHeight = provHeight
+		}
 	}
 
 	update() {
 		log("Current Piece Row:", this.Piece.row)
+		log("Stack Height:", this.stackHeight)
 		
 		if (this.Piece.checkCollision(this.field, ROWS)) {
 			log("Collision")
+			this.updateStackHeight()
+			this.patternMatch()
+			this.lineClear()
 			this.Piece.row = -1
 			this.Piece.column = 5
 			this.Piece = this.Bag.getNextPiece()
