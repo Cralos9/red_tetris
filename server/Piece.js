@@ -1,14 +1,18 @@
 import { log } from "./debug.js"
 import { moveHorizontal, moveVertical, rotation } from "./movement.js"
 import { COLUMNS } from "./gameParams.js"
+import { getRotations, getSkirt, compare } from "./utils.js"
 
 export class Piece {
-	constructor(piece, patterns, skirts, color) {
-		this.piece = piece
-		this.patterns = patterns
-		this.skirts = skirts
+	constructor(pieceCoor, color) {
+		this.patterns = pieceCoor
+		this.skirts = [getSkirt(pieceCoor[0])]
+		for (let i = 0; i < 3; i++) {
+			const tmp = getRotations(this.patterns[i]).sort(compare)
+			this.skirts.push(getSkirt(tmp))
+			this.patterns.push(tmp)
+		}
 		this.index = 0
-		this.height = 0
 		this.row = -1
 		this.column = 5
 		this.color = color
@@ -35,7 +39,6 @@ export class Piece {
 
 		for (let y = 0; y < pattern.length; y++) {
 			const arr = pattern[y]
-			//log(y, arr)
 			if (this.row + arr[1] > -1) {
 				field[this.row + arr[1]][this.column + arr[0]] = color
 			}
@@ -102,9 +105,5 @@ export class Piece {
 
 	getCurrPattern() {
 		return this.patterns[this.index]
-	}
-
-	toString() {
-		return `Piece: ${this.piece}`
 	}
 }

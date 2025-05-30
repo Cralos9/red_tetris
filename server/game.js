@@ -24,7 +24,6 @@ export class Game {
 		this.Piece = this.Bag.getCurrentPiece()
 		//const piece = piecesMap["T"]
 		//this.Piece = new Piece("T", piece.patterns, piece.skirts)
-		log(this.Piece.toString())
 		this.time = Date.now()
 		this.hitList = []
 		this.stackHeight = ROWS
@@ -96,8 +95,8 @@ export class Game {
 			this.lineClear()
 			this.Piece.row = -1
 			this.Piece.column = 5
+			this.Piece.index = 0
 			this.Piece = this.Bag.getNextPiece()
-			console.log(this.Piece.toString())
 			//this.socket.emit('color', this.Piece.color)
 		} else {
 			this.Piece.drawPiece(this.field, 0)

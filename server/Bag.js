@@ -1,10 +1,24 @@
 import { Piece } from "./Piece.js"
 import { randomNbr } from "./utils.js"
-import { piecesMap } from "./piecePosition.js"
+import {
+	Icoor,
+	Tcoor,
+	Jcoor,
+	Lcoor,
+	Ocoor,
+	Scoor,
+	Zcoor
+} from "./gameParams.js"
 
-//function reorder(order) {
-//	for (let i = 0; i < arr.length; )
-//}
+const pieces = {
+	"I": new Piece(Icoor, 1),
+	"T": new Piece(Tcoor, 2),
+	"J": new Piece(Jcoor, 3),
+	"L": new Piece(Lcoor, 4),
+	"O": new Piece(Ocoor, 5),
+	"S": new Piece(Scoor, 6),
+	"Z": new Piece(Zcoor, 7),
+}
 
 export class Bag {
 	constructor () {
@@ -19,15 +33,13 @@ export class Bag {
 			"Z"
 		]
 		for (let i = 0; i < this.order.length; i++) {
-			const piece = piecesMap[this.order[i]]
-			this.stack.push(new Piece(this.order[i], piece.patterns, piece.skirts, piece.color))
+			this.stack.push(pieces[this.order[i]])
 		}
 	}
 
 	getNextPiece() {
 		this.stack.pop()
-		const piece = this.order[randomNbr(this.order.length - 1)]
-		this.stack.unshift(new Piece(piece, piecesMap[piece].patterns, piecesMap[piece].skirts, piecesMap[piece].color))
+		this.stack.unshift(pieces[this.order[randomNbr(6)]])
 		return (this.stack[this.stack.length - 2])
 	}
 	
