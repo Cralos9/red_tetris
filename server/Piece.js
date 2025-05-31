@@ -1,6 +1,6 @@
 import { log } from "./debug.js"
 import { moveHorizontal, moveVertical, rotation } from "./movement.js"
-import { COLUMNS } from "./gameParams.js"
+import { COLUMNS, ROWS } from "./gameParams.js"
 import { getRotations, getSkirt, compare } from "./utils.js"
 
 export class Piece {
@@ -18,7 +18,7 @@ export class Piece {
 		this.color = color
 	}
 
-	checkCollision(field, ROWS) {
+	checkCollision(field) {
 		const skirt = this.getCurrSkirt()
 
 		log("Skirt:", skirt)
@@ -105,5 +105,9 @@ export class Piece {
 
 	getCurrPattern() {
 		return this.patterns[this.index]
+	}
+
+	toString() {
+		return `Piece Color: ${this.color}`
 	}
 }

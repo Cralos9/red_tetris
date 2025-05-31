@@ -1,5 +1,5 @@
 import { Piece } from "./Piece.js"
-import { randomNbr } from "./utils.js"
+import { getRandomOrder } from "./utils.js"
 import {
 	Icoor,
 	Tcoor,
@@ -23,27 +23,25 @@ const pieces = {
 export class Bag {
 	constructor () {
 		this.stack = []
-		this.order = [
-			"I",
-			"T",
-			"J",
-			"L",
-			"O",
-			"S",
-			"Z"
-		]
+		this.order = ["I", "T", "J", "L", "O", "S", "Z"]
+		getRandomOrder(this.order)
 		for (let i = 0; i < this.order.length; i++) {
 			this.stack.push(pieces[this.order[i]])
 		}
+		this.rotation = 7
 	}
 
 	getNextPiece() {
-		this.stack.pop()
-		this.stack.unshift(pieces[this.order[randomNbr(6)]])
-		return (this.stack[this.stack.length - 2])
+		if (this.rotation === this.order.length) {
+			getRandomOrder(this.order)
+			this.rotation = 0
+		}
+		this.stack.push(pieces[this.order[this.rotation]])
+		this.rotation++
+		return (this.stack.shift())
 	}
 	
-	getCurrentPiece() {
-		return (this.stack[this.stack.length - 1])
+	getStack() {
+		return (this.stack)
 	}
 }

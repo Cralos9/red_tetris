@@ -21,9 +21,7 @@ export class Game {
 			this.field[i] = arr
 		}
 
-		this.Piece = this.Bag.getCurrentPiece()
-		//const piece = piecesMap["T"]
-		//this.Piece = new Piece("T", piece.patterns, piece.skirts)
+		this.Piece = this.Bag.getNextPiece()
 		this.time = Date.now()
 		this.hitList = []
 		this.stackHeight = ROWS
@@ -88,8 +86,11 @@ export class Game {
 			this.running = false
 			return
 		}
-		if (this.Piece.checkCollision(this.field, ROWS)) {
+		if (this.Piece.checkCollision(this.field)) {
 			log("Collision")
+			this.Bag.getStack().forEach(element => {
+				console.log("Piece:", element.color)
+			})
 			this.updateStackHeight()
 			this.patternMatch()
 			this.lineClear()

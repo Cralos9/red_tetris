@@ -37,3 +37,12 @@ export function getRotations(pos) {
 	//console.log(rot)
 	return (rot)
 }
+
+export function getRandomOrder(arr) {
+	for (let i = arr.length - 1; i >= 0; i--) {
+		const rNbr = randomNbr(i);
+		const tmp = arr[i]
+		arr[i] = arr[rNbr]
+		arr[rNbr] = tmp
+	}
+}
