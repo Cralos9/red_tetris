@@ -8,6 +8,7 @@ export default function RoomPage() {
   const roomCode = params.room;
   const name = params.player_name;
   const score = 30000;
+  const game_amount = 3;
   const [username, setUsername] = useState('');
 
   function getColor(value)
@@ -33,6 +34,7 @@ export default function RoomPage() {
     socket.on('action', (msg) => 
     {
       const cells = document.querySelectorAll('.game-bottle .cell');
+      const cells2 = document.querySelectorAll('.secondary-game .cell');
       const field = msg.field;
       field[9][9] = 8;
       for (let y = 0; y < 20; y++) 
@@ -44,6 +46,8 @@ export default function RoomPage() {
           if (value !== 8) {
             cells[index].style.backgroundImage = 'none';
             cells[index].style.backgroundColor = getColor(value);
+            cells2[index].style.backgroundImage = 'none';
+            cells2[index].style.backgroundColor = getColor(value);
           } else {
             cells[index].style.backgroundImage = "url('/images/blue_virus.gif')";
             cells[index].style.backgroundSize = "cover";
@@ -65,6 +69,29 @@ export default function RoomPage() {
         bottle.appendChild(cell);
       }
     
+      const game22 = document.querySelector('.secondary-games');
+      game22.innerHTML = '';
+      for (let i = 1; i < game_amount; i++)
+      {
+        const games = document.createElement('div');
+        games.className = 'secondary-game'
+        games.innerHTML = '';
+        for (let i = 0; i < 200; i++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          games.appendChild(cell);
+      }
+        game22.appendChild(games)
+      }
+      
+      // const game2 = document.querySelector('.secondary-game');
+      // game2.innerHTML = '';
+      // for (let i = 0; i < 200; i++) {
+      //   const cell = document.createElement('div');
+      //   cell.className = 'cell';
+      //   game2.appendChild(cell);
+      // }
+
       const next = document.querySelector('.next-piece');
       next.querySelectorAll('.cell').forEach(cell => cell.remove());
           
@@ -122,14 +149,8 @@ export default function RoomPage() {
         <div className="game-bottle">
         </div>
       </div>
-      {/* <div className='secondary-games'>
-        <div className='secondary-game'></div>
-        <div className='secondary-game'></div>
-        <div className='secondary-game'></div>
-        <div className='secondary-game'></div>
-        <div className='secondary-game'></div>
-        <div className='secondary-game'></div>
-      </div> */}
+      <div className='secondary-games'>
+      </div>
       <div className='button-container'>
         <button onClick={scoreSave} className='buttons'>Start</button>
         <button className='buttons'>Reset</button>
