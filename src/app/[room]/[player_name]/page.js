@@ -54,7 +54,6 @@ export default function RoomPage() {
     })
 
     document.addEventListener("keydown", e => {
-        // console.log("Event:", e.key)
         socket.emit("action", {key: e.key})
     })
 
