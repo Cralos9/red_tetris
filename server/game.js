@@ -3,15 +3,12 @@ import { log } from "./debug.js"
 import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
 
-const SPEED = 1;
-
 export class Game {
-	constructor(socket) {
+	constructor() {
 		this.Bag = new Bag()
 		this.field = []
 
 		this.running = true
-		this.socket = socket
 
 		for (let i = 0; i < ROWS; i++) {
 			let arr = []
@@ -22,7 +19,7 @@ export class Game {
 		}
 
 		this.Piece = this.Bag.getNextPiece()
-		this.time = Date.now()
+		this.frames = 0
 		this.hitList = []
 		this.stackHeight = ROWS
 	}
@@ -80,7 +77,12 @@ export class Game {
 	update() {
 		log("Current Piece Row:", this.Piece.row)
 		log("Stack Height:", this.stackHeight)
+		const moves = getMoves()
 		
+		if (this.frames === 60) {
+			moves.y = 1
+			this.frames = 0
+		}
 		if (this.stackHeight < 0) {
 			console.log("Game Over")
 			this.running = false
@@ -88,28 +90,19 @@ export class Game {
 		}
 		if (this.Piece.checkCollision(this.field)) {
 			log("Collision")
-			this.Bag.getStack().forEach(element => {
-				console.log("Piece:", element.color)
-			})
 			this.updateStackHeight()
 			this.patternMatch()
 			this.lineClear()
-			this.Piece.row = -1
+			this.Piece.row = 0
 			this.Piece.column = 5
 			this.Piece.index = 0
 			this.Piece = this.Bag.getNextPiece()
-			//this.socket.emit('color', this.Piece.color)
 		} else {
 			this.Piece.drawPiece(this.field, 0)
-			const moves = getMoves()
-			if (Date.now() - this.time >= 1000 / SPEED) {
-				moves.y = 1
-				this.time = Date.now()
-			}
 			this.Piece.move(moves.x, moves.y, this.field)
 			this.Piece.rotate(moves.r)
 			this.Piece.drawPiece(this.field, this.Piece.color)
 		}
-		this.socket.emit('action', {field: this.field})
+		this.frames++
 	}
 }

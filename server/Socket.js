@@ -14,9 +14,9 @@ export function connectSocket(server) {
 			console.log("Event:", msg.key)
 			switch (msg.key) {
 				case "Enter":
-					game = new Game(socket)
+					game = new Game()
 					console.log("Game Started")
-					startGame(game)
+					startGame(game, socket)
 					break
 				case "ArrowLeft":
 					moveHorizontal(-1)
@@ -42,7 +42,7 @@ export function connectSocket(server) {
 	})
 }
 
-async function startGame(game) {
+async function startGame(game, socket) {
 	const FPS = 60
 	const timeDelay = 1000 / FPS
 	let currTime
@@ -50,8 +50,11 @@ async function startGame(game) {
 
 	while (game.running) {
 		currTime = Date.now()
+
 		game.update()
+		socket.emit('action', {field: game.field})
 		console.table(game.field)
+
 		frameTime = Date.now() - currTime
 		if (frameTime > -1 && frameTime < timeDelay) {
 			await new Promise(r => setTimeout(r, timeDelay - frameTime))
