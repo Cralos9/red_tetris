@@ -1,6 +1,6 @@
 import { Server } from "socket.io"
 import { Game } from "./game.js"
-import { moveHorizontal, moveVertical, rotation, holdPiece } from "./movement.js"
+import { moveHorizontal, moveVertical, rotation, holdPiece, hardDrop } from "./movement.js"
 
 var game
 var io
@@ -17,6 +17,9 @@ export function connectSocket(server) {
 					game = new Game()
 					console.log("Game CREATED")
 					startGame(game, socket)
+					break
+				case " ":
+					hardDrop(true)
 					break
 				case "ArrowLeft":
 					moveHorizontal(-1)
@@ -39,6 +42,10 @@ export function connectSocket(server) {
 					break
 				case "c":
 					holdPiece(true)
+					break
+
+				default:
+					console.log("Not Rec Key")
 					break
 			}
 		})

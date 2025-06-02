@@ -2,7 +2,8 @@ const move = {
 	x: 0,
 	y: 0,
 	r: 0,
-	hold: false
+	hold: false,
+	hardDrop: false
 }
 
 let time
@@ -25,6 +26,10 @@ export function moveVertical(y) {
 
 export function holdPiece(flag) {
 	move.hold = flag
+}
+
+export function hardDrop(flag) {
+	move.hardDrop = flag
 }
 
 export function rotation(r) {

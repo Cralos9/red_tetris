@@ -1,4 +1,4 @@
-import { getMoves, holdPiece } from "./movement.js"
+import { getMoves, holdPiece, hardDrop } from "./movement.js"
 import { log } from "./debug.js"
 import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
@@ -125,8 +125,13 @@ export class Game {
 			this.Piece = this.Bag.getNextPiece()
 		} else {
 			this.Piece.draw(this.field, 0)
-			this.Piece.move(input.x, input.y, this.field)
-			this.Piece.rotate(input.r)
+			if (input.hardDrop === true) {
+				this.Piece.hardDrop(this.field)
+				hardDrop(false)
+			} else {
+				this.Piece.move(input.x, input.y, this.field)
+				this.Piece.rotate(input.r)
+			}
 			this.Piece.draw(this.field, this.Piece.color)
 		}
 		this.frames++
