@@ -1,20 +1,24 @@
 import { log } from "./debug.js"
 import { moveHorizontal, moveVertical, rotation } from "./movement.js"
-import { COLUMNS } from "./gameParams.js"
+import { COLUMNS, ROWS } from "./gameParams.js"
+import { getRotations, getSkirt, compare } from "./utils.js"
 
 export class Piece {
-	constructor(piece, patterns, skirts, color) {
-		this.piece = piece
-		this.patterns = patterns
-		this.skirts = skirts
+	constructor(pieceCoor, color) {
+		this.patterns = pieceCoor
+		this.skirts = [getSkirt(pieceCoor[0])]
+		for (let i = 0; i < 3; i++) {
+			const tmp = getRotations(this.patterns[i]).sort(compare)
+			this.skirts.push(getSkirt(tmp))
+			this.patterns.push(tmp)
+		}
 		this.index = 0
-		this.height = 0
-		this.row = -1
+		this.row = 0
 		this.column = 5
 		this.color = color
 	}
 
-	checkCollision(field, ROWS) {
+	checkCollision(field) {
 		const skirt = this.getCurrSkirt()
 
 		log("Skirt:", skirt)
@@ -35,19 +39,9 @@ export class Piece {
 
 		for (let y = 0; y < pattern.length; y++) {
 			const arr = pattern[y]
-			//log(y, arr)
 			if (this.row + arr[1] > -1) {
 				field[this.row + arr[1]][this.column + arr[0]] = color
 			}
-		}
-	}
-
-	validMove(start, end, inc) {
-		const pattern = this.getCurrPattern()
-		let i = start
-
-		while (i < end) {
-			i += inc
 		}
 	}
 
@@ -99,7 +93,7 @@ export class Piece {
 	}
 
 	rotate(r) {
-		this.index += r
+		this.index += r + 4
 		this.index = this.index % 4
 		log("Rotated Piece:", this.index)
 		rotation(0)
@@ -114,6 +108,6 @@ export class Piece {
 	}
 
 	toString() {
-		return `Piece: ${this.piece}`
+		return `Piece Color: ${this.color}`
 	}
 }

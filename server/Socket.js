@@ -3,7 +3,6 @@ import { Game } from "./game.js"
 import { moveHorizontal, moveVertical, rotation, setTime } from "./movement.js"
 
 var game
-var running = false
 var io
 
 export function connectSocket(server) {
@@ -15,10 +14,9 @@ export function connectSocket(server) {
 			//console.log("Event:", msg.key)
 			switch (msg.key) {
 				case "start":
-					game = new Game(socket)
-					running = true
+					game = new Game()
 					console.log("Game CREATED")
-					startGame(game)
+					startGame(game, socket)
 					break
 				case "ArrowLeft":
 					moveHorizontal(-1)
@@ -30,30 +28,33 @@ export function connectSocket(server) {
 				case "ArrowUp":
 					rotation(1)
 					break
-				//case "z":
-				//	rotation(-1)
-				//	break
+				case "z":
+					rotation(-1)
+					break
 				case "ArrowDown":
 					moveVertical(1)
 					break
 				case "Escape":
-					running = false
+					game.running = false
 					break
 			}
 		})
 	})
 }
 
-async function startGame(game) {
+async function startGame(game, socket) {
 	const FPS = 60
 	const timeDelay = 1000 / FPS
 	let currTime
 	let frameTime
 
-	while (running) {
+	while (game.running) {
 		currTime = Date.now()
+
 		game.update()
-		//console.table(game.field)
+		socket.emit('action', {field: game.field})
+		console.table(game.field)
+
 		frameTime = Date.now() - currTime
 		if (frameTime > -1 && frameTime < timeDelay) {
 			await new Promise(r => setTimeout(r, timeDelay - frameTime))

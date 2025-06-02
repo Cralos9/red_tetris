@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "srv-devDB": "DEBUG=true nodemon server/server.js",
-    "srv-dev": "DEBUG=false nodemon server/server.js",
+	"srv-devDB": "DEBUG=true nodemon server",
+    "srv-dev": "DEBUG=false nodemon server",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
