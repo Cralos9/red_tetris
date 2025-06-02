@@ -109,10 +109,10 @@ export class Piece {
 			}
 		}
 		this.column += x
-		this.row += y
+		//this.row += y
 		log("Moved Piece Vertical:", this.row)
 		log("Moved Piece to column:", this.column)
-		moveVertical(0)
+		//moveVertical(0)
 		moveHorizontal(0)
 	}
 
@@ -134,6 +134,7 @@ export class Piece {
 	reset() {
 		this.row = 0
 		this.columnn = 5
+		this.index = 0
 	}
 
 	toString() {
