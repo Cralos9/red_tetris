@@ -1,6 +1,6 @@
 import { log } from "./debug.js"
 import { moveHorizontal, moveVertical, rotation } from "./movement.js"
-import { ROWS, COLUMNS } from "./gameParams.js"
+import { COLUMNS } from "./gameParams.js"
 
 export class Piece {
 	constructor(piece, patterns, skirts, color) {
@@ -17,7 +17,7 @@ export class Piece {
 	checkCollision(field, ROWS) {
 		const skirt = this.getCurrSkirt()
 
-		console.log("Skirt:", skirt)
+		log("Skirt:", skirt)
 		for (let i = 0; i < skirt.length; i++) {
 			const arr = skirt[i]
 			const y = this.row + (arr[1] + 1)
@@ -64,7 +64,7 @@ export class Piece {
 				pX = pattern[i][0]
 				const check = this.column + x + pX
 				const pY = this.row + pattern[i][1]
-				console.log("H-Check:", pY, check)
+				log("H-Check:", pY, check)
 				if (check > -1 && pY > -1 && field[pY][check] === 0) {
 					x = x
 				} else {
@@ -81,7 +81,7 @@ export class Piece {
 				pX = pattern[i][0]
 				const check = this.column + x + pX
 				const pY = this.row + pattern[i][1]
-				console.log("H+Check", pY, check)
+				log("H+Check", pY, check)
 				if (check < COLUMNS && pY > -1 && field[pY][check] === 0) {
 					x = x
 				} else {

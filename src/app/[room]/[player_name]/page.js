@@ -88,7 +88,7 @@ export default function RoomPage() {
   }, [name]);
   
   function scoreSave() {
-    socket.emit("action", "start");
+    socket.emit("action", {key: "start"});
     if (name && score !== undefined) {
       localStorage.setItem("username", name);
 
