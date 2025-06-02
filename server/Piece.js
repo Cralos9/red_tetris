@@ -34,7 +34,7 @@ export class Piece {
 		return (0)
 	}
 
-	drawPiece(field, color) {
+	draw(field, color) {
 		const pattern = this.getCurrPattern()
 
 		for (let y = 0; y < pattern.length; y++) {
@@ -105,6 +105,11 @@ export class Piece {
 
 	getCurrPattern() {
 		return this.patterns[this.index]
+	}
+
+	reset() {
+		this.row = 0
+		this.columnn = 5
 	}
 
 	toString() {

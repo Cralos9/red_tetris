@@ -1,6 +1,6 @@
 import { Server } from "socket.io"
 import { Game } from "./game.js"
-import { moveHorizontal, moveVertical, rotation, setTime } from "./movement.js"
+import { moveHorizontal, moveVertical, rotation, holdPiece } from "./movement.js"
 
 var game
 var io
@@ -36,6 +36,9 @@ export function connectSocket(server) {
 					break
 				case "Escape":
 					game.running = false
+					break
+				case "c":
+					holdPiece(true)
 					break
 			}
 		})
