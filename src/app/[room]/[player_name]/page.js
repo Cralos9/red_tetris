@@ -99,11 +99,12 @@ export default function RoomPage() {
 				const games = document.createElement('div');
 				games.className = 'secondary-game'
 				games.innerHTML = '';
-				for (let i = 0; i < 200; i++) {
+				for (let i = 0; i < 200; i++) 
+				{
 					const cell = document.createElement('div');
 					cell.className = 'cell';
 					games.appendChild(cell);
-			}
+				}
 				game22.appendChild(games)
 			}
 
@@ -182,12 +183,11 @@ export default function RoomPage() {
 				<div className="game-bottle">
 				</div>
 			</div>
-			<div className='secondary-games'>
-			</div>
 			<div className='button-container'>
 				<button onClick={scoreSave} className='buttons' disabled={isDisabled}>Start</button>
 				<button onClick={resetGame} className='buttons'>Reset</button>
 			</div>
+			<div className='secondary-games'></div>
 		</div>
 	);
 }
