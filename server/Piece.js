@@ -45,30 +45,6 @@ export class Piece {
 		}
 	}
 
-	hardDrop(field) {
-		const skirt = this.getCurrSkirt()
-		let lowerY = ROWS
-
-		log("Piece HardDrop")
-		for (let i = 0; i < skirt.length; i++) {
-			const x = this.column + skirt[i][0]
-			let y = i + skirt[i][1]
-			while (y < ROWS) {
-				console.log("HD-Coor:", y, x)
-				if (y > -1 && field[y][x] > 0 && lowerY >= y) {
-					lowerY = y
-					break
-				}
-				y++
-			}
-			log("Possible Piece Row:", lowerY)
-			lowerY = lowerY - skirt[i][1] - 1
-			log("Possible Piece Row:", lowerY)
-		}
-		this.row = lowerY
-		log("New Piece Row:", lowerY)
-	}
-
 	move(x, y, field) {
 		const pattern = this.getCurrPattern()
 		let pX

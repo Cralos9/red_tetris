@@ -95,6 +95,12 @@ export class Game {
 		log("Current Piece:", this.Piece.toString())
 	}
 
+	hardDrop() {
+		while (this.Piece.checkCollision(this.field) === 0) {
+			this.Piece.row++
+		}
+	}
+
 	update() {
 		log("Current Piece Row:", this.Piece.row)
 		log("Stack Height:", this.stackHeight)
@@ -113,7 +119,7 @@ export class Game {
 			holdPiece(false)
 		}
 		if (input.hardDrop === true) {
-			this.Piece.hardDrop(this.field)	
+			this.hardDrop()
 			this.lockPiece = true
 			hardDrop(false)
 		} else {
