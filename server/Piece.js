@@ -13,7 +13,7 @@ export class Piece {
 			this.patterns.push(tmp)
 		}
 		this.index = 0
-		this.row = 0
+		this.row = 1
 		this.column = 5
 		this.color = color
 	}
@@ -105,7 +105,7 @@ export class Piece {
 	}
 
 	reset() {
-		this.row = 0
+		this.row = 1
 		this.column = 5
 		this.index = 0
 	}

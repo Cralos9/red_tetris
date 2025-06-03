@@ -1,7 +1,7 @@
 import { getMoves, holdPiece, hardDrop, moveVertical } from "./movement.js"
 import { log } from "./debug.js"
 import { Bag } from "./Bag.js"
-import { ROWS, COLUMNS } from "./gameParams.js"
+import { ROWS, COLUMNS, SPEED } from "./gameParams.js"
 
 export class Game {
 	constructor() {
@@ -109,7 +109,7 @@ export class Game {
 		// Undraw Piece
 		this.Piece.draw(this.field, 0)
 		if (this.frames === 60) {
-			input.y = 1
+			input.y = 1 * SPEED
 			this.frames = 0
 		}
 

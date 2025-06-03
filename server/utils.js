@@ -34,8 +34,19 @@ export function getRotations(pos) {
 		arr[1] = pos[i][0]
 		rot.push(arr)
 	}
-	//console.log(rot)
 	return (rot)
+}
+
+export function getKicks(Aoffsets, Boffsets) {
+	const kicks = []
+
+	for (let i = 0; i < Aoffsets.length; i++) {
+		let arr = []
+		arr[0] = Aoffsets[i][0] - Boffsets[i][0] 
+		arr[1] = Aoffsets[i][1] - Boffsets[i][1]
+		kicks.push(arr)
+	}
+	return (kicks)
 }
 
 export function getRandomOrder(arr) {
