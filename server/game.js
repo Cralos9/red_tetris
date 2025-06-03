@@ -123,7 +123,7 @@ export class Game {
 			this.lockPiece = true
 			hardDrop(false)
 		} else {
-			this.Piece.move(input.x, 0, this.field)
+			this.Piece.move(input.x, this.field)
 			this.Piece.rotate(input.r)
 		}
 
@@ -131,10 +131,10 @@ export class Game {
 			this.Piece.row += input.y
 			moveVertical(0)
 		} else {
-			this.lockDelay++
 			if (this.lockDelay === 30) {
 				this.lockPiece = true
 			}
+			this.lockDelay++
 		}
 
 		if (this.lockPiece === true) {

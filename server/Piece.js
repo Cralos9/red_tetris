@@ -45,7 +45,7 @@ export class Piece {
 		}
 	}
 
-	move(x, y, field) {
+	move(x, field) {
 		const pattern = this.getCurrPattern()
 		let pX
 
@@ -85,10 +85,7 @@ export class Piece {
 			}
 		}
 		this.column += x
-		//this.row += y
-		log("Moved Piece Vertical:", this.row)
 		log("Moved Piece to column:", this.column)
-		//moveVertical(0)
 		moveHorizontal(0)
 	}
 
