@@ -124,7 +124,7 @@ export class Game {
 			hardDrop(false)
 		} else {
 			this.Piece.move(input.x, this.field)
-			this.Piece.rotate(input.r)
+			this.Piece.rotate(this.field, input.r)
 		}
 
 		if (this.Piece.checkCollision(this.field) === 0) {

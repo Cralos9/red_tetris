@@ -7,17 +7,20 @@ import {
 	Lcoor,
 	Ocoor,
 	Scoor,
-	Zcoor
+	Zcoor,
+	JLTSZoffsets,
+	Ioffsets,
+	Ooffsets
 } from "./gameParams.js"
 
 const pieces = {
-	"I": new Piece(Icoor, 1),
-	"T": new Piece(Tcoor, 2),
-	"J": new Piece(Jcoor, 3),
-	"L": new Piece(Lcoor, 4),
-	"O": new Piece(Ocoor, 5),
-	"S": new Piece(Scoor, 6),
-	"Z": new Piece(Zcoor, 7),
+	"I": new Piece(Icoor, Ioffsets, 1),
+	"T": new Piece(Tcoor, JLTSZoffsets, 2),
+	"J": new Piece(Jcoor, JLTSZoffsets, 3),
+	"L": new Piece(Lcoor, JLTSZoffsets, 4),
+	"O": new Piece(Ocoor, Ooffsets, 5),
+	"S": new Piece(Scoor, JLTSZoffsets, 6),
+	"Z": new Piece(Zcoor, JLTSZoffsets, 7),
 }
 
 export class Bag {
