@@ -34,7 +34,7 @@ export class Piece {
 		return (0)
 	}
 
-	drawPiece(field, color) {
+	draw(field, color) {
 		const pattern = this.getCurrPattern()
 
 		for (let y = 0; y < pattern.length; y++) {
@@ -85,10 +85,10 @@ export class Piece {
 			}
 		}
 		this.column += x
-		this.row += y
+		//this.row += y
 		log("Moved Piece Vertical:", this.row)
 		log("Moved Piece to column:", this.column)
-		moveVertical(0)
+		//moveVertical(0)
 		moveHorizontal(0)
 	}
 
@@ -105,6 +105,12 @@ export class Piece {
 
 	getCurrPattern() {
 		return this.patterns[this.index]
+	}
+
+	reset() {
+		this.row = 0
+		this.columnn = 5
+		this.index = 0
 	}
 
 	toString() {

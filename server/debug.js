@@ -7,6 +7,6 @@ export function log(str, ...args) {
 		args.forEach(element => {
 			out += element + " "
 		});
-		// console.log(out)
+		console.log(out)
 	}
 }

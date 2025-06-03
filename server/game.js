@@ -1,4 +1,4 @@
-import { getMoves } from "./movement.js"
+import { getMoves, holdPiece, hardDrop, moveVertical } from "./movement.js"
 import { log } from "./debug.js"
 import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
@@ -22,6 +22,10 @@ export class Game {
 		this.frames = 0
 		this.hitList = []
 		this.stackHeight = ROWS
+		this.hold = 0
+		this.holdLock = false
+		this.lockDelay = 0
+		this.lockPiece = false
 	}
 
 	patternMatch() {
@@ -74,35 +78,86 @@ export class Game {
 		}
 	}
 
+	holdPiece() {
+		this.Piece.reset()
+		log("Holding Piece:", this.Piece.toString())
+		if (this.hold === 0) {
+			log("Empty Hold")
+			this.hold = this.Piece
+			this.Piece = this.Bag.getNextPiece()
+		} else {
+			log("Hold with:", this.Piece.toString())
+			const tmp = this.Piece
+			this.Piece = this.hold
+			this.hold = tmp
+		}
+		log("Holded Piece:", this.hold.toString())
+		log("Current Piece:", this.Piece.toString())
+	}
+
+	hardDrop() {
+		while (this.Piece.checkCollision(this.field) === 0) {
+			this.Piece.row++
+		}
+	}
+
 	update() {
 		log("Current Piece Row:", this.Piece.row)
 		log("Stack Height:", this.stackHeight)
-		const moves = getMoves()
+		const input = getMoves()
 		
+		// Undraw Piece
+		this.Piece.draw(this.field, 0)
 		if (this.frames === 60) {
-			moves.y = 1
+			input.y = 1
 			this.frames = 0
 		}
-		if (this.stackHeight < 0) {
-			console.log("Game Over")
-			this.running = false
-			return
+
+		if (input.hold === true && this.holdLock === false) {
+			this.holdPiece()
+			this.holdLock = true
+			holdPiece(false)
 		}
-		if (this.Piece.checkCollision(this.field)) {
-			log("Collision")
+		if (input.hardDrop === true) {
+			this.hardDrop()
+			this.lockPiece = true
+			hardDrop(false)
+		} else {
+			this.Piece.move(input.x, 0, this.field)
+			this.Piece.rotate(input.r)
+		}
+
+		if (this.Piece.checkCollision(this.field) === 0) {
+			this.Piece.row += input.y
+			moveVertical(0)
+		} else {
+			this.lockDelay++
+			if (this.lockDelay === 30) {
+				this.lockPiece = true
+			}
+		}
+
+		if (this.lockPiece === true) {
+			this.Piece.draw(this.field, this.Piece.color)
+			log("Piece Locked")
 			this.updateStackHeight()
 			this.patternMatch()
 			this.lineClear()
-			this.Piece.row = 0
-			this.Piece.column = 5
-			this.Piece.index = 0
+			this.holdLock = false
+			this.lockPiece = false
+			this.lockDelay = 0
+			this.Piece.reset()
 			this.Piece = this.Bag.getNextPiece()
-		} else {
-			this.Piece.drawPiece(this.field, 0)
-			this.Piece.move(moves.x, moves.y, this.field)
-			this.Piece.rotate(moves.r)
-			this.Piece.drawPiece(this.field, this.Piece.color)
 		}
+
+		// Draw Current Piece
+		this.Piece.draw(this.field, this.Piece.color)
+
+		if (this.stackHeight <= 0) {
+			console.log("GameOver")
+			this.running = false
+		}
+
 		this.frames++
 	}
 }
