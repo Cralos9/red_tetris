@@ -11,7 +11,7 @@ export function connectSocket(server) {
 	io.on("connection", (socket) => {
 		console.log("User connected:", socket.id)
 		socket.on('action', (msg) => {
-			//console.log("Event:", msg.key)
+			console.log("Event:", msg.key)
 			switch (msg.key) {
 				case "start":
 					game = new Game()
@@ -62,7 +62,7 @@ async function startGame(game, socket) {
 		currTime = Date.now()
 
 		game.update()
-		socket.emit('action', {field: game.field})
+		socket.emit('action', {field: game.field, running: game.running})
 		console.table(game.field)
 
 		frameTime = Date.now() - currTime

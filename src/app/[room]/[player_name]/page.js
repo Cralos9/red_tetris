@@ -6,25 +6,32 @@ import { socket } from "../../../socket";
 export default function RoomPage() {
 	const params = useParams();
 	const roomCode = params.room;
+	const [gameOver, setGameOver] = useState(false);
+
 	const name = params.player_name;
 	const score = 30000;
 	const game_amount = 3;
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
+	
+	function end_game() {
+	  setIsDisabled(false);
+	  setGameOver(true);
+	}
 
 	function getColor(value)
 	{
 		const colors = {
 			0: 'transparent',
-			1: 'cyan',
-			2: 'purple',
-			3: 'blue',
-			4: 'orange',
-			5: 'yellow',
-			6: 'green',
-			7: 'red',
-
+			1: '#b2ffff',
+			2: '#d6a4ff',
+			3: '#a3c4ff',
+			4: '#ffd1a4',
+			5: '#ffffb2',
+			6: '#b2ffb2',       
+			7: '#ffb2b2',
 		};
+		
 		return colors[value];
 	}
 	useEffect(() => {
@@ -34,9 +41,14 @@ export default function RoomPage() {
 
 		socket.on('action', (msg) => 
 		{
+			if (!msg.running)
+			{
+				console.log("You lost")
+				end_game()
+				return
+			}
 			const cells = document.querySelectorAll('.game-bottle .cell');
 			const field = msg.field;
-			field[9][9] = 8;
 
 			const secondaryGames = document.querySelectorAll('.secondary-game');
 
@@ -94,14 +106,6 @@ export default function RoomPage() {
 			}
 				game22.appendChild(games)
 			}
-			
-			// const game2 = document.querySelector('.secondary-game');
-			// game2.innerHTML = '';
-			// for (let i = 0; i < 200; i++) {
-			//   const cell = document.createElement('div');
-			//   cell.className = 'cell';
-			//   game2.appendChild(cell);
-			// }
 
 			const next = document.querySelector('.next-piece');
 			next.querySelectorAll('.cell').forEach(cell => cell.remove());
@@ -125,7 +129,19 @@ export default function RoomPage() {
 			}
 	}, [name]);
 	
+	function resetGame()
+	{
+		socket.emit("action", {key: "Escape"})
+		setIsDisabled(false)
+	}
+
 	function scoreSave() {
+		if (gameOver == true)
+		{
+			end_game();
+			setGameOver(false)
+		}
+		console.log(gameOver)
 		setIsDisabled(true);
 		socket.emit("action", {key: "start"});
 		if (name && score !== undefined) {
@@ -149,6 +165,10 @@ export default function RoomPage() {
 
 	return (
 		<div>
+				{gameOver && <div className='game-Over'>
+					Game Over
+					<img className='game-over-image'src="/images/ripmario.gif"></img>
+				</div>}
 				<nav>
 					<h1 className='room-info'>Room Code:{roomCode}      Username:{username}</h1>
 				</nav>
@@ -166,7 +186,7 @@ export default function RoomPage() {
 			</div>
 			<div className='button-container'>
 				<button onClick={scoreSave} className='buttons' disabled={isDisabled}>Start</button>
-				<button className='buttons'>Reset</button>
+				<button onClick={resetGame} className='buttons'>Reset</button>
 			</div>
 		</div>
 	);
