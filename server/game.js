@@ -138,8 +138,8 @@ export class Game {
 		}
 
 		if (this.lockPiece === true) {
-			this.Piece.draw(this.field, this.Piece.color)
 			log("Piece Locked")
+			this.Piece.draw(this.field, this.Piece.color)
 			this.updateStackHeight()
 			this.patternMatch()
 			this.lineClear()

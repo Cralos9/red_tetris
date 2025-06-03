@@ -109,7 +109,7 @@ export class Piece {
 
 	reset() {
 		this.row = 0
-		this.columnn = 5
+		this.column = 5
 		this.index = 0
 	}
 
