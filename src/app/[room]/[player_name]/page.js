@@ -28,10 +28,12 @@ export default function RoomPage() {
   useEffect(() => {
     socket.on("connect", () => {
       console.log("Connected to the websocket")
-      })
+    })
 
+	socket.emit("joinRoom", {playerName: name, roomCode: roomCode})
     socket.on('action', (msg) => 
     {
+		console.log("Recived msg", msg)
       const cells = document.querySelectorAll('.game-bottle .cell');
       const field = msg.field;
       field[9][9] = 8;
@@ -88,7 +90,7 @@ export default function RoomPage() {
   }, [name]);
   
   function scoreSave() {
-    socket.emit("action", {key: "start"});
+    socket.emit("startGame", {roomCode: roomCode});
     if (name && score !== undefined) {
       localStorage.setItem("username", name);
 
