@@ -7,66 +7,94 @@ export default function Game() {
   const router = useRouter();
   const [scores, setScores] = useState([]);
 
+  function isAlphaNumeric(str) {
+	return /^[a-zA-Z0-9]+$/.test(str);
+  }
+
   useEffect(() => {
-    const foundScores = [];
+	const foundScores = [];
   
-    for (let i = 0; i < localStorage.length; i++) 
-    {
-      const key = localStorage.key(i);
-      if (key && key.startsWith("Score")) {
-        const value = localStorage.getItem(key);
-        if (value) {
-          const [name, scoreStr] = value.split(" ");
-          const score = parseInt(scoreStr, 10);
-          if (!isNaN(score)) {
-            foundScores.push({ name, score });
-          }
-        }
-      }
-    }
+	for (let i = 0; i < localStorage.length; i++) 
+	{
+	  const key = localStorage.key(i);
+	  if (key && key.startsWith("Score")) {
+		const value = localStorage.getItem(key);
+		if (value) {
+		  const [name, scoreStr] = value.split(" ");
+		  const score = parseInt(scoreStr, 10);
+		  if (!isNaN(score)) {
+			foundScores.push({ name, score });
+		  }
+		}
+	  }
+	}
   
-    foundScores.sort((a, b) => b.score - a.score);
-    const topFormatted = foundScores.slice(0, 5).map(entry => `${entry.name} ${entry.score}`);
+	foundScores.sort((a, b) => b.score - a.score);
+	const topFormatted = foundScores.slice(0, 5).map(entry => `${entry.name} ${entry.score}`);
   
-    setScores(topFormatted);
-    }, []);
+	setScores(topFormatted);
+	}, []);
   
 
   function enterRooms(e) {
-    e.preventDefault();
-    const input = document.getElementById('input');
-    const room = input.value;
-    if (!room) {
-      input.placeholder = "Must input a room code";
-      input.classList.add("error-placeholder");
-      input.classList.add("shake")
-      input.value = "";
-      return;
-    }
-    const user = localStorage.getItem("username");
-    router.push(`/${room}/${user}`);
+	e.preventDefault();
+	const input = document.getElementById('input');
+	const room = input.value;
+	if (!room) {
+	  input.placeholder = "Must input a room code";
+	  input.classList.add("error-placeholder");
+	  input.classList.add("shake")
+	  input.value = "";
+	  return;
+	}
+	if(!isAlphaNumeric())
+	{
+		console.log(!isAlphaNumeric())
+		return
+	}
+	const user = localStorage.getItem("username");
+	router.push(`/${room}/${user}`);
   }
 
   return (
-    <div className="main-container">
-      <form className="usercard" onSubmit={enterRooms}>
-        <h2 className="userTitle">Game Code</h2>
-        <div>
-          <input className="input" placeholder="Enter game code" maxLength={16} id="input" />
-        </div>
-            <button className="button">
-              <img className="mario-run" src="/images/mario.gif" />
-              <img className="goomba-run" src="/images/goomba2.gif"  />
-              <span className='text-container'>Play</span>
-        </button>
-      </form>
-      <div className="usercard">
-        <h2 className='userTitle'>YOUR SCORES</h2>
-        <h3 style={{ color: 'white' }}>USER SCORE</h3>
-        {scores.map((s, idx) => (
-          <h3 key={idx} style={{ color: 'white' }}>{idx + 1} {s}</h3>
-        ))}
-      </div>
-    </div>
+	<div className="main-container">
+	  <form className="usercard" onSubmit={enterRooms}>
+		<h2 className="userTitle">Game Code</h2>
+		<div>
+		  <input
+			className="input"
+			placeholder="Enter game code"
+			maxLength={16}
+			id="input"
+			onInput={(e) => {
+			  const value = e.target.value;
+			if (value)
+			{
+				const lastChar = value.charAt(value.length - 1);
+				if (lastChar)
+				  if(!isAlphaNumeric())
+				  {
+					input.placeholder = "Must be alphanumeric";
+					input.classList.add("error-placeholder");
+				  }
+			}
+			  }
+			}
+		  />
+		</div>
+			<button className="button">
+			  <img className="mario-run" src="/images/mario.gif" />
+			  <img className="goomba-run" src="/images/goomba2.gif"  />
+			  <span className='text-container'>Play</span>
+		</button>
+	  </form>
+	  <div className="usercard">
+		<h2 className='userTitle'>YOUR SCORES</h2>
+		<h3 style={{ color: 'white' }}>USER SCORE</h3>
+		{scores.map((s, idx) => (
+		  <h3 key={idx} style={{ color: 'white' }}>{idx + 1} {s}</h3>
+		))}
+	  </div>
+	</div>
   );
 }

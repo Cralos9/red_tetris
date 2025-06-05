@@ -49,7 +49,6 @@
   border-top: none;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
   text-align: center;
-  z-index: 1;
 }
 
 .held-piece {

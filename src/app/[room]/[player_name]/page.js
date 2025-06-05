@@ -10,7 +10,7 @@ export default function RoomPage() {
 
 	const name = params.player_name;
 	const score = 30000;
-	const game_amount = 3;
+	const game_amount = 4;
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
 	
