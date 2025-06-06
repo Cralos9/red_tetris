@@ -87,7 +87,6 @@ export class Piece {
 		}
 		this.column += x
 		log("Moved Piece to column:", this.column)
-		moveHorizontal(0)
 	}
 
 	checkRotation(field, kick, pattern) {
@@ -120,7 +119,6 @@ export class Piece {
 				}
 			}
 		}
-		rotation(0)
 	}
 
 	getCurrSkirt() {

@@ -31,7 +31,7 @@ export default function RoomPage() {
     })
 
 	socket.emit("joinRoom", {playerName: name, roomCode: roomCode})
-    socket.on('action', (msg) => 
+    socket.on(name, (msg) => 
     {
 		console.log("Recived msg", msg)
       const cells = document.querySelectorAll('.game-bottle .cell');
@@ -56,7 +56,7 @@ export default function RoomPage() {
     })
 
     document.addEventListener("keydown", e => {
-        socket.emit("action", {key: e.key})
+        socket.emit('action', {key: e.key, Name: name})
     })
 
       const bottle = document.querySelector('.game-bottle');

@@ -4,9 +4,10 @@ import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS, SPEED } from "./gameParams.js"
 
 export class Game {
-	constructor() {
+	constructor(input) {
 		this.Bag = new Bag()
 		this.field = []
+		this.input = input
 
 		this.running = true
 
@@ -104,32 +105,33 @@ export class Game {
 	update() {
 		log("Current Piece Row:", this.Piece.row)
 		log("Stack Height:", this.stackHeight)
-		const input = getMoves()
 		
 		// Undraw Piece
 		this.Piece.draw(this.field, 0)
 		if (this.frames === 60) {
-			input.y = 1 * SPEED
+			this.input.y = 1 * SPEED
 			this.frames = 0
 		}
 
-		if (input.hold === true && this.holdLock === false) {
+		if (this.input.holdPiece === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
 			holdPiece(false)
 		}
-		if (input.hardDrop === true) {
+		if (this.input.hardDropF === true) {
 			this.hardDrop()
 			this.lockPiece = true
-			hardDrop(false)
+			this.input.hardDrop(false)
 		} else {
-			this.Piece.move(input.x, this.field)
-			this.Piece.rotate(this.field, input.r)
+			this.Piece.move(this.input.x, this.field)
+			this.Piece.rotate(this.field, this.input.rot)
+			this.input.move(0)
+			this.input.rotate(0)
 		}
 
 		if (this.Piece.checkCollision(this.field) === 0) {
-			this.Piece.row += input.y
-			moveVertical(0)
+			this.Piece.row += this.input.y
+			this.input.pushDown(0)
 		} else {
 			if (this.lockDelay === 30) {
 				this.lockPiece = true

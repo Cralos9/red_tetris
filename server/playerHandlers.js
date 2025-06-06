@@ -1,4 +1,5 @@
 import { Room } from "./Room.js"
+import { Player } from "./Player.js"
 
 export const playerHandlers = (socket, RoomsMap) => {
 	const joinRoom = (payload) => {
@@ -6,10 +7,13 @@ export const playerHandlers = (socket, RoomsMap) => {
 		const roomCode = payload.roomCode
 		console.log("Player:", playerName)
 		console.log("Joined Room:", roomCode)
-		console.log("RoomMap:", RoomsMap)
+		const player = new Player(playerName, socket)
 		if (RoomsMap.has(roomCode) === false) {
-			RoomsMap.set(roomCode, new Room(playerName))
+			RoomsMap.set(roomCode, new Room(player))
+		} else {
+			RoomsMap.get(roomCode).addPlayer(player)
 		}
+		console.log("RoomMap:", RoomsMap)
 		socket.join(roomCode.toString())
 	}
 	socket.on('joinRoom', joinRoom)
