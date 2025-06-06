@@ -40,6 +40,9 @@ export function getRotations(pos) {
 export function getKicks(Aoffsets, Boffsets) {
 	const kicks = []
 
+	if (Boffsets === undefined) {
+		return (Aoffsets)
+	}
 	for (let i = 0; i < Aoffsets.length; i++) {
 		let arr = []
 		arr[0] = Aoffsets[i][0] - Boffsets[i][0] 
