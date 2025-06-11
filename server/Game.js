@@ -112,25 +112,25 @@ export class Game {
 			this.frames = 0
 		}
 
-		if (this.input.holdPiece === true && this.holdLock === false) {
+		if (this.input.hold === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
-			holdPiece(false)
+			this.input.holdPiece(false)
 		}
-		if (this.input.hardDropF === true) {
+		if (this.input.hardDrop === true) {
 			this.hardDrop()
 			this.lockPiece = true
-			this.input.hardDrop(false)
+			this.input.hardDropPiece(false)
 		} else {
 			this.Piece.move(this.input.x, this.field)
 			this.Piece.rotate(this.field, this.input.rot)
-			this.input.move(0)
-			this.input.rotate(0)
+			this.input.movePiece(0)
+			this.input.rotatePiece(0)
 		}
 
 		if (this.Piece.checkCollision(this.field) === 0) {
 			this.Piece.row += this.input.y
-			this.input.pushDown(0)
+			this.input.pushDownPiece(0)
 		} else {
 			if (this.lockDelay === 30) {
 				this.lockPiece = true

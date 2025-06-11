@@ -16,7 +16,7 @@ app.prepare().then(() => {
 	const server = createServer(handler)
 	const io = new Server(server)
 	
-	io.on('connect', (socket) => {
+	io.on('connection', (socket) => {
 		console.log("User Id:", socket.id)
 		playerHandlers(socket, RoomsMap)
 		gameHandlers(io, socket, RoomsMap)

@@ -1,29 +1,29 @@
 export class GameController {
 	constructor() {
-		this.holdPiece = false
-		this.hardDropF = false
+		this.hold = false
+		this.hardDrop = false
 		this.rot = 0
 		this.x = 0
 		this.y = 0
 	}
 
-	move(input) {
+	movePiece(input) {
 		this.x = input
 	}
 
-	pushDown(input) {
+	pushDownPiece(input) {
 		this.y = input
 	}
 
-	rotate(input) {
+	rotatePiece(input) {
 		this.rot = input
 	}
 
-	hardDrop(input) {
-		this.hardDropF = input
+	hardDropPiece(input) {
+		this.hardDrop = input
 	}
 	
 	holdPiece(input) {
-		this.holdPiece = input
+		this.hold = input
 	}
 }

@@ -1,3 +1,5 @@
+import { log } from "./debug.js"
+
 export const gameHandlers = (io, socket, RoomsMap) => {
 	const gameInput = (payload) => {
 		const key = payload.key
@@ -5,26 +7,26 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const playerName = payload.playerName
 		const room = RoomsMap.get(roomCode)
 		const player = room.playersArr.find(player => playerName === player.name)
-		console.log(player.toString())
+		log("KeyDown:", player.toString())
 		switch (key) {
 			case " ":
-				player.input.hardDrop(true)
+				player.input.hardDropPiece(true)
 				break
 			case "ArrowLeft":
-				player.input.move(-1)
+				player.input.movePiece(-1)
 				break
 			case "ArrowRight":
-				player.input.move(1)
+				player.input.movePiece(1)
 				break
 			case "x":
 			case "ArrowUp":
-				player.input.rotate(1)
+				player.input.rotatePiece(1)
 				break
 			case "z":
-				player.input.rotate(-1)
+				player.input.rotatePiece(-1)
 				break
 			case "ArrowDown":
-				player.input.pushDown(1)
+				player.input.pushDownPiece(1)
 				break
 			case "c":
 				player.input.holdPiece(true)
@@ -41,10 +43,10 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const roomCode = payload.roomCode
 		const Room = RoomsMap.get(roomCode)
 		Room.playersArr.forEach(player => {
-			console.log("Game Started,", player.toString())
+			log("Game Started,", player.toString())
 			player.runGame(roomCode)
 		})
 	}
 	socket.on('startGame', startGame)
-	socket.on('action', gameInput)
+	socket.on('keyDown', gameInput)
 }

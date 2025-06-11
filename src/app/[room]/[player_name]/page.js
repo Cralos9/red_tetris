@@ -60,7 +60,7 @@ export default function RoomPage() {
     })
 
     document.addEventListener("keydown", e => {
-        socket.emit('action', {key: e.key, playerName: name, roomCode: roomCode})
+        socket.emit('keyDown', {key: e.key, playerName: name, roomCode: roomCode})
     })
 
       const bottle = document.querySelector('.game-bottle');
