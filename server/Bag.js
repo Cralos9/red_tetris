@@ -13,23 +13,22 @@ import {
 	Ooffsets
 } from "./gameParams.js"
 
-const pieces = {
-	"I": new Piece(Icoor, Ioffsets, 1),
-	"T": new Piece(Tcoor, JLTSZoffsets, 2),
-	"J": new Piece(Jcoor, JLTSZoffsets, 3),
-	"L": new Piece(Lcoor, JLTSZoffsets, 4),
-	"O": new Piece(Ocoor, Ooffsets, 5),
-	"S": new Piece(Scoor, JLTSZoffsets, 6),
-	"Z": new Piece(Zcoor, JLTSZoffsets, 7),
-}
-
 export class Bag {
 	constructor () {
+		this.pieces = {
+			"I": new Piece(Icoor, Ioffsets, 1),
+			"T": new Piece(Tcoor, JLTSZoffsets, 2),
+			"J": new Piece(Jcoor, JLTSZoffsets, 3),
+			"L": new Piece(Lcoor, JLTSZoffsets, 4),
+			"O": new Piece(Ocoor, Ooffsets, 5),
+			"S": new Piece(Scoor, JLTSZoffsets, 6),
+			"Z": new Piece(Zcoor, JLTSZoffsets, 7),
+		}
 		this.stack = []
 		this.order = ["I", "T", "J", "L", "O", "S", "Z"]
 		getRandomOrder(this.order)
 		for (let i = 0; i < this.order.length; i++) {
-			this.stack.push(pieces[this.order[i]])
+			this.stack.push(this.pieces[this.order[i]])
 		}
 		this.rotation = 7
 	}
@@ -39,7 +38,7 @@ export class Bag {
 			getRandomOrder(this.order)
 			this.rotation = 0
 		}
-		this.stack.push(pieces[this.order[this.rotation]])
+		this.stack.push(this.pieces[this.order[this.rotation]])
 		this.rotation++
 		return (this.stack.shift())
 	}
