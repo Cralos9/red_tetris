@@ -62,7 +62,7 @@ async function startGame(game, socket) {
 		currTime = Date.now()
 
 		game.update()
-		socket.emit('action', {field: game.field, running: game.running})
+		socket .emit('action', {field: game.field, running: game.running})
 		console.table(game.field)
 
 		frameTime = Date.now() - currTime

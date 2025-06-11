@@ -9,7 +9,7 @@ export default function RoomPage() {
 	const [gameOver, setGameOver] = useState(false);
 
 	const name = params.player_name;
-	const score = 30000;
+	const score = 40000;
 	const game_amount = 4;
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
@@ -39,46 +39,51 @@ export default function RoomPage() {
 			console.log("Connected to the websocket")
 			})
 
-		socket.on('action', (msg) => 
+	socket.on('action', (msg) => 
+	{
+		if (!msg.running)
 		{
-			if (!msg.running)
+		console.log("You lost")
+			end_game()
+			return
+		}
+		const cells = document.querySelectorAll('.game-bottle .cell');
+		const field = msg.field;
+		const secondaryGames = document.querySelectorAll('.secondary-game');
+		for (let y = 0; y < 20; y++) 
+		{
+			for (let x = 0; x < 10; x++) 
 			{
-				console.log("You lost")
-				end_game()
-				return
-			}
-			const cells = document.querySelectorAll('.game-bottle .cell');
-			const field = msg.field;
-
-			const secondaryGames = document.querySelectorAll('.secondary-game');
-
-			for (let y = 0; y < 20; y++) {
-				for (let x = 0; x < 10; x++) {
-					const index = y * 10 + x;
-					const value = field[y][x];
-
-					if (value !== 8) {
-						cells[index].style.backgroundImage = 'none';
-						cells[index].style.backgroundColor = getColor(value);
-					} else {
-						cells[index].style.backgroundImage = "url('/images/blue_virus.gif')";
-						cells[index].style.backgroundSize = "cover";
-					}
-					secondaryGames.forEach(game => {
-						const gameCells = game.querySelectorAll('.cell');
-						if (gameCells[index]) {
-							if (value !== 8) {
-								gameCells[index].style.backgroundImage = 'none';
-								gameCells[index].style.backgroundColor = getColor(value);
-							} else {
-								gameCells[index].style.backgroundImage = "url('/images/blue_virus.gif')";
-								gameCells[index].style.backgroundSize = "cover";
-							}
-						}
-					});
+				const index = y * 10 + x;
+				const value = field[y][x];
+				if (value !== 8) 
+				{
+					cells[index].style.backgroundImage = 'none';
+					cells[index].style.backgroundColor = getColor(value);
+				} else {
+					cells[index].style.backgroundImage = "url('/images/blue_virus.gif')";
+					cells[index].style.backgroundSize = "cover";
 				}
+				secondaryGames.forEach(game => 
+				{
+					const gameCells = game.querySelectorAll('.cell');
+					if (gameCells[index]) 
+					{
+						if (value !== 8) 
+						{
+							gameCells[index].style.backgroundImage = 'none';
+							gameCells[index].style.backgroundColor = getColor(value);
+						} 
+						else 
+						{
+							gameCells[index].style.backgroundImage = "url('/images/blue_virus.gif')";
+							gameCells[index].style.backgroundSize = "cover";
+						}
+					}
+				});
 			}
-		})
+		}
+	})
 
 		document.addEventListener("keydown", e => {
 				socket.emit("action", {key: e.key})
@@ -137,32 +142,49 @@ export default function RoomPage() {
 	}
 
 	function scoreSave() {
-		if (gameOver == true)
-		{
+		if (gameOver === true) {
 			end_game();
-			setGameOver(false)
+			setGameOver(false);
 		}
-		console.log(gameOver)
+		console.log(gameOver);
 		setIsDisabled(true);
-		socket.emit("action", {key: "start"});
+		socket.emit("action", { key: "start" });
+	
 		if (name && score !== undefined) {
 			localStorage.setItem("username", name);
 
-			let maxScoreIndex = 0;
+			const scores = [];
 			for (let i = 0; i < localStorage.length; i++) {
 				const key = localStorage.key(i);
 				if (key && key.startsWith("Score")) {
-					const num = parseInt(key.replace("Score", ""), 10);
-					if (!isNaN(num) && num > maxScoreIndex) {
-						maxScoreIndex = num;
+					const value = localStorage.getItem(key);
+					if (value) {
+						const [savedName, savedScore] = value.split(" ");
+						scores.push({ key, name: savedName, score: parseInt(savedScore) });
 					}
 				}
 			}
-			const nextKey = `Score${maxScoreIndex + 1}`;
-			localStorage.setItem(nextKey, `${name} ${score}`);
 
+			scores.push({ name, score });
+
+			scores.sort((a, b) => b.score - a.score);
+	
+			const top5 = scores.slice(0, 5);
+	
+			for (let i = 0; i < localStorage.length; i++) {
+				const key = localStorage.key(i);
+				if (key && key.startsWith("Score")) {
+					localStorage.removeItem(key);
+					i = -1;
+				}
+			}
+	
+			top5.forEach((entry, index) => {
+				localStorage.setItem(`Score${index + 1}`, `${entry.name} ${entry.score}`);
+			});
 		}
 	}
+	
 
 	return (
 		<div>

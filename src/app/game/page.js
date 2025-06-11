@@ -7,10 +7,6 @@ export default function Game() {
   const router = useRouter();
   const [scores, setScores] = useState([]);
 
-  function isAlphaNumeric(str) {
-	return /^[a-zA-Z0-9]+$/.test(str);
-  }
-
   useEffect(() => {
 	const foundScores = [];
   
@@ -40,17 +36,19 @@ export default function Game() {
 	e.preventDefault();
 	const input = document.getElementById('input');
 	const room = input.value;
-	if (!room) {
-	  input.placeholder = "Must input a room code";
-	  input.classList.add("error-placeholder");
-	  input.classList.add("shake")
-	  input.value = "";
-	  return;
-	}
-	if(!isAlphaNumeric())
+	if(!input.value || !input.value.match(/^[0-9a-z]+$/))
 	{
-		console.log(!isAlphaNumeric())
-		return
+		if (!input.value)
+			input.placeholder = "Must have a user";
+		else
+		{
+			input.placeholder = "Only alphanumeric characters";
+			input.style.fontSize = '16px';
+		}
+		input.classList.add("error-placeholder");
+		input.classList.add("shake")
+		input.value = "";
+		return;
 	}
 	const user = localStorage.getItem("username");
 	router.push(`/${room}/${user}`);
@@ -61,26 +59,7 @@ export default function Game() {
 	  <form className="usercard" onSubmit={enterRooms}>
 		<h2 className="userTitle">Game Code</h2>
 		<div>
-		  <input
-			className="input"
-			placeholder="Enter game code"
-			maxLength={16}
-			id="input"
-			onInput={(e) => {
-			  const value = e.target.value;
-			if (value)
-			{
-				const lastChar = value.charAt(value.length - 1);
-				if (lastChar)
-				  if(!isAlphaNumeric())
-				  {
-					input.placeholder = "Must be alphanumeric";
-					input.classList.add("error-placeholder");
-				  }
-			}
-			  }
-			}
-		  />
+			<input className='input' placeholder='Enter room code' maxLength={16} id='input'></input>
 		</div>
 			<button className="button">
 			  <img className="mario-run" src="/images/mario.gif" />
