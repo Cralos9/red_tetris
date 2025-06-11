@@ -7,14 +7,19 @@ export class Player {
 		this.socket = socket
 		this.input = new GameController()
 		this.game = new Game(this.input)
+		this.interval = 0
 	}
 
 	runGame() {
-		const game = setInterval(() => {
+		this.interval = setInterval(() => {
 			this.game.update()
-			console.table(this.game.field)
-			this.socket.emit(this.name, {field: this.game.field})
+			//console.table(this.game.field)
+			this.socket.emit('game', {field: this.game.field, player: this.name})
 		}, 20)
+	}
+
+	stopGame() {
+		clearInterval(this.interval)
 	}
 
 	toString() {

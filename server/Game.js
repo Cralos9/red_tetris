@@ -1,4 +1,3 @@
-import { getMoves, holdPiece, hardDrop, moveVertical } from "./movement.js"
 import { log } from "./debug.js"
 import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS, SPEED } from "./gameParams.js"

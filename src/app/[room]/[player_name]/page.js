@@ -31,9 +31,13 @@ export default function RoomPage() {
     })
 
 	socket.emit("joinRoom", {playerName: name, roomCode: roomCode})
-    socket.on(name, (msg) => 
+    socket.on('game', (msg) => 
     {
+		const player = msg.player
 		console.log("Recived msg", msg)
+		if (player !== name) {
+			return
+		}
       const cells = document.querySelectorAll('.game-bottle .cell');
       const field = msg.field;
       field[9][9] = 8;
@@ -56,7 +60,7 @@ export default function RoomPage() {
     })
 
     document.addEventListener("keydown", e => {
-        socket.emit('action', {key: e.key, Name: name})
+        socket.emit('action', {key: e.key, playerName: name, roomCode: roomCode})
     })
 
       const bottle = document.querySelector('.game-bottle');

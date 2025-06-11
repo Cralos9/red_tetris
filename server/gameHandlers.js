@@ -1,8 +1,11 @@
 export const gameHandlers = (io, socket, RoomsMap) => {
 	const gameInput = (payload) => {
 		const key = payload.key
-		const playerName = payload.Name
-		const player = RoomsMap.get('123').playersArr.find(player => playerName === player.name)
+		const roomCode = payload.roomCode
+		const playerName = payload.playerName
+		const room = RoomsMap.get(roomCode)
+		const player = room.playersArr.find(player => playerName === player.name)
+		console.log(player.toString())
 		switch (key) {
 			case " ":
 				player.input.hardDrop(true)
@@ -26,17 +29,19 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 			case "c":
 				player.input.holdPiece(true)
 				break
+			case "Escape":
+				player.stopGame()
 
 			default:
-				console.log("Not Rec Key")
+				console.log("Not Rec Key", key)
 				break
 		}
 	}
 	const startGame = (payload) => {
 		const roomCode = payload.roomCode
 		const Room = RoomsMap.get(roomCode)
-		console.log("Starting Game")
 		Room.playersArr.forEach(player => {
+			console.log("Game Started,", player.toString())
 			player.runGame(roomCode)
 		})
 	}
