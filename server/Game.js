@@ -140,22 +140,17 @@ export class Game {
 		if (this.input.hold === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
-			this.input.holdPiece(false)
 		}
 		if (this.input.hardDrop === true) {
 			this.hardDrop()
 			this.lockPiece = true
-			this.input.hardDropPiece(false)
 		} else {
 			this.Piece.move(this.input.x, this.field)
 			this.Piece.rotate(this.field, this.input.rot)
-			this.input.movePiece(0)
-			this.input.rotatePiece(0)
 		}
 
 		if (this.Piece.checkCollision(this.field) === 0) {
 			this.Piece.row += this.input.y
-			this.input.pushDownPiece(0)
 		} else {
 			if (this.lockDelay === 30) {
 				this.lockPiece = true

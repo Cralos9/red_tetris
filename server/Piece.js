@@ -1,5 +1,4 @@
 import { log } from "./debug.js"
-import { moveHorizontal, moveVertical, rotation } from "./movement.js"
 import { COLUMNS, ROWS } from "./gameParams.js"
 import { getRotations, getSkirt, compare, getKicks } from "./utils.js"
 
