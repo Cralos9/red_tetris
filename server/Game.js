@@ -49,7 +49,6 @@ export class Game {
 		}
 
 		this.Piece = this.Bag.getNextPiece()
-		this.frames = 0
 		this.hitList = []
 		this.stackHeight = ROWS
 		this.hold = 0
@@ -137,10 +136,6 @@ export class Game {
 		
 		// Undraw Piece
 		this.Piece.draw(this.field, 0)
-		if (this.frames === 60) {
-			this.input.y = 1 * SPEED
-			this.frames = 0
-		}
 
 		if (this.input.hold === true && this.holdLock === false) {
 			this.holdPiece()
@@ -188,7 +183,5 @@ export class Game {
 			console.log("GameOver")
 			this.running = false
 		}
-
-		this.frames++
 	}
 }
