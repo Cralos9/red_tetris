@@ -3,13 +3,13 @@ import { Player } from "./Player.js"
 import { log } from "./debug.js"
 
 // Map socket.id to Players
-export const playerHandlers = (socket, RoomsMap) => {
+export const playerHandlers = (io, socket, RoomsMap) => {
 	const joinRoom = (payload) => {
 		const playerName = payload.playerName
 		const roomCode = payload.roomCode
 		log("Player:", playerName)
 		log("Joined Room:", roomCode)
-		const player = new Player(playerName, socket)
+		const player = new Player(playerName, io, socket.id)
 		if (RoomsMap.has(roomCode) === false) {
 			RoomsMap.set(roomCode, new Room())
 		}
