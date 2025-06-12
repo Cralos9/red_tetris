@@ -1,3 +1,4 @@
+import { keyBinds } from "./gameParams.js"
 import { log } from "./debug.js"
 
 export const gameHandlers = (io, socket, RoomsMap) => {
@@ -8,26 +9,26 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const player = room.plMap.get(socket.id)
 		log("KeyDown:", player.toString())
 		switch (key) {
-			case " ":
+			case keyBinds.HARDDROP:
 				player.input.hardDropPiece(true)
 				break
-			case "ArrowLeft":
+			case keyBinds.MOVELEFT:
 				player.input.movePiece(-1)
 				break
-			case "ArrowRight":
+			case keyBinds.MOVERIGHT:
 				player.input.movePiece(1)
 				break
-			case "x":
-			case "ArrowUp":
+			case keyBinds.ROTATERIGHT[0]:
+			case keyBinds.ROTATERIGHT[1]:
 				player.input.rotatePiece(1)
 				break
-			case "z":
+			case keyBinds.ROTATELEFT:
 				player.input.rotatePiece(-1)
 				break
-			case "ArrowDown":
+			case keyBinds.SOFTDROP:
 				player.input.pushDownPiece(1)
 				break
-			case "c":
+			case keyBinds.HOLD:
 				player.input.holdPiece(true)
 				break
 			case "Escape":
