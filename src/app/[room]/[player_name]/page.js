@@ -62,6 +62,7 @@ export default function RoomPage() {
 	useEffect(() => {
 		socket.emit('joinRoom', {playerName: name, roomCode: roomCode})
 		socket.on('game', (msg) => {
+			console.log("socket_id: ", socket.id)
 			if (!msg.running) {
 				console.log("You lost")
 				end_game()

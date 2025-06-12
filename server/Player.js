@@ -2,19 +2,20 @@ import { Game } from "./Game.js"
 import { GameController } from "./GameInput.js"
 
 export class Player {
-	constructor(name, socket) {
+	constructor(name, io, id) {
 		this.name = name
-		this.socket = socket
+		this.id = id
+		this.io = io
 		this.input = new GameController()
 		this.game = new Game(this.input)
 		this.interval = 0
 	}
 
-	runGame() {
+	runGame(roomCode) {
 		this.interval = setInterval(() => {
 			this.game.update()
 			//console.table(this.game.field)
-			this.socket.emit('game', {field: this.game.field, player: this.name, running: this.game.running})
+			this.io.to(roomCode).emit('game', {field: this.game.field, playerId: this.id, running: this.game.running})
 		}, 20)
 	}
 
@@ -23,6 +24,6 @@ export class Player {
 	}
 
 	toString() {
-		return `Player ${this.name}`
+		return `Player ${this.id}, ${this.name}`
 	}
 }
