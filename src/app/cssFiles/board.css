@@ -55,8 +55,7 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(6, 1fr);
-  position: absolute;
-  left: -7vw;
+  position: relative;
   width: 135px;
   height: 150px;
   background: rgba(126, 126, 126, 0.964);
@@ -69,8 +68,7 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(10, 1fr);
-  position: absolute;
-  right: -10vw;
+  position: relative;
   width: 190px;
   height: 300px;
   background: rgba(126, 126, 126, 0.964);

@@ -105,33 +105,30 @@
   }  
 
 
-
-
 .game-wrapper {
-	left: 40%;
-	top: 20%;
-	display: flex;
 	position: absolute;
-	width: fit-content;
-	margin: 0 auto;
-  }
-
+	display: flex;
+	justify-content: center;
+	top: 20%;
+	left: 32%;
+}
+  
   
 
 .usercard
 {
-		background: rgba(56, 56, 56, 0.964);
-		width: 35%;
-		box-shadow: 10px 10px 10px rgba(66, 66, 66, 0.719);
-		display: flex;
-		flex-direction: column;
-		padding: 60px;
-		gap: 15px;
-		text-align: center;
-		z-index: 1;
-		border-radius: 10px;
-		border-width: 10px;
-		border-color: #000000;
+	background: rgba(56, 56, 56, 0.964);
+	width: 35%;
+	box-shadow: 10px 10px 10px rgba(66, 66, 66, 0.719);
+	display: flex;
+	flex-direction: column;
+	padding: 60px;
+	gap: 15px;
+	text-align: center;
+	z-index: 1;
+	border-radius: 10px;
+	border-width: 10px;
+	border-color: #000000;
 }
 
 

@@ -19,6 +19,15 @@ export default function RoomPage() {
 	  setGameOver(true);
 	}
 
+	function add_cells(div, amount)
+	{
+		for (let i = 0; i < amount; i++) 
+		{
+			const cell = document.createElement('div');
+			cell.className = 'cell';
+			div.appendChild(cell);
+		}
+	}
 	function getColor(value)
 	{
 		const colors = {
@@ -34,10 +43,23 @@ export default function RoomPage() {
 		
 		return colors[value];
 	}
+
 	useEffect(() => {
-		socket.on("connect", () => {
-			console.log("Connected to the websocket")
-			})
+		socket.connect();
+	  
+		function handleConnect() 
+		{
+			console.log("Connected to the websocket");
+		}
+		
+		  socket.on("connect", handleConnect);
+		
+		  return function cleanup() {
+			socket.off("connect", handleConnect);
+		  };
+		}, []);
+
+	useEffect(() => {
 
 	socket.on('action', (msg) => 
 	{
@@ -91,11 +113,7 @@ export default function RoomPage() {
 
 			const bottle = document.querySelector('.game-bottle');
 			bottle.innerHTML = '';
-			for (let i = 0; i < 200; i++) {
-				const cell = document.createElement('div');
-				cell.className = 'cell';
-				bottle.appendChild(cell);
-			}
+			add_cells(bottle, 200)
 		
 			const game22 = document.querySelector('.secondary-games');
 			game22.innerHTML = '';
@@ -104,35 +122,20 @@ export default function RoomPage() {
 				const games = document.createElement('div');
 				games.className = 'secondary-game'
 				games.innerHTML = '';
-				for (let i = 0; i < 200; i++) 
-				{
-					const cell = document.createElement('div');
-					cell.className = 'cell';
-					games.appendChild(cell);
-				}
+				add_cells(games, 200)
 				game22.appendChild(games)
 			}
 
 			const next = document.querySelector('.next-piece');
-			next.querySelectorAll('.cell').forEach(cell => cell.remove());
-					
-			for (let i = 0; i < 60; i++) {
-				const cell = document.createElement('div');
-				cell.className = 'cell';
-				next.appendChild(cell);
-			}
+			next.querySelectorAll('.cell').forEach(cell => cell.remove());		
+			add_cells(next, 60)
 
 			const held = document.querySelector('.held-piece');
 			held.querySelectorAll('.cell').forEach(cell => cell.remove());
+			add_cells(held, 36)
 		
-			for (let i = 0; i < 36; i++) {
-				const cell = document.createElement('div');
-				cell.className = 'cell';
-				held.appendChild(cell);
-			}
-			if (name) {
+			if (name) 
 				setUsername(name);
-			}
 	}, [name]);
 	
 	function resetGame()
@@ -199,10 +202,10 @@ export default function RoomPage() {
 				<div className="held-piece">
 					<span className="held-label">Held Piece</span>
 				</div>
+				<div className="game-bottle">
+				</div>
 				<div className="next-piece">
 					<span className="held-label">Next Pieces</span>
-				</div>
-				<div className="game-bottle">
 				</div>
 			</div>
 			<div className='button-container'>
