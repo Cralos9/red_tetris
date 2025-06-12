@@ -1,15 +1,14 @@
 export class Room {
-	constructor(host) { 
-		this.host = host
-		this.playersArr = [host]
+	constructor() { 
+		this.plMap = new Map()
 		console.log("Creating a Room")
 	}
 	
-	addPlayer(player) {
-		this.playersArr.push(player)
+	addPlayer(socketId, player) {
+		this.plMap.set(socketId, player)
 	}
 
-	leavePlayer(player) {
-		// Take out the player from players array
+	leavePlayer(socketId) {
+		this.plMap.delete(socketId)
 	}
 }

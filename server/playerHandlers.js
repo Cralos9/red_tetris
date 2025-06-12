@@ -11,14 +11,9 @@ export const playerHandlers = (socket, RoomsMap) => {
 		log("Joined Room:", roomCode)
 		const player = new Player(playerName, socket)
 		if (RoomsMap.has(roomCode) === false) {
-			RoomsMap.set(roomCode, new Room(player))
-		} else {
-			const room = RoomsMap.get(roomCode)
-			if (!room.playersArr.find(player => player.name === playerName)) {
-				RoomsMap.get(roomCode).addPlayer(player)
-			}
-			console.log("User Already exists", playerName)
+			RoomsMap.set(roomCode, new Room())
 		}
+		RoomsMap.get(roomCode).addPlayer(socket.id, player)
 		console.log("RoomMap:", RoomsMap)
 		socket.join(roomCode.toString())
 	}

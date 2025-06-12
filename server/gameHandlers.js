@@ -4,9 +4,8 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 	const gameInput = (payload) => {
 		const key = payload.key
 		const roomCode = payload.roomCode
-		const playerName = payload.playerName
 		const room = RoomsMap.get(roomCode)
-		const player = room.playersArr.find(player => playerName === player.name)
+		const player = room.plMap.get(socket.id)
 		log("KeyDown:", player.toString())
 		switch (key) {
 			case " ":
@@ -41,8 +40,8 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 	}
 	const startGame = (payload) => {
 		const roomCode = payload.roomCode
-		const Room = RoomsMap.get(roomCode)
-		Room.playersArr.forEach(player => {
+		const room = RoomsMap.get(roomCode)
+		room.plMap.forEach(player => {
 			log("Game Started,", player.toString())
 			player.runGame(roomCode)
 		})
