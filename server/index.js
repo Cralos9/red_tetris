@@ -18,7 +18,7 @@ app.prepare().then(() => {
 	
 	io.on('connection', (socket) => {
 		console.log("User Id:", socket.id)
-		playerHandlers(socket, RoomsMap)
+		playerHandlers(io, socket, RoomsMap)
 		gameHandlers(io, socket, RoomsMap)
 	})
 
