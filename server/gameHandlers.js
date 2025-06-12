@@ -40,6 +40,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 	}
 	const startGame = (payload) => {
 		const roomCode = payload.roomCode
+		console.log("Code", roomCode)
 		const room = RoomsMap.get(roomCode)
 		room.plMap.forEach(player => {
 			log("Game Started,", player.toString())

@@ -2,9 +2,39 @@ import { log } from "./debug.js"
 import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS, SPEED } from "./gameParams.js"
 
+const coor = [[5,19],[5,18],[5,17],[5,16],[4,17],[6,17],[7,17]]
+
+const compare = (x, y) => {
+	for (let i = 0; i < coor.length; i++) {
+		if (coor[i][0] === x && coor[i][1] === y) {
+			return (true)
+		}
+	}
+	return (false)
+}
+
+const formField = (hightestRow) => {
+	const field = []
+
+	for (let i = ROWS - 1; i >= 0; i--) {
+		let arr = []
+		for (let k = 0; k < COLUMNS; k++) {
+			if (i >= hightestRow && !compare(k, i)) {
+				arr[k] = 1
+			} else {
+				arr[k] = 0
+			}
+		}
+		field[i] = arr
+	}
+	console.table(field)
+	return (field)
+}
+
 export class Game {
 	constructor(input) {
 		this.Bag = new Bag()
+		//this.field = formField(ROWS - 4)
 		this.field = []
 		this.input = input
 

@@ -14,7 +14,7 @@ export class Player {
 		this.interval = setInterval(() => {
 			this.game.update()
 			//console.table(this.game.field)
-			this.socket.emit('game', {field: this.game.field, player: this.name})
+			this.socket.emit('game', {field: this.game.field, player: this.name, running: this.game.running})
 		}, 20)
 	}
 
