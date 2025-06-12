@@ -39,7 +39,7 @@ export default function Game() {
 	if(!input.value || !input.value.match(/^[0-9a-z]+$/))
 	{
 		if (!input.value)
-			input.placeholder = "Must have a user";
+			input.placeholder = "Must have a room code";
 		else
 		{
 			input.placeholder = "Only alphanumeric characters";
