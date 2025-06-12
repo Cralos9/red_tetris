@@ -8,6 +8,10 @@ export class Room {
 		this.plMap.set(socketId, player)
 	}
 
+	searchPlayer(playerId) {
+		return (this.plMap.get(playerId))
+	}
+
 	leavePlayer(socketId) {
 		this.plMap.delete(socketId)
 	}
