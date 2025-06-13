@@ -60,6 +60,25 @@ export default function RoomPage() {
 
 	useEffect(() => {
 		socket.emit('joinRoom', {playerName: name, roomCode: roomCode})
+		socket.on('join', (msg) => 
+		{
+			var otherBoards = msg.playerIds
+			console.log(otherBoards.length)
+			for(var i = 0; i <= otherBoards.length; i++)
+			{
+				if(otherBoards[i] === socket.id || otherBoards[i] === undefined)
+					continue;
+				let otherBoard = document.getElementById(otherBoards[i]);
+				if (!otherBoard) 
+				{
+					otherBoard = document.createElement('div');
+					otherBoard.className = 'secondary-game';
+					otherBoard.id = otherBoards[i];
+					add_cells(otherBoard, 200);
+					document.querySelector('.secondary-games').appendChild(otherBoard);
+				}
+			}
+		})
 		socket.on('game', (msg) => {
 			const field = msg.field;
 		
@@ -74,10 +93,13 @@ export default function RoomPage() {
 					for (let x = 0; x < 10; x++) {
 						const index = y * 10 + x;
 						const value = field[y][x];
-						if (value !== 8) {
+						if (value !== 8) 
+						{
 							cells[index].style.backgroundImage = 'none';
 							cells[index].style.backgroundColor = getColor(value);
-						} else {
+						} 
+						else 
+						{
 							cells[index].style.backgroundImage = "url('/images/blue_virus.gif')";
 							cells[index].style.backgroundSize = "cover";
 						}
@@ -88,14 +110,14 @@ export default function RoomPage() {
 			{
 				let otherBoard = document.getElementById(msg.playerId);
 		
-				if (!otherBoard) {
-					otherBoard = document.createElement('div');
-					otherBoard.className = 'secondary-game';
-					otherBoard.id = msg.playerId;
-					add_cells(otherBoard, 200);
-					document.querySelector('.secondary-games').appendChild(otherBoard);
-				}
-		
+				// if (!otherBoard) {
+				// 	otherBoard = document.createElement('div');
+				// 	otherBoard.className = 'secondary-game';
+				// 	otherBoard.id = msg.playerId;
+				// 	add_cells(otherBoard, 200);
+				// 	document.querySelector('.secondary-games').appendChild(otherBoard);
+				// }
+
 				const gameCells = otherBoard.querySelectorAll('.cell');
 				for (let y = 0; y < 20; y++) {
 					for (let x = 0; x < 10; x++) {
