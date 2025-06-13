@@ -19,12 +19,47 @@ export default function RoomPage() {
 	  setGameOver(true);
 	}
 
+	function nextPieceDraw(nextPiece)
+	{
+		if(nextPiece != 0)
+		{
+			const next = document.querySelector('.next-piece');
+			const centerX = 2;
+			var centerY = 2;
+			const cells = next.querySelectorAll('.cell2');
+			cells.forEach((cell) =>
+			{
+				cell.style.backgroundColor = getColor(0);
+				cell.style.border = '0px solid #222';
+			});
+			nextPiece.forEach((piece) => {
+				if (centerY > 8)
+					return
+				piece.forEach(([x, y]) => {
+					const drawX = centerX + x;
+					const drawY = centerY + y;
+					const index = drawY * 6 + drawX;
+					const cell = cells[index];
+					if (cell)
+					{
+						cell.style.backgroundColor = getColor(1);
+						cell.style.border = '2px solid #222';
+					}
+				});
+				centerY += 3;
+			});
+		}
+	}
+
 	function add_cells(div, amount)
 	{
 		for (let i = 0; i < amount; i++) 
 		{
 			const cell = document.createElement('div');
-			cell.className = 'cell';
+			if (amount === 200)
+				cell.className = 'cell';
+			else
+			cell.className = 'cell2';
 			div.appendChild(cell);
 		}
 	}
@@ -81,7 +116,6 @@ export default function RoomPage() {
 		})
 		socket.on('game', (msg) => {
 			const field = msg.field;
-		
 			if (!msg.running) {
 				end_game();
 				return;
@@ -89,8 +123,31 @@ export default function RoomPage() {
 		
 			if (msg.playerId === socket.id) {
 				const cells = document.querySelectorAll('.game-bottle .cell');
+				const heldPiece = msg.holdPiece
+				const nextPiece = msg.nextPiece
+				nextPieceDraw(nextPiece);
+				if (heldPiece != 0)
+				{
+					const cells = held.querySelectorAll('.cell2');
+					cells.forEach((cell) =>
+					{
+						cell.style.backgroundColor = getColor(0);
+						cell.style.border = '0px solid #222';
+					});
+					const centerX = 2;
+					const centerY = 2;
+					heldPiece.forEach(([x, y]) => {
+						const drawX = centerX + x;
+						const drawY = centerY + y;
+						const index = drawY * 6 + drawX;
+						const cell = cells[index];
+						cell.style.backgroundColor = getColor(1);
+						cell.style.border = '2px solid #222';
+					});
+				}
 				for (let y = 0; y < 20; y++) {
-					for (let x = 0; x < 10; x++) {
+					for (let x = 0; x < 10; x++) 
+					{
 						const index = y * 10 + x;
 						const value = field[y][x];
 						if (value !== 8) 
@@ -109,15 +166,6 @@ export default function RoomPage() {
 			else 
 			{
 				let otherBoard = document.getElementById(msg.playerId);
-		
-				// if (!otherBoard) {
-				// 	otherBoard = document.createElement('div');
-				// 	otherBoard.className = 'secondary-game';
-				// 	otherBoard.id = msg.playerId;
-				// 	add_cells(otherBoard, 200);
-				// 	document.querySelector('.secondary-games').appendChild(otherBoard);
-				// }
-
 				const gameCells = otherBoard.querySelectorAll('.cell');
 				for (let y = 0; y < 20; y++) {
 					for (let x = 0; x < 10; x++) {
@@ -152,7 +200,7 @@ export default function RoomPage() {
 
 		const held = document.querySelector('.held-piece');
 		held.querySelectorAll('.cell').forEach(cell => cell.remove());
-		add_cells(held, 36)
+		add_cells(held, 30)
 
 		if (name) 
 			setUsername(name);
