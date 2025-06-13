@@ -37,7 +37,7 @@
 
 .cell {
   border: 2px solid #000000;
-  background-color: #22222200;
+  box-shadow: inset 4px 4px 0 #4e4e4e57, inset -4px -4px 0 #44444459;
 }
 
 .game-bottle {
