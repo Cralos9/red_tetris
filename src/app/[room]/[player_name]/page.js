@@ -10,7 +10,7 @@ export default function RoomPage() {
 
 	const name = params.player_name;
 	const score = 40000;
-	const game_amount = 4;
+	var game_amount = 3;
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
 	
@@ -47,9 +47,8 @@ export default function RoomPage() {
 	useEffect(() => {
 		socket.connect();
 	  
-		function handleConnect() 
-		{
-			console.log("Connected to the websocket");
+		function handleConnect() {
+			console.log("Connection Accepted")
 		}
 
 		socket.on("connect", handleConnect);
@@ -61,50 +60,82 @@ export default function RoomPage() {
 
 	useEffect(() => {
 		socket.emit('joinRoom', {playerName: name, roomCode: roomCode})
-		socket.on('game', (msg) => {
-			console.log("socket_id: ", socket.id)
-			if (!msg.running) {
-				console.log("You lost")
-				end_game()
-				return
-			}
-			const cells = document.querySelectorAll('.game-bottle .cell');
-			const field = msg.field;
-			const secondaryGames = document.querySelectorAll('.secondary-game');
-			for (let y = 0; y < 20; y++) 
+		socket.on('join', (msg) => 
+		{
+			var otherBoards = msg.playerIds
+			console.log(otherBoards.length)
+			for(var i = 0; i <= otherBoards.length; i++)
 			{
-				for (let x = 0; x < 10; x++) 
+				if(otherBoards[i] === socket.id || otherBoards[i] === undefined)
+					continue;
+				let otherBoard = document.getElementById(otherBoards[i]);
+				if (!otherBoard) 
 				{
-					const index = y * 10 + x;
-					const value = field[y][x];
-					if (value !== 8) 
-					{
-						cells[index].style.backgroundImage = 'none';
-						cells[index].style.backgroundColor = getColor(value);
-					} else {
-						cells[index].style.backgroundImage = "url('/images/blue_virus.gif')";
-						cells[index].style.backgroundSize = "cover";
-					}
-					secondaryGames.forEach(game => 
-					{
-						const gameCells = game.querySelectorAll('.cell');
-						if (gameCells[index]) 
+					otherBoard = document.createElement('div');
+					otherBoard.className = 'secondary-game';
+					otherBoard.id = otherBoards[i];
+					add_cells(otherBoard, 200);
+					document.querySelector('.secondary-games').appendChild(otherBoard);
+				}
+			}
+		})
+		socket.on('game', (msg) => {
+			const field = msg.field;
+		
+			if (!msg.running) {
+				end_game();
+				return;
+			}
+		
+			if (msg.playerId === socket.id) {
+				const cells = document.querySelectorAll('.game-bottle .cell');
+				for (let y = 0; y < 20; y++) {
+					for (let x = 0; x < 10; x++) {
+						const index = y * 10 + x;
+						const value = field[y][x];
+						if (value !== 8) 
 						{
-							if (value !== 8) 
-							{
+							cells[index].style.backgroundImage = 'none';
+							cells[index].style.backgroundColor = getColor(value);
+						} 
+						else 
+						{
+							cells[index].style.backgroundImage = "url('/images/blue_virus.gif')";
+							cells[index].style.backgroundSize = "cover";
+						}
+					}
+				}
+			} 
+			else 
+			{
+				let otherBoard = document.getElementById(msg.playerId);
+		
+				// if (!otherBoard) {
+				// 	otherBoard = document.createElement('div');
+				// 	otherBoard.className = 'secondary-game';
+				// 	otherBoard.id = msg.playerId;
+				// 	add_cells(otherBoard, 200);
+				// 	document.querySelector('.secondary-games').appendChild(otherBoard);
+				// }
+
+				const gameCells = otherBoard.querySelectorAll('.cell');
+				for (let y = 0; y < 20; y++) {
+					for (let x = 0; x < 10; x++) {
+						const index = y * 10 + x;
+						const value = field[y][x];
+						if (gameCells[index]) {
+							if (value !== 8) {
 								gameCells[index].style.backgroundImage = 'none';
 								gameCells[index].style.backgroundColor = getColor(value);
-							} 
-							else 
-							{
+							} else {
 								gameCells[index].style.backgroundImage = "url('/images/blue_virus.gif')";
 								gameCells[index].style.backgroundSize = "cover";
 							}
 						}
-					});
+					}
 				}
 			}
-		})
+		});		
 		document.addEventListener("keydown", e => {
 			socket.emit("keyDown", {key: e.key, roomCode: roomCode})
 		})
@@ -114,14 +145,6 @@ export default function RoomPage() {
 
 		const game22 = document.querySelector('.secondary-games');
 		game22.innerHTML = '';
-		for (let i = 1; i < game_amount; i++)
-		{
-			const games = document.createElement('div');
-			games.className = 'secondary-game'
-			games.innerHTML = '';
-			add_cells(games, 200)
-			game22.appendChild(games)
-		}
 
 		const next = document.querySelector('.next-piece');
 		next.querySelectorAll('.cell').forEach(cell => cell.remove());		

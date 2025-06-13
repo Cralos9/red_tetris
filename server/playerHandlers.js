@@ -13,9 +13,19 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		if (RoomsMap.has(roomCode) === false) {
 			RoomsMap.set(roomCode, new Room())
 		}
-		RoomsMap.get(roomCode).addPlayer(socket.id, player)
+		const room = RoomsMap.get(roomCode)
+		room.addPlayer(socket.id, player)
 		console.log("RoomMap:", RoomsMap)
 		socket.join(roomCode.toString())
+		const arr = []
+		const iter = room.plMap.keys()
+		let value = iter.next().value
+		while (value !== undefined) {
+			arr.push(value)
+			console.log(value)
+			value = iter.next().value
+		}
+		io.to(roomCode).emit('join', {playerIds: arr})
 	}
 	const disconnection = (reason) => {
 		console.log("Disconnected:", reason)
