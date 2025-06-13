@@ -29,6 +29,7 @@ export class Player {
 			this.io.to(roomCode).emit('game', {
 				field: this.game.field,
 				holdPiece: this.game.hold ? this.game.hold.getCurrPattern() : 0,
+				nextPiece: this.game.Bag.nextPiecesArr(),
 				playerId: this.id,
 				running: this.game.running,
 			})
