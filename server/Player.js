@@ -25,7 +25,7 @@ export class Player {
 			this.input.rotatePiece(0)
 			this.input.hardDropPiece(false)
 			this.input.holdPiece(false)
-			//console.table(this.game.field)
+			console.table(this.game.field)
 			this.io.to(roomCode).emit('game', {
 				field: this.game.field,
 				holdPiece: this.game.hold ? {hold: this.game.hold.patterns[0], color: this.game.hold.color} : 0,
