@@ -16,6 +16,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		RoomsMap.get(roomCode).addPlayer(socket.id, player)
 		console.log("RoomMap:", RoomsMap)
 		socket.join(roomCode.toString())
+		socket.to(roomCode).emit('join', {playerId: socket.id})
 	}
 	const disconnection = (reason) => {
 		console.log("Disconnected:", reason)
