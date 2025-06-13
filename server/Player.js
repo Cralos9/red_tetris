@@ -26,7 +26,12 @@ export class Player {
 			this.input.hardDropPiece(false)
 			this.input.holdPiece(false)
 			//console.table(this.game.field)
-			this.io.to(roomCode).emit('game', {field: this.game.field, playerId: this.id, running: this.game.running})
+			this.io.to(roomCode).emit('game', {
+				field: this.game.field,
+				holdPiece: this.game.hold ? this.game.hold.getCurrPattern() : 0,
+				playerId: this.id,
+				running: this.game.running,
+			})
 			frames++
 		}, delay)
 	}

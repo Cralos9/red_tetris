@@ -51,7 +51,7 @@ export class Game {
 		this.Piece = this.Bag.getNextPiece()
 		this.hitList = []
 		this.stackHeight = ROWS
-		this.hold = 0
+		this.hold = null
 		this.holdLock = false
 		this.lockDelay = 0
 		this.lockPiece = false
@@ -110,7 +110,7 @@ export class Game {
 	holdPiece() {
 		this.Piece.reset()
 		log("Holding Piece:", this.Piece.toString())
-		if (this.hold === 0) {
+		if (this.hold === null) {
 			log("Empty Hold")
 			this.hold = this.Piece
 			this.Piece = this.Bag.getNextPiece()
@@ -179,4 +179,6 @@ export class Game {
 			this.running = false
 		}
 	}
+
+	
 }
