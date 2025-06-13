@@ -42,6 +42,14 @@ export class Bag {
 		this.rotation++
 		return (this.stack.shift())
 	}
+
+	nextPiecesArr() {
+		const arr = []
+		this.stack.forEach(piece => {
+			arr.push(piece.patterns[0])
+		})
+		return (arr)
+	}
 	
 	getStack() {
 		return (this.stack)
