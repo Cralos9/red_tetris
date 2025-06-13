@@ -1,7 +1,17 @@
 export const ROWS = 20
 export const COLUMNS = 10
 
-export const SPEED = 0
+export const SPEED = 1
+
+export const keyBinds = {
+	HARDDROP: " ",
+	HOLD: "c",
+	MOVELEFT: "ArrowLeft",
+	MOVERIGHT: "ArrowRight",
+	ROTATELEFT: "z",
+	ROTATERIGHT: ["x", 'ArrowUp'],
+	SOFTDROP: "ArrowDown"
+}
 
 export const Icoor = [
 	[

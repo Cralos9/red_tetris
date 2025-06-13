@@ -49,10 +49,9 @@ export class Game {
 		}
 
 		this.Piece = this.Bag.getNextPiece()
-		this.frames = 0
 		this.hitList = []
 		this.stackHeight = ROWS
-		this.hold = 0
+		this.hold = null
 		this.holdLock = false
 		this.lockDelay = 0
 		this.lockPiece = false
@@ -111,7 +110,7 @@ export class Game {
 	holdPiece() {
 		this.Piece.reset()
 		log("Holding Piece:", this.Piece.toString())
-		if (this.hold === 0) {
+		if (this.hold === null) {
 			log("Empty Hold")
 			this.hold = this.Piece
 			this.Piece = this.Bag.getNextPiece()
@@ -137,30 +136,21 @@ export class Game {
 		
 		// Undraw Piece
 		this.Piece.draw(this.field, 0)
-		if (this.frames === 60) {
-			this.input.y = 1 * SPEED
-			this.frames = 0
-		}
 
 		if (this.input.hold === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
-			this.input.holdPiece(false)
 		}
 		if (this.input.hardDrop === true) {
 			this.hardDrop()
 			this.lockPiece = true
-			this.input.hardDropPiece(false)
 		} else {
 			this.Piece.move(this.input.x, this.field)
 			this.Piece.rotate(this.field, this.input.rot)
-			this.input.movePiece(0)
-			this.input.rotatePiece(0)
 		}
 
 		if (this.Piece.checkCollision(this.field) === 0) {
 			this.Piece.row += this.input.y
-			this.input.pushDownPiece(0)
 		} else {
 			if (this.lockDelay === 30) {
 				this.lockPiece = true
@@ -188,7 +178,7 @@ export class Game {
 			console.log("GameOver")
 			this.running = false
 		}
-
-		this.frames++
 	}
+
+	
 }

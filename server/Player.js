@@ -12,11 +12,28 @@ export class Player {
 	}
 
 	runGame(roomCode) {
+		const delay = 16 // Close to 60 FPS
+		let frames = 0
 		this.interval = setInterval(() => {
+			if (frames === 60) {
+				this.input.pushDownPiece(1)
+				frames = 0
+			}
 			this.game.update()
+			this.input.movePiece(0)
+			this.input.pushDownPiece(0)
+			this.input.rotatePiece(0)
+			this.input.hardDropPiece(false)
+			this.input.holdPiece(false)
 			//console.table(this.game.field)
-			this.io.to(roomCode).emit('game', {field: this.game.field, playerId: this.id, running: this.game.running})
-		}, 20)
+			this.io.to(roomCode).emit('game', {
+				field: this.game.field,
+				holdPiece: this.game.hold ? this.game.hold.getCurrPattern() : 0,
+				playerId: this.id,
+				running: this.game.running,
+			})
+			frames++
+		}, delay)
 	}
 
 	stopGame() {
