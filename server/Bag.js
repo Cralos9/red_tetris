@@ -46,7 +46,7 @@ export class Bag {
 	nextPiecesArr() {
 		const arr = []
 		this.stack.forEach(piece => {
-			arr.push(piece.patterns[0])
+			arr.push({piece: piece.patterns[0], color: piece.color})
 		})
 		return (arr)
 	}
