@@ -24,6 +24,17 @@
 }
 
 
+.mario-leave {
+	z-index: 1;
+	position: absolute;
+	top: 75%;
+	/* left: -10px; */
+	/* transform: translateY(-50%); */
+	height: 50px;
+	opacity: 0;
+	pointer-events: none;
+}
+
 .input::placeholder
 {
 	font-family: 'Press Start 2P';
@@ -180,10 +191,26 @@
 	z-index: 2;
 }
 
+.lineClear {
+	right : 470px;
+	bottom: 200px;
+	font-family: 'Press Start 2P';
+	font-weight: bold;
+	font-size: 45px;
+	z-index: 6;
+	position: absolute;
+	text-align: center;
+	color: #ffb006;
+	text-shadow: 5px 5px  #4b4b4bc9;
+}
+
+
 .title {
 	font-family: 'Press Start 2P';
 	font-weight: bold;
 	font-size: 60px;
+	z-index: 6;
+	position: relative;
 	text-align: center;
 	color: #2c2c2c;
 	text-shadow: 5px 5px  #777575;

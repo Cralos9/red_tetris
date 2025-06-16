@@ -38,7 +38,7 @@ function add_secondary_cells(div,  amount)
 		if (amount === 200)
 			cell.className = 'cell';
 		else
-		cell.className = 'cell2';
+			cell.className = 'cell2';
 		div.appendChild(cell);
 	}
 }
@@ -53,7 +53,7 @@ function add_secondary_cells(div,  amount)
 			if (amount === 200)
 				cell.className = 'cell';
 			else
-			cell.className = 'cell2';
+				cell.className = 'cell2';
 			div.appendChild(cell);
 		}
 	}

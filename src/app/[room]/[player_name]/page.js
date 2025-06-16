@@ -61,7 +61,8 @@ export default function RoomPage() {
 			}
 		})
 		socket.on('game', (msg) => {
-			if (!msg.running && msg.playerId === socket.id) {
+			if (!msg.running && msg.playerId === socket.id) 
+			{
 				end_game();
 				return;
 			}
@@ -88,8 +89,8 @@ export default function RoomPage() {
 		})
 		
 		gameDraw.add_cells('.game-bottle', 200)
-		const game22 = document.querySelector('.secondary-games');
-		game22.innerHTML = '';
+		// const game22 = document.querySelector('.secondary-games');
+		// game22.innerHTML = '';
 		gameDraw.add_cells('.next-piece', 60)
 		gameDraw.add_cells('.held-piece', 30)
 		if (name) 
@@ -98,8 +99,19 @@ export default function RoomPage() {
 	
 	function resetGame()
 	{
-		socket.emit("keyDown", {key: "Escape"})
-		setIsDisabled(false)
+		const single = document.createElement('div');
+		const lines = document.querySelector('.lineClear')
+
+		if(lines)
+		{
+			lines.textContent = 'Double'
+			return
+		}
+		single.className = 'lineClear';
+		single.textContent = 'Single';
+		document.body.appendChild(single);
+		// socket.emit("keyDown", {key: "Escape"})
+		// setIsDisabled(false)
 	}
 
 	function scoreSave() {
@@ -159,8 +171,7 @@ export default function RoomPage() {
 				<div className="held-piece">
 					<span className="held-label">Held Piece</span>
 				</div>
-				<div className="game-bottle">
-				</div>
+				<div className="game-bottle"></div>
 				<div className="next-piece">
 					<span className="held-label">Next Pieces</span>
 				</div>
