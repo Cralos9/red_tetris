@@ -20,11 +20,11 @@ export class Player {
 				frames = 0
 			}
 			this.game.update()
-			this.input.movePiece(0)
+			//this.input.movePiece(0)
 			this.input.pushDownPiece(0)
-			this.input.rotatePiece(0)
+			//this.input.rotatePiece(0)
 			this.input.hardDropPiece(false)
-			this.input.holdPiece(false)
+			//this.input.holdPiece(false)
 			console.table(this.game.field)
 			this.io.to(roomCode).emit('game', {
 				field: this.game.field,

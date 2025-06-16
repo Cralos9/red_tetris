@@ -37,41 +37,35 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 
 export const gameHandlers = (io, socket, RoomsMap) => {
 	const gameInput = (payload) => {
-		const key = payload.key
-		const roomCode = payload.roomCode
+		const parsed = JSON.parse(payload)
+		const keys = parsed.keys
+		const roomCode = parsed.roomCode
 		const room = RoomsMap.get(roomCode)
 		const player = room.plMap.get(socket.id)
 		log("KeyDown:", player.toString())
-		switch (key) {
-			case keyBinds.HARDDROP:
-				player.input.hardDropPiece(true)
-				break
-			case keyBinds.MOVELEFT:
-				player.input.movePiece(-1)
-				break
-			case keyBinds.MOVERIGHT:
-				player.input.movePiece(1)
-				break
-			case keyBinds.ROTATERIGHT[0]:
-			case keyBinds.ROTATERIGHT[1]:
-				player.input.rotatePiece(1)
-				break
-			case keyBinds.ROTATELEFT:
-				player.input.rotatePiece(-1)
-				break
-			case keyBinds.SOFTDROP:
-				player.input.pushDownPiece(1)
-				break
-			case keyBinds.HOLD:
-				player.input.holdPiece(true)
-				break
-			case "Escape":
-				player.stopGame()
-
-			default:
-				console.log("Not Rec Key", key)
-				break
-		}
+		if (keys[keyBinds.MOVELEFT]) { player.input.movePiece(-1) }
+		if (keys[keyBinds.MOVERIGHT]) { player.input.movePiece(1) }
+		if (keys[keyBinds.HARDDROP]) { player.input.hardDropPiece(true) }
+		if (keys[keyBinds.HOLD]) { player.input.holdPiece(true) }
+		if (keys[keyBinds.ROTATELEFT]) { player.input.rotatePiece(-1) }
+		if (keys[keyBinds.ROTATERIGHT]) { player.input.rotatePiece(1) }
+		if (keys[keyBinds.SOFTDROP]) { player.input.pushDownPiece(true) }
+		if (keys["Escape"]) { player.stopGame() }
+	}
+	const keyUp = (payload) => {
+		const parsed = JSON.parse(payload)
+		const keys = parsed.keys
+		const roomCode = parsed.roomCode
+		const room = RoomsMap.get(roomCode)
+		const player = room.plMap.get(socket.id)
+		log("KeyDown:", player.toString())
+		if (!keys[keyBinds.MOVELEFT]) { player.input.movePiece(0) }
+		if (!keys[keyBinds.MOVERIGHT]) { player.input.movePiece(0) }
+		if (!keys[keyBinds.HARDDROP]) { player.input.hardDropPiece(false) }
+		if (!keys[keyBinds.HOLD]) { player.input.holdPiece(false) }
+		if (!keys[keyBinds.ROTATELEFT]) { player.input.rotatePiece(0) }
+		if (!keys[keyBinds.ROTATERIGHT]) { player.input.rotatePiece(0) }
+		if (!keys[keyBinds.SOFTDROP]) { player.input.pushDownPiece(false) }
 	}
 	const startGame = (payload) => {
 		const roomCode = payload.roomCode
@@ -84,4 +78,5 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 	}
 	socket.on('startGame', startGame)
 	socket.on('keyDown', gameInput)
+	socket.on('keyUp', keyUp)
 }

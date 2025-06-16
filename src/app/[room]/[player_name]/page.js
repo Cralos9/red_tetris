@@ -83,8 +83,14 @@ export default function RoomPage() {
 			gameDraw.game(cells, field)
 		});
 
+		const set = {}
 		document.addEventListener("keydown", e => {
-			socket.emit("keyDown", {key: e.key, roomCode: roomCode})
+			set[e.key] = 1
+			socket.emit("keyDown", JSON.stringify({keys: set, roomCode: roomCode}))
+		})
+		document.addEventListener("keyup", e => {
+			set[e.key] = 0
+			socket.emit('keyUp', JSON.stringify({keys: set, roomCode: roomCode}))
 		})
 		
 		gameDraw.add_cells('.game-bottle', 200)
