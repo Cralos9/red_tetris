@@ -1,8 +1,7 @@
 import { createServer } from "node:http"
 import next from "next"
 import { Server } from "socket.io"
-import { gameHandlers } from "./gameHandlers.js"
-import { playerHandlers } from "./playerHandlers.js"
+import { playerHandlers, gameHandlers } from "./handlers.js"
 
 const hostname = "localhost"
 const port = 3000
