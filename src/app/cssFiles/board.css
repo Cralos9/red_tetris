@@ -29,9 +29,15 @@
   
 }
 
+
+.cell2 {
+  border: 0px solid #000000;
+  background-color: #22222200;
+}
+
 .cell {
   border: 2px solid #000000;
-  background-color: #22222200;
+  box-shadow: inset 4px 4px 0 #4e4e4e57, inset -4px -4px 0 #44444459;
 }
 
 .game-bottle {
@@ -54,9 +60,9 @@
 .held-piece {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(6, 1fr);
+  grid-template-rows: repeat(5, 1fr);
   position: relative;
-  width: 135px;
+  width: 150px;
   height: 150px;
   background: rgba(126, 126, 126, 0.964);
   border: 10px solid #0d0e0d;
