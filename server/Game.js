@@ -58,6 +58,7 @@ export class Game {
 	}
 
 	patternMatch() {
+		this.hitList = []
 		for (let y = ROWS - 1; y >= 0; y--) {
 			let count = 0
 			for (let x = 0; x < COLUMNS; x++) {
@@ -92,7 +93,6 @@ export class Game {
 		}
 		log("Cleared:", linesNbr)
 		this.stackHeight += linesNbr
-		this.hitList = []
 	}
 
 	holdPiece() {
@@ -122,7 +122,6 @@ export class Game {
 		log("Current Piece Row:", this.Piece.row)
 		log("Stack Height:", this.stackHeight)
 		
-		// Undraw Piece
 		this.Piece.undraw(this.field)
 
 		if (this.input.hold === true && this.holdLock === false) {
