@@ -135,13 +135,7 @@ export class Game {
 		log("Stack Height:", this.stackHeight)
 		
 		// Undraw Piece
-		const y = this.Piece.row
-		while (this.Piece.checkCollision(this.field) === 0) {
-			this.Piece.row++
-		}
-		this.Piece.draw(this.field, 0)
-		this.Piece.row = y
-		this.Piece.draw(this.field, 0)
+		this.Piece.undraw(this.field)
 
 		if (this.input.hold === true && this.holdLock === false) {
 			this.holdPiece()
@@ -177,14 +171,7 @@ export class Game {
 			this.Piece = this.Bag.getNextPiece()
 		}
 
-		const y2 = this.Piece.row
-		while (this.Piece.checkCollision(this.field) === 0) {
-			this.Piece.row++
-		}
-		this.Piece.draw(this.field, -1)
-		this.Piece.row = y2
-		// Draw Current Piece
-		this.Piece.draw(this.field, this.Piece.color)
+		this.Piece.draw(this.field)
 
 		if (this.stackHeight <= 0) {
 			console.log("GameOver")
