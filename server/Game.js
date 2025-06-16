@@ -1,12 +1,42 @@
-import { getMoves, holdPiece, hardDrop, moveVertical } from "./movement.js"
 import { log } from "./debug.js"
 import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS, SPEED } from "./gameParams.js"
 
+const coor = [[5,19],[5,18],[5,17],[5,16],[4,17],[6,17],[7,17]]
+
+const compare = (x, y) => {
+	for (let i = 0; i < coor.length; i++) {
+		if (coor[i][0] === x && coor[i][1] === y) {
+			return (true)
+		}
+	}
+	return (false)
+}
+
+const formField = (hightestRow) => {
+	const field = []
+
+	for (let i = ROWS - 1; i >= 0; i--) {
+		let arr = []
+		for (let k = 0; k < COLUMNS; k++) {
+			if (i >= hightestRow ) {//&& !compare(k, i)) {
+				arr[k] = 1
+			} else {
+				arr[k] = 0
+			}
+		}
+		field[i] = arr
+	}
+	console.table(field)
+	return (field)
+}
+
 export class Game {
-	constructor() {
+	constructor(input) {
 		this.Bag = new Bag()
+		//this.field = formField(ROWS - 4)
 		this.field = []
+		this.input = input
 
 		this.running = true
 
@@ -19,21 +49,22 @@ export class Game {
 		}
 
 		this.Piece = this.Bag.getNextPiece()
-		this.frames = 0
 		this.hitList = []
 		this.stackHeight = ROWS
-		this.hold = 0
+		this.hold = null
 		this.holdLock = false
 		this.lockDelay = 0
 		this.lockPiece = false
 	}
 
 	patternMatch() {
+		this.hitList = []
 		for (let y = ROWS - 1; y >= 0; y--) {
 			let count = 0
 			for (let x = 0; x < COLUMNS; x++) {
 				if (this.field[y][x] > 0) {
 					count++
+					this.stackHeight = y
 				}
 			}
 			if (count === this.field[y].length) {
@@ -45,43 +76,29 @@ export class Game {
 
 	lineClear() {
 		const linesNbr = this.hitList.length
-		const start = this.hitList[0]
+		const start = this.hitList ? this.hitList[0] : 0
 		
 		this.hitList.forEach(line => {
 			for (let i = 0; i < this.field[line]; i++) {
 				this.field[line][i] = 0
 			}
 		})
-		log("Start:", start, this.stackHeight)
 		for (let y = start; y >= this.stackHeight; y--) {
 			log("Clearing Line:", y)
 			for (let x = 0; x < this.field[y].length; x++) {
-				this.field[y][x] = this.field[y - linesNbr][x]
+				if (y - linesNbr > -1) {
+					this.field[y][x] = this.field[y - linesNbr][x]
+				}
 			}
 		}
+		log("Cleared:", linesNbr)
 		this.stackHeight += linesNbr
-		this.hitList = []
-	}
-
-	updateStackHeight() {
-		const pattern = this.Piece.getCurrPattern()
-		let lowerY = pattern[0][1]
-
-		for (let i = 0; i < pattern.length; i++) {
-			if (lowerY > pattern[i][1]) {
-				lowerY = pattern[i][1]
-			}
-		}
-		const provHeight = this.Piece.row + lowerY
-		if (this.stackHeight > provHeight) {
-			this.stackHeight = provHeight
-		}
 	}
 
 	holdPiece() {
 		this.Piece.reset()
 		log("Holding Piece:", this.Piece.toString())
-		if (this.hold === 0) {
+		if (this.hold === null) {
 			log("Empty Hold")
 			this.hold = this.Piece
 			this.Piece = this.Bag.getNextPiece()
@@ -104,32 +121,23 @@ export class Game {
 	update() {
 		log("Current Piece Row:", this.Piece.row)
 		log("Stack Height:", this.stackHeight)
-		const input = getMoves()
 		
-		// Undraw Piece
-		this.Piece.draw(this.field, 0)
-		if (this.frames === 60) {
-			input.y = 1 * SPEED
-			this.frames = 0
-		}
+		this.Piece.undraw(this.field)
 
-		if (input.hold === true && this.holdLock === false) {
+		if (this.input.hold === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
-			holdPiece(false)
 		}
-		if (input.hardDrop === true) {
+		if (this.input.hardDrop === true) {
 			this.hardDrop()
 			this.lockPiece = true
-			hardDrop(false)
 		} else {
-			this.Piece.move(input.x, this.field)
-			this.Piece.rotate(this.field, input.r)
+			this.Piece.move(this.input.x, this.field)
+			this.Piece.rotate(this.field, this.input.rot)
 		}
 
 		if (this.Piece.checkCollision(this.field) === 0) {
-			this.Piece.row += input.y
-			moveVertical(0)
+			this.Piece.row += this.input.y
 		} else {
 			if (this.lockDelay === 30) {
 				this.lockPiece = true
@@ -139,8 +147,7 @@ export class Game {
 
 		if (this.lockPiece === true) {
 			log("Piece Locked")
-			this.Piece.draw(this.field, this.Piece.color)
-			this.updateStackHeight()
+			this.Piece.draw(this.field)
 			this.patternMatch()
 			this.lineClear()
 			this.holdLock = false
@@ -150,14 +157,13 @@ export class Game {
 			this.Piece = this.Bag.getNextPiece()
 		}
 
-		// Draw Current Piece
-		this.Piece.draw(this.field, this.Piece.color)
+		this.Piece.draw(this.field)
 
 		if (this.stackHeight <= 0) {
 			console.log("GameOver")
 			this.running = false
 		}
-
-		this.frames++
 	}
+
+	
 }

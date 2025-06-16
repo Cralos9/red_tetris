@@ -14,15 +14,25 @@
 	left: 20px;
 }
 
+.logButton:hover {background-color: #000000}
+
+.logButton:active {
+  background-color: #000000;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
 .logButton
 {
-	background-color: #1c1f1e;
+	background-color: #000000;
 	color: white;
 	font-family: 'Press Start 2P';
 	padding: 15px 40px;
 	margin-left: 0px;
 	font-size: 18px;
 	border: none;
+	border-radius: 5px;
+	box-shadow: 0 9px #999;
 	cursor: pointer;
 	z-index: 2;
 	position: relative;

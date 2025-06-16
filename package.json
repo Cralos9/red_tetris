@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "srv-devDB": "DEBUG=true nodemon server",
+    "srv-devDB": "DEBUG=true nodemon --inspect server",
     "srv-dev": "DEBUG=false nodemon server",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "dev": "next dev --turbopack",
