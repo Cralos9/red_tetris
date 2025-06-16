@@ -34,15 +34,34 @@ export class Piece {
 		return (0)
 	}
 
-	draw(field, color) {
+	drawPiece(field, color) {
 		const pattern = this.getCurrPattern()
 
 		for (let y = 0; y < pattern.length; y++) {
 			const arr = pattern[y]
-			if (this.row + arr[1] > -1) {
-				field[this.row + arr[1]][this.column + arr[0]] = color
-			}
+			field[this.row + arr[1]][this.column + arr[0]] = color
 		}
+	
+	}
+
+	undraw(field) {
+		const y = this.row
+		while (this.checkCollision(field) === 0) {
+			this.row++
+		}
+		this.drawPiece(field, 0)
+		this.row = y
+		this.drawPiece(field, 0)
+	}
+
+	draw(field) {
+		const y = this.row
+		while (this.checkCollision(field) === 0) {
+			this.row++
+		}
+		this.drawPiece(field, -1)
+		this.row = y
+		this.drawPiece(field, this.color)
 	}
 
 	move(x, field) {
