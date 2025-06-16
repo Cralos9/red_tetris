@@ -19,7 +19,7 @@ const formField = (hightestRow) => {
 	for (let i = ROWS - 1; i >= 0; i--) {
 		let arr = []
 		for (let k = 0; k < COLUMNS; k++) {
-			if (i >= hightestRow && !compare(k, i)) {
+			if (i >= hightestRow ) {//&& !compare(k, i)) {
 				arr[k] = 1
 			} else {
 				arr[k] = 0
@@ -63,6 +63,7 @@ export class Game {
 			for (let x = 0; x < COLUMNS; x++) {
 				if (this.field[y][x] > 0) {
 					count++
+					this.stackHeight = y
 				}
 			}
 			if (count === this.field[y].length) {
@@ -74,37 +75,24 @@ export class Game {
 
 	lineClear() {
 		const linesNbr = this.hitList.length
-		const start = this.hitList[0]
+		const start = this.hitList ? this.hitList[0] : 0
 		
 		this.hitList.forEach(line => {
 			for (let i = 0; i < this.field[line]; i++) {
 				this.field[line][i] = 0
 			}
 		})
-		log("Start:", start, this.stackHeight)
 		for (let y = start; y >= this.stackHeight; y--) {
 			log("Clearing Line:", y)
 			for (let x = 0; x < this.field[y].length; x++) {
-				this.field[y][x] = this.field[y - linesNbr][x]
+				if (y - linesNbr > -1) {
+					this.field[y][x] = this.field[y - linesNbr][x]
+				}
 			}
 		}
+		log("Cleared:", linesNbr)
 		this.stackHeight += linesNbr
 		this.hitList = []
-	}
-
-	updateStackHeight() {
-		const pattern = this.Piece.getCurrPattern()
-		let lowerY = pattern[0][1]
-
-		for (let i = 0; i < pattern.length; i++) {
-			if (lowerY > pattern[i][1]) {
-				lowerY = pattern[i][1]
-			}
-		}
-		const provHeight = this.Piece.row + lowerY
-		if (this.stackHeight > provHeight) {
-			this.stackHeight = provHeight
-		}
 	}
 
 	holdPiece() {
@@ -160,8 +148,7 @@ export class Game {
 
 		if (this.lockPiece === true) {
 			log("Piece Locked")
-			this.Piece.draw(this.field, this.Piece.color)
-			this.updateStackHeight()
+			this.Piece.draw(this.field)
 			this.patternMatch()
 			this.lineClear()
 			this.holdLock = false
