@@ -10,8 +10,9 @@ export class Player {
 		this.game = 0
 	}
 
-	runGame(roomCode) {
-		this.game = new Game(this.input)
+	runGame(roomCode, target) {
+		this.game = new Game(this.input, target)
+		console.log("Target:", target)
 		const delay = 16 // Close to 60 FPS
 		let frames = 0
 		const interval = setInterval(() => {

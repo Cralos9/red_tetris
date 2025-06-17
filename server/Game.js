@@ -32,10 +32,8 @@ const formField = (hightestRow) => {
 	return (field)
 }
 
-const garbageQueue = [3]
-
 export class Game {
-	constructor(input) {
+	constructor(input, target) {
 		this.Bag = new Bag()
 		//this.field = formField(ROWS - 15)
 		this.field = []
@@ -59,6 +57,8 @@ export class Game {
 		this.lockDelay = 0
 		this.lockPiece = false
 		this.linesCleared = 0
+		this.target = target
+		this.garbageQueue = []
 	}
 
 	patternMatch() {
@@ -99,6 +99,8 @@ export class Game {
 				}
 			}
 		}
+		this.target.game.garbageQueue.push(linesNbr - 1)
+		console.log("GarbageQueue:", this.target.game.garbageQueue)
 		this.stackHeight += linesNbr
 		this.linesCleared = linesNbr
 	}
@@ -126,28 +128,28 @@ export class Game {
 		}
 	}
 
-	createGarbage(garbageQueue) {
-		garbageQueue.forEach(lineNbr => {
-			for (let y = this.stackHeight; y < ROWS; y++) {
-				const nextY = y - lineNbr
-				for (let x = 0; x < COLUMNS; x++) {
-					if (nextY > -1) {
-						this.field[y - lineNbr][x] = this.field[y][x]
-					}
+	createGarbage() {
+		const lineNbr = this.garbageQueue.shift()
+
+		for (let y = this.stackHeight; y < ROWS; y++) {
+			const nextY = y - lineNbr
+			for (let x = 0; x < COLUMNS; x++) {
+				if (nextY > -1) {
+					this.field[y - lineNbr][x] = this.field[y][x]
 				}
 			}
-			for (let i = 0; i < lineNbr; i++) {
-				const y = (ROWS - 1) - i
-				const gap = randomNbr(COLUMNS - 1)
-				for (let x = 0; x < COLUMNS; x++) {
-					if (x !== gap) {
-						this.field[y][x] = 8
-					} else {
-						this.field[y][x] = 0
-					}
+		}
+		for (let i = 0; i < lineNbr; i++) {
+			const y = (ROWS - 1) - i
+			const gap = randomNbr(COLUMNS - 1)
+			for (let x = 0; x < COLUMNS; x++) {
+				if (x !== gap) {
+					this.field[y][x] = 8
+				} else {
+					this.field[y][x] = 0
 				}
 			}
-		})
+		}
 	}
 
 	update() {
@@ -185,8 +187,8 @@ export class Game {
 			if (this.hitList.length) {
 				this.lineClear()
 			}
-			if (garbageQueue.length) {
-				this.createGarbage(garbageQueue)
+			if (this.garbageQueue.length) {
+				this.createGarbage()
 			}
 			this.holdLock = false
 			this.lockPiece = false
