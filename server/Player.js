@@ -7,14 +7,14 @@ export class Player {
 		this.id = id
 		this.io = io
 		this.input = new GameController()
-		this.game = new Game(this.input)
-		this.interval = 0
+		this.game = 0
 	}
 
 	runGame(roomCode) {
+		this.game = new Game(this.input)
 		const delay = 16 // Close to 60 FPS
 		let frames = 0
-		this.interval = setInterval(() => {
+		const interval = setInterval(() => {
 			if (frames === 60) {
 				this.input.pushDownPiece(1)
 				frames = 0
@@ -25,7 +25,7 @@ export class Player {
 			this.input.rotatePiece(0)
 			this.input.hardDropPiece(false)
 			this.input.holdPiece(false)
-			console.table(this.game.field)
+			//console.table(this.game.field)
 			this.io.to(roomCode).emit('game', {
 				field: this.game.field,
 				linesCleared: this.game.linesCleared,
@@ -34,12 +34,15 @@ export class Player {
 				playerId: this.id,
 				running: this.game.running,
 			})
+			if (this.game.running === false) {
+				clearInterval(interval)
+			}
 			frames++
 		}, delay)
 	}
 
 	stopGame() {
-		clearInterval(this.interval)
+		this.game.running = false
 	}
 
 	toString() {
