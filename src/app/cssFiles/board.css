@@ -30,14 +30,18 @@
 }
 
 
-.cell2 {
+/* .cell2 {
+  position: relative;
+  z-index: 5;
   border: 0px solid #000000;
-  background-color: #22222200;
-}
+  box-shadow: inset 2px 2px 0 #4e4e4e57, inset -4px -4px 0 #44444459;
+} */
 
-.cell {
+.cell, .cell2 {
+  position: relative;
+  z-index: 5;
   border: 2px solid #000000;
-  box-shadow: inset 4px 4px 0 #4e4e4e57, inset -4px -4px 0 #44444459;
+  box-shadow: inset 2px 2px 0 #4e4e4e57, inset -4px -4px 0 #44444459;
 }
 
 .game-bottle {
