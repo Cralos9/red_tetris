@@ -28,7 +28,7 @@ export class Player {
 			console.table(this.game.field)
 			this.io.to(roomCode).emit('game', {
 				field: this.game.field,
-				linesCleared: this.game.hitList.length,
+				linesCleared: this.game.linesCleared,
 				holdPiece: this.game.hold ? {hold: this.game.hold.patterns[0], color: this.game.hold.color} : 0,
 				nextPiece: this.game.Bag.nextPiecesArr(),
 				playerId: this.id,
