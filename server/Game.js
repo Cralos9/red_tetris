@@ -34,7 +34,7 @@ const formField = (hightestRow) => {
 export class Game {
 	constructor(input) {
 		this.Bag = new Bag()
-		//this.field = formField(ROWS - 4)
+		//this.field = formField(ROWS - 15)
 		this.field = []
 		this.input = input
 
@@ -50,7 +50,7 @@ export class Game {
 
 		this.Piece = this.Bag.getNextPiece()
 		this.hitList = []
-		this.stackHeight = ROWS
+		this.stackHeight = ROWS - 1
 		this.hold = null
 		this.holdLock = false
 		this.lockDelay = 0
@@ -72,6 +72,7 @@ export class Game {
 				this.hitList.push(y)
 			}
 		}
+		log("Stack:", this.stackHeight)
 		log("Marked Lines:", this.hitList)
 	}
 
@@ -85,14 +86,16 @@ export class Game {
 			}
 		})
 		for (let y = start; y >= this.stackHeight; y--) {
-			log("Clearing Line:", y)
+			log("Moving Line,", y - linesNbr, "to,", y)
 			for (let x = 0; x < this.field[y].length; x++) {
-				if (y - linesNbr > -1) {
-					this.field[y][x] = this.field[y - linesNbr][x]
+				const nextY = y - linesNbr
+				if (nextY > -1) {
+					this.field[y][x] = this.field[nextY][x]
+				} else {
+					this.field[y][x] = 0
 				}
 			}
 		}
-		log("Cleared:", linesNbr)
 		this.stackHeight += linesNbr
 		this.linesCleared = linesNbr
 	}
@@ -122,7 +125,6 @@ export class Game {
 
 	update() {
 		log("Current Piece Row:", this.Piece.row)
-		log("Stack Height:", this.stackHeight)
 		this.linesCleared = 0
 		
 		this.Piece.undraw(this.field)
@@ -153,7 +155,9 @@ export class Game {
 			log("Piece Locked")
 			this.Piece.draw(this.field)
 			this.patternMatch()
-			this.lineClear()
+			if (this.hitList.length) {
+				this.lineClear()
+			}
 			this.holdLock = false
 			this.lockPiece = false
 			this.lockDelay = 0
