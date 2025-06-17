@@ -55,6 +55,7 @@ export class Game {
 		this.holdLock = false
 		this.lockDelay = 0
 		this.lockPiece = false
+		this.linesCleared = 0
 	}
 
 	patternMatch() {
@@ -93,6 +94,7 @@ export class Game {
 		}
 		log("Cleared:", linesNbr)
 		this.stackHeight += linesNbr
+		this.linesCleared = linesNbr
 	}
 
 	holdPiece() {
@@ -121,6 +123,7 @@ export class Game {
 	update() {
 		log("Current Piece Row:", this.Piece.row)
 		log("Stack Height:", this.stackHeight)
+		this.linesCleared = 0
 		
 		this.Piece.undraw(this.field)
 
@@ -138,6 +141,7 @@ export class Game {
 
 		if (this.Piece.checkCollision(this.field) === 0) {
 			this.Piece.row += this.input.y
+			this.lockDelay = 0
 		} else {
 			if (this.lockDelay === 30) {
 				this.lockPiece = true
