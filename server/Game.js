@@ -1,6 +1,7 @@
 import { log } from "./debug.js"
 import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS, SPEED } from "./gameParams.js"
+import { randomNbr } from "./utils.js"
 
 const coor = [[5,19],[5,18],[5,17],[5,16],[4,17],[6,17],[7,17]]
 
@@ -30,6 +31,8 @@ const formField = (hightestRow) => {
 	console.table(field)
 	return (field)
 }
+
+const garbageQueue = [3]
 
 export class Game {
 	constructor(input) {
@@ -87,8 +90,8 @@ export class Game {
 		})
 		for (let y = start; y >= this.stackHeight; y--) {
 			log("Moving Line,", y - linesNbr, "to,", y)
+			const nextY = y - linesNbr
 			for (let x = 0; x < this.field[y].length; x++) {
-				const nextY = y - linesNbr
 				if (nextY > -1) {
 					this.field[y][x] = this.field[nextY][x]
 				} else {
@@ -121,6 +124,30 @@ export class Game {
 		while (this.Piece.checkCollision(this.field) === 0) {
 			this.Piece.row++
 		}
+	}
+
+	createGarbage(garbageQueue) {
+		garbageQueue.forEach(lineNbr => {
+			for (let y = this.stackHeight; y < ROWS; y++) {
+				const nextY = y - lineNbr
+				for (let x = 0; x < COLUMNS; x++) {
+					if (nextY > -1) {
+						this.field[y - lineNbr][x] = this.field[y][x]
+					}
+				}
+			}
+			for (let i = 0; i < lineNbr; i++) {
+				const y = (ROWS - 1) - i
+				const gap = randomNbr(COLUMNS - 1)
+				for (let x = 0; x < COLUMNS; x++) {
+					if (x !== gap) {
+						this.field[y][x] = 8
+					} else {
+						this.field[y][x] = 0
+					}
+				}
+			}
+		})
 	}
 
 	update() {
@@ -157,6 +184,9 @@ export class Game {
 			this.patternMatch()
 			if (this.hitList.length) {
 				this.lineClear()
+			}
+			if (garbageQueue.length) {
+				this.createGarbage(garbageQueue)
 			}
 			this.holdLock = false
 			this.lockPiece = false
