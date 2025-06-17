@@ -5,11 +5,6 @@ import { socket } from "../../../socket";
 import  gameDraw  from "./functions";
 
 export default function RoomPage() {
-	const gifs = [
-		"/images/blue_virus.gif",
-		"/images/yellow_virus.gif",
-		"/images/red_virus.gif"
-	  ];
 	const params = useParams();
 	const roomCode = params.room;
 	const [gameOver, setGameOver] = useState(false);
@@ -30,10 +25,11 @@ export default function RoomPage() {
 	  
 		function handleConnect() {
 			console.log("Connection Accepted")
+			// socket.emit('disconnection', {roomCode: roomCode})
 		}
 
 		socket.on("connect", handleConnect);
-
+		
 		return function cleanup() {
 			socket.off("connect", handleConnect);
 		};
@@ -68,13 +64,29 @@ export default function RoomPage() {
 			}
 			const field = msg.field;
 			var cells 
-			if (msg.playerId === socket.id) {
+			if (msg.playerId === socket.id) 
+			{
 				cells = document.querySelectorAll('.game-bottle .cell');
 				const heldPiece = msg.holdPiece
 				const nextPiece = msg.nextPiece
 				gameDraw.nextPieceDraw(nextPiece);
 				gameDraw.heldPieceDraw(heldPiece);
-				const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
+				const lineClear = document.createElement('div');
+				if (msg.linesCleared > 0) 
+				{
+					console.log(msg.linesCleared)
+					const existing = document.querySelector('.lineClear');
+					if (existing) existing.remove();
+				
+					lineClear.className = 'lineClear';
+					lineClear.textContent = gameDraw.get_lines(msg.linesCleared)
+					void lineClear.offsetWidth;
+					document.body.appendChild(lineClear);
+					setTimeout(() => {
+						lineClear.remove();
+					}, 2000);
+					msg.linesCleared =0;
+				}
 			} 
 			else 
 			{
@@ -84,13 +96,30 @@ export default function RoomPage() {
 			gameDraw.game(cells, field)
 		});
 
+		async function handleBeforeUnload() {
+			if (socket && socket.connected) {
+				await new Promise((resolve) => {
+					socket.emit('disconnection', { roomCode: roomCode }, resolve);
+				});
+				if (otherBoards && otherBoards.length) {
+					for (let i = 0; i < otherBoards.length; i++) {
+						const otherBoard = document.getElementById(otherBoards[i]);
+						if (otherBoard) otherBoard.remove();
+					}
+				}
+				socket.disconnect();
+			}
+		}
+		
+		window.addEventListener('beforeunload', handleBeforeUnload);
+
 		document.addEventListener("keydown", e => {
 			socket.emit("keyDown", {key: e.key, roomCode: roomCode})
 		})
 		
-		gameDraw.add_cells('.game-bottle', 200)
 		// const game22 = document.querySelector('.secondary-games');
 		// game22.innerHTML = '';
+		gameDraw.add_cells('.game-bottle', 200)
 		gameDraw.add_cells('.next-piece', 60)
 		gameDraw.add_cells('.held-piece', 30)
 		if (name) 
@@ -99,17 +128,6 @@ export default function RoomPage() {
 	
 	function resetGame()
 	{
-		const single = document.createElement('div');
-		const lines = document.querySelector('.lineClear')
-
-		if(lines)
-		{
-			lines.textContent = 'Double'
-			return
-		}
-		single.className = 'lineClear';
-		single.textContent = 'Single';
-		document.body.appendChild(single);
 		// socket.emit("keyDown", {key: "Escape"})
 		// setIsDisabled(false)
 	}

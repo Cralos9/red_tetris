@@ -1,4 +1,10 @@
 
+const gifs = [
+	"/images/blue_virus.gif",
+	"/images/yellow_virus.gif",
+	"/images/red_virus.gif"
+];
+
 function game(cells, field)
 {
 	for (let y = 0; y < 20; y++) 
@@ -19,8 +25,8 @@ function game(cells, field)
 				{
 					if (!cell.hasAttribute('data-virus')) 
 					{
-					const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
-					cell.setAttribute('data-virus', randomGif);
+						const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
+						cell.setAttribute('data-virus', randomGif);
 					}
 					const virusGif = cell.getAttribute('data-virus');
 					cell.style.backgroundImage = `url('${virusGif}')`;
@@ -28,6 +34,15 @@ function game(cells, field)
 				}
 			}
 		}
+}
+
+function get_lines(linesCleared)
+{
+	const lines = {
+		1: 'Single',
+		2: 'Double',
+	}
+	return(lines[linesCleared])
 }
 
 function add_secondary_cells(div,  amount)
@@ -134,7 +149,8 @@ const gameDraw = {
 	getColor,
 	add_cells,
 	add_secondary_cells,
-	game
+	game,
+	get_lines
 };
 
 export default gameDraw;
