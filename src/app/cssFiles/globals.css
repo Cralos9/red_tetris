@@ -192,7 +192,7 @@
 }
 
 .lineClear {
-	right : 470px;
+	right: 470px;
 	bottom: 200px;
 	font-family: 'Press Start 2P';
 	font-weight: bold;
@@ -201,8 +201,18 @@
 	position: absolute;
 	text-align: center;
 	color: #ffb006;
-	text-shadow: 5px 5px  #4b4b4bc9;
+	text-shadow: 5px 5px #4b4b4bc9;
+	opacity: 1;
+	animation: tilt-shaking 2s;
 }
+
+@keyframes tilt-shaking {
+	0% { transform: rotate(0deg); }
+	25% { transform: rotate(5deg); }
+	50% { transform: rotate(0deg); }
+	75% { transform: rotate(-5deg); }
+	100% { transform: rotate(0deg); }
+  }
 
 
 .title {

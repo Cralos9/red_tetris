@@ -1,6 +1,7 @@
 import { log } from "./debug.js"
 import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS, SPEED } from "./gameParams.js"
+import { randomNbr } from "./utils.js"
 
 const coor = [[5,19],[5,18],[5,17],[5,16],[4,17],[6,17],[7,17]]
 
@@ -32,7 +33,7 @@ const formField = (hightestRow) => {
 }
 
 export class Game {
-	constructor(input) {
+	constructor(input, target) {
 		this.Bag = new Bag()
 		//this.field = formField(ROWS - 15)
 		this.field = []
@@ -56,6 +57,8 @@ export class Game {
 		this.lockDelay = 0
 		this.lockPiece = false
 		this.linesCleared = 0
+		this.target = target
+		this.garbageQueue = []
 	}
 
 	patternMatch() {
@@ -87,8 +90,8 @@ export class Game {
 		})
 		for (let y = start; y >= this.stackHeight; y--) {
 			log("Moving Line,", y - linesNbr, "to,", y)
+			const nextY = y - linesNbr
 			for (let x = 0; x < this.field[y].length; x++) {
-				const nextY = y - linesNbr
 				if (nextY > -1) {
 					this.field[y][x] = this.field[nextY][x]
 				} else {
@@ -96,6 +99,8 @@ export class Game {
 				}
 			}
 		}
+		this.target.game.garbageQueue.push(linesNbr - 1)
+		console.log("GarbageQueue:", this.target.game.garbageQueue)
 		this.stackHeight += linesNbr
 		this.linesCleared = linesNbr
 	}
@@ -120,6 +125,30 @@ export class Game {
 	hardDrop() {
 		while (this.Piece.checkCollision(this.field) === 0) {
 			this.Piece.row++
+		}
+	}
+
+	createGarbage() {
+		const lineNbr = this.garbageQueue.shift()
+
+		for (let y = this.stackHeight; y < ROWS; y++) {
+			const nextY = y - lineNbr
+			for (let x = 0; x < COLUMNS; x++) {
+				if (nextY > -1) {
+					this.field[y - lineNbr][x] = this.field[y][x]
+				}
+			}
+		}
+		for (let i = 0; i < lineNbr; i++) {
+			const y = (ROWS - 1) - i
+			const gap = randomNbr(COLUMNS - 1)
+			for (let x = 0; x < COLUMNS; x++) {
+				if (x !== gap) {
+					this.field[y][x] = 8
+				} else {
+					this.field[y][x] = 0
+				}
+			}
 		}
 	}
 
@@ -157,6 +186,9 @@ export class Game {
 			this.patternMatch()
 			if (this.hitList.length) {
 				this.lineClear()
+			}
+			if (this.garbageQueue.length) {
+				this.createGarbage()
 			}
 			this.holdLock = false
 			this.lockPiece = false

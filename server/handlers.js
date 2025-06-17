@@ -29,9 +29,11 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		io.to(roomCode).emit('join', {playerIds: arr})
 	}
 	const disconnection = (reason) => {
+		const room = RoomsMap.get(reason.roomCode)
+		room.leavePlayer(socket.id)
 		console.log("Disconnected:", reason)
 	}
-	socket.on('disconnect', disconnection)
+	socket.on('disconnection', disconnection)
 	socket.on('joinRoom', joinRoom)
 }
 
@@ -67,7 +69,6 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 				break
 			case "Escape":
 				player.stopGame()
-
 			default:
 				console.log("Not Rec Key", key)
 				break
@@ -79,7 +80,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const room = RoomsMap.get(roomCode)
 		room.plMap.forEach(player => {
 			log("Game Started,", player.toString())
-			player.runGame(roomCode)
+			player.runGame(roomCode, room.getTarget())
 		})
 	}
 	socket.on('startGame', startGame)

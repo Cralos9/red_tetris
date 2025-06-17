@@ -1,3 +1,5 @@
+import { randomNbr } from "./utils.js"
+
 export class Room {
 	constructor() { 
 		this.plMap = new Map()
@@ -6,6 +8,11 @@ export class Room {
 	
 	addPlayer(socketId, player) {
 		this.plMap.set(socketId, player)
+	}
+
+	getTarget() {
+		const keys = Array.from(this.plMap.values())
+		return (keys[randomNbr(this.plMap.size)])
 	}
 
 	searchPlayer(playerId) {
