@@ -1,6 +1,7 @@
 export class Room {
 	constructor() { 
 		this.plMap = new Map()
+		this.owner = null;
 		console.log("Creating a Room")
 	}
 	

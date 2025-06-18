@@ -36,7 +36,7 @@ export default function Game() {
 	e.preventDefault();
 	const input = document.getElementById('input');
 	const room = input.value;
-	if(!input.value || !input.value.match(/^[0-9a-z]+$/))
+	if(!input.value || !input.value.match(/^[0-9a-zA-Z]+$/))
 	{
 		if (!input.value)
 			input.placeholder = "Must have a room code";

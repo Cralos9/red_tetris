@@ -28,11 +28,11 @@ const formField = (hightestRow) => {
 		}
 		field[i] = arr
 	}
-	console.table(field)
+	// console.table(field)
 	return (field)
 }
 
-const garbageQueue = [3]
+var garbageQueue = [1]
 
 export class Game {
 	constructor(input) {
@@ -135,6 +135,7 @@ export class Game {
 						this.field[y - lineNbr][x] = this.field[y][x]
 					}
 				}
+				garbageQueue = [0]
 			}
 			for (let i = 0; i < lineNbr; i++) {
 				const y = (ROWS - 1) - i

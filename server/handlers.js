@@ -15,6 +15,8 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 			RoomsMap.set(roomCode, new Room())
 		}
 		const room = RoomsMap.get(roomCode)
+		if(room.plMap.size  == 0)
+			room.owner = socket.id
 		room.addPlayer(socket.id, player)
 		console.log("RoomMap:", RoomsMap)
 		socket.join(roomCode.toString())
@@ -26,10 +28,15 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 			console.log(value)
 			value = iter.next().value
 		}
-		io.to(roomCode).emit('join', {playerIds: arr})
+		io.to(roomCode).emit('join', {playerIds: arr, roomOwner: room.owner})
 	}
 	const disconnection = (reason) => {
 		const room = RoomsMap.get(reason.roomCode)
+		// if (socket.id == room.owner)
+		// 	room.owner = null;
+		const player = room.plMap.get(socket.id)
+		player.game.running = false;
+		console.log("gameRunning: ", player.game.running)
 		room.leavePlayer(socket.id)
 		console.log("Disconnected:", reason)
 	}
@@ -76,8 +83,13 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 	}
 	const startGame = (payload) => {
 		const roomCode = payload.roomCode
-		console.log("Code", roomCode)
 		const room = RoomsMap.get(roomCode)
+		const player = room.plMap.get(socket.id)
+		if (room.owner != socket.id)
+		{
+			console.log("Not owner");
+			return;
+		}
 		room.plMap.forEach(player => {
 			log("Game Started,", player.toString())
 			player.runGame(roomCode)

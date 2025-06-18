@@ -11,7 +11,7 @@ export default function Home() {
   {
 	e.preventDefault();
 	const name = document.getElementById('username')
-	if(!name.value || !name.value.match(/^[0-9a-z]+$/))
+	if(!name.value || !name.value.match(/^[0-9a-zA-Z]+$/))
 	{
 		if (!name.value)
 			name.placeholder = "Must have a user";

@@ -1,8 +1,8 @@
 
 const gifs = [
-	"/images/blue_virus.gif",
-	"/images/yellow_virus.gif",
-	"/images/red_virus.gif"
+	"/images/blue_virus2.gif",
+	"/images/yellow_virus2.gif",
+	"/images/red_virus2.gif"
 ];
 
 function game(cells, field)
@@ -41,6 +41,8 @@ function get_lines(linesCleared)
 	const lines = {
 		1: 'Single',
 		2: 'Double',
+		3: 'Triple',
+		4: 'Home Run',
 	}
 	return(lines[linesCleared])
 }

@@ -72,71 +72,6 @@
 	position: relative;
 	left: 5vw;
 }
-
-
-.secondary-games {
-	display: flex;
-	flex-direction: row;
-	gap: 2vw;
-	padding: 20px;
-	width: fit-content;
-	position: absolute;
-	left : 2%;
-	top: 20%;
-	background: transparent;
-	border: none;
-	border-radius: 20px;
-	box-shadow: none;
-	overflow-x: auto;
-	z-index: 3;
-}
-
-.secondary-game {
-	display: grid;
-	grid-template-columns: repeat(10, 1fr);
-	grid-template-rows: repeat(20, 1fr);
-	background: rgba(126, 126, 126, 0.964);
-	width: 10vw;
-	height: 40vh;
-	border-left: 4px solid #0d0e0d;
-	border-right: 4px solid #0d0e0d;
-	border-bottom: 4px solid #0d0e0d;
-	border-top: none;
-	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
-	text-align: center;
-	position: relative;
-	z-index: 1;
-}
-
-.wrapper {
-	display: grid;
-	grid-template-columns: repeat(10, 1fr);
-	column-gap: 10px;
-	row-gap: 1em;
-  }  
-
-
-.game-wrapper {
-	position: absolute;
-	display: flex;
-	justify-content: center;
-	top: 20%;
-	left: 32%;
-}
-  
-.player-wrapper {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	margin: 10px;
-  }
-  
-  .player-label {
-	font-size: 14px;
-	font-weight: bold;
-	color: white;
-	margin-bottom: 5px;
-  }
   
 
 .usercard
@@ -203,7 +138,7 @@
 	color: #ffb006;
 	text-shadow: 5px 5px #4b4b4bc9;
 	opacity: 1;
-	animation: tilt-shaking 2s;
+	animation: tilt-shaking 1s;
 }
 
 @keyframes tilt-shaking {
