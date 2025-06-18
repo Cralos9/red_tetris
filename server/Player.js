@@ -13,8 +13,8 @@ export class Player extends Observer {
 		this.game = 0
 	}
 
-	runGame(roomCode, target) {
-		this.game = new Game(this.input, target)
+	runGame(roomCode) {
+		this.game = new Game(this.input, this.targets)
 		const delay = 16 // Close to 60 FPS
 		let frames = 0
 		const interval = setInterval(() => {
@@ -44,9 +44,11 @@ export class Player extends Observer {
 		}, delay)
 	}
 
-	update(payload) {
-		console.log("Targets:", payload)
-		this.targets = payload
+	update(newPlayer) {
+		this.targets.push(newPlayer)
+		console.log("Targets from:", this.toString())
+		this.targets.forEach(player => console.log(player.toString()))
+		console.log("End Targets")
 	}
 
 	stopGame() {

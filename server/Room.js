@@ -1,4 +1,3 @@
-import { randomNbr } from "./utils.js"
 import { Subject } from "./Subject.js"
 
 export class Room extends Subject {
@@ -9,14 +8,10 @@ export class Room extends Subject {
 	}
 	
 	addPlayer(socketId, player) {
-		this.addObserver(player)
-		this.notify(Array.from(this.plMap.values()))
+		this.notify(player)
+		player.targets = Array.from(this.plMap.values())
 		this.plMap.set(socketId, player)
-	}
-
-	getTarget() {
-		const keys = Array.from(this.plMap.values())
-		return (keys[randomNbr(this.plMap.size)])
+		this.addObserver(player)
 	}
 
 	searchPlayer(playerId) {
@@ -24,6 +19,9 @@ export class Room extends Subject {
 	}
 
 	leavePlayer(socketId) {
+		//const player = this.plMap.get(socketId)
+		//this.removeObserver(player)
+		//this.notify(player)
 		this.plMap.delete(socketId)
 	}
 }
