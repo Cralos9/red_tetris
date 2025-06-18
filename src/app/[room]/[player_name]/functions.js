@@ -80,13 +80,13 @@ function getColor(value)
 	const colors = {
 	"-1": '#ffffffCC',
 	0: 'transparent',
-	1: '#00faff', // vivid cyan
-	2: '#c030ff', // bright violet
-	3: '#3399ff', // strong blue
-	4: '#ff9933', // bold orange
-	5: '#ffff33', // vivid yellow
-	6: '#33ff33', // bright green
-	7: '#ff3333'  // strong red
+	1: '#00faff', 
+	2: '#c030ff',
+	3: '#3399ff',
+	4: '#ff9933',
+	5: '#ffff33',
+	6: '#33ff33',
+	7: '#ff3333'  
 	};
 	
 	return colors[value];
