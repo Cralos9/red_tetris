@@ -1,8 +1,11 @@
 import { Game } from "./Game.js"
 import { GameController } from "./GameInput.js"
+import { Observer } from "./Observer.js"
 
-export class Player {
+export class Player extends Observer {
 	constructor(name, io, id) {
+		super()
+		this.targets = null
 		this.name = name
 		this.id = id
 		this.io = io
@@ -12,7 +15,6 @@ export class Player {
 
 	runGame(roomCode, target) {
 		this.game = new Game(this.input, target)
-		console.log("Target:", target)
 		const delay = 16 // Close to 60 FPS
 		let frames = 0
 		const interval = setInterval(() => {
@@ -40,6 +42,11 @@ export class Player {
 			}
 			frames++
 		}, delay)
+	}
+
+	update(payload) {
+		console.log("Targets:", payload)
+		this.targets = payload
 	}
 
 	stopGame() {
