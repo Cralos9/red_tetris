@@ -1,6 +1,6 @@
-import { Game } from "./Game.js"
-import { GameController } from "./GameInput.js"
-import { Observer } from "./Observer.js"
+import { Game } from "./Game/Game.js"
+import { GameController } from "./Game/GameInput.js"
+import { Observer } from "./Observer/Observer.js"
 import { Events } from "./globalEvents.js"
 import { log } from "./debug.js"
 

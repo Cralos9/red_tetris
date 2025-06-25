@@ -1,4 +1,4 @@
-import { Subject } from "./Subject.js"
+import { Subject } from "./Observer/Subject.js"
 import { Events } from "./globalEvents.js"
 
 export class Room extends Subject {

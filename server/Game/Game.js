@@ -1,6 +1,6 @@
-import { log } from "./debug.js"
+import { log } from "../debug.js"
 import { Bag } from "./Bag.js"
-import { ROWS, COLUMNS, SPEED } from "./gameParams.js"
+import { ROWS, COLUMNS } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
 
 const coor = [[5,19],[5,18],[5,17],[5,16],[4,17],[6,17],[7,17]]

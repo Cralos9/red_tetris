@@ -1,6 +1,6 @@
 import { Room } from "./Room.js"
 import { Player } from "./Player.js"
-import { keyBinds } from "./gameParams.js"
+import { keyBinds } from "./Game/gameParams.js"
 import { log } from "./debug.js"
 
 // Map socket.id to Players
