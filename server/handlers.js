@@ -80,7 +80,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const room = RoomsMap.get(roomCode)
 		room.plMap.forEach(player => {
 			log("Game Started,", player.toString())
-			player.runGame(roomCode, room.getTarget())
+			player.runGame(roomCode)
 		})
 	}
 	socket.on('startGame', startGame)

@@ -1,18 +1,19 @@
-import { randomNbr } from "./utils.js"
+import { Subject } from "./Subject.js"
+import { Events } from "./globalEvents.js"
 
-export class Room {
+export class Room extends Subject {
 	constructor() { 
+		super()
 		this.plMap = new Map()
 		console.log("Creating a Room")
 	}
 	
 	addPlayer(socketId, player) {
+		console.log("This Player joined the Room")
+		this.notify(player, Events.JOIN_PLAYER)
+		player.targets = Array.from(this.plMap.values())
 		this.plMap.set(socketId, player)
-	}
-
-	getTarget() {
-		const keys = Array.from(this.plMap.values())
-		return (keys[randomNbr(this.plMap.size)])
+		this.addObserver(player)
 	}
 
 	searchPlayer(playerId) {
@@ -20,6 +21,10 @@ export class Room {
 	}
 
 	leavePlayer(socketId) {
+		console.log("This Player left the Room")
+		const player = this.plMap.get(socketId)
 		this.plMap.delete(socketId)
+		this.removeObserver(player)
+		this.notify(player, Events.LEAVE_PLAYER)
 	}
 }

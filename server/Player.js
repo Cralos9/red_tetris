@@ -1,8 +1,13 @@
 import { Game } from "./Game.js"
 import { GameController } from "./GameInput.js"
+import { Observer } from "./Observer.js"
+import { Events } from "./globalEvents.js"
+import { log } from "./debug.js"
 
-export class Player {
+export class Player extends Observer {
 	constructor(name, io, id) {
+		super()
+		this.targets = []
 		this.name = name
 		this.id = id
 		this.io = io
@@ -10,9 +15,8 @@ export class Player {
 		this.game = 0
 	}
 
-	runGame(roomCode, target) {
-		this.game = new Game(this.input, target)
-		console.log("Target:", target)
+	runGame(roomCode) {
+		this.game = new Game(this.input, this.targets)
 		const delay = 16 // Close to 60 FPS
 		let frames = 0
 		const interval = setInterval(() => {
@@ -40,6 +44,23 @@ export class Player {
 			}
 			frames++
 		}, delay)
+	}
+
+	update(state, event) {
+		switch (event) {
+			case Events.JOIN_PLAYER:
+				var joiner = state
+				log("Add Player to Targets:", joiner.id)
+				this.targets.push(joiner)
+				break
+			case Events.LEAVE_PLAYER:
+				var leaver = state
+				console.log("Remove Player:", leaver.id)
+				this.targets = this.targets.filter(player => player.id !== leaver.id)
+				break
+			default:
+				break
+		}
 	}
 
 	stopGame() {

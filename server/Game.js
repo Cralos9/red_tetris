@@ -33,7 +33,7 @@ const formField = (hightestRow) => {
 }
 
 export class Game {
-	constructor(input, target) {
+	constructor(input, targets) {
 		this.Bag = new Bag()
 		//this.field = formField(ROWS - 15)
 		this.field = []
@@ -57,7 +57,9 @@ export class Game {
 		this.lockDelay = 0
 		this.lockPiece = false
 		this.linesCleared = 0
-		this.target = target
+
+		this.targets = targets
+
 		this.garbageQueue = []
 	}
 
@@ -99,8 +101,11 @@ export class Game {
 				}
 			}
 		}
-		this.target.game.garbageQueue.push(linesNbr - 1)
-		console.log("GarbageQueue:", this.target.game.garbageQueue)
+		if (linesNbr > 1) {
+			this.targets.forEach(target => {
+				target.game.garbageQueue.push(linesNbr - 1)
+			})
+		}
 		this.stackHeight += linesNbr
 		this.linesCleared = linesNbr
 	}
@@ -204,6 +209,4 @@ export class Game {
 			this.running = false
 		}
 	}
-
-	
 }
