@@ -52,6 +52,7 @@ export class Player extends Observer {
 				var leaver = state
 				console.log("Remove Player:", leaver.id)
 				this.targets = this.targets.filter(player => player.id !== leaver.id)
+				this.io.emit("boardRemove", {id : leaver.id})
 				break
 			default:
 				break

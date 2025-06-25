@@ -33,9 +33,17 @@ export default function RoomPage() {
 
 		socket.on("connect", handleConnect);
 		
+		socket.on('Owner', (msg) =>
+		{
+			console.log("Socket oN owner")
+			if(socket.id === msg.owner)
+				document.getElementById('Start').style.visibility = 'visible'
+		});
+
 		socket.on("boardRemove", (msg) =>
 		{
-			var board = document.getElementById(socket.id)
+			console.log("Board Remove Id: " ,msg.id)
+			var board = document.getElementById(msg.id)
 			if(board)
 			{
 				console.log("ENTROU Ze")

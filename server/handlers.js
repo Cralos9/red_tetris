@@ -47,10 +47,10 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		const player = room.plMap.get(socket.id)
 		if (player) 
 		{
-			if(player.game.running)
+			if(player.game)
 				player.game.running = false
-			room.leavePlayer(socket.id, room)
-			socket.emit("boardRemove", {id : socket.id})
+			room.leavePlayer(socket.id)
+			socket.emit("Owner", {owner: room.owner})
 			console.log("Disconnected:", reason)
 		}
 	}
@@ -72,8 +72,8 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 
 		for (const sockId of toRemove) 
 		{
-			room.leavePlayer(sockId, room)
-			socket.emit("boardRemove", {id : socket.id})
+			room.leavePlayer(sockId)
+			socket.emit("Owner", {owner: room.owner})
 			const staleSocket = io.sockets.sockets.get(sockId)
 			if (staleSocket) 
 				staleSocket.leave(room.code)
