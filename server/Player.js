@@ -3,12 +3,14 @@ import { GameController } from "./Game/GameInput.js"
 import { Observer } from "./Observer/Observer.js"
 import { Events } from "./globalEvents.js"
 import { log } from "./debug.js"
+import { TargetManager } from "./Game/TargetManager.js"
 
 export class Player extends Observer {
 	constructor(name, io, id) {
 		super()
 		this.targets = []
 		this.game = null
+		this.targetManager = null
 		this.name = name
 		this.id = id
 		this.io = io
@@ -17,7 +19,9 @@ export class Player extends Observer {
 	}
 
 	runGame(roomCode) {
+		this.targetManager = new TargetManager(this.targets)
 		this.game = new Game(this.input, this.targets)
+		this.game.addObserver(this.targetManager)
 		const delay = 16 // Close to 60 FPS
 		const interval = setInterval(() => {
 			this.game.update()
