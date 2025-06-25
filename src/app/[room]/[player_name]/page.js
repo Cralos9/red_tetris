@@ -23,6 +23,9 @@ export default function RoomPage() {
 	useEffect(() => {
 		socket.connect();
 	  
+		socket.on('ping-check', () => {
+			socket.emit('pong-check')
+		})
 		function handleConnect() {
 			console.log("Connection Accepted")
 			// socket.emit('disconnection', {roomCode: roomCode})
@@ -30,6 +33,15 @@ export default function RoomPage() {
 
 		socket.on("connect", handleConnect);
 		
+		socket.on("boardRemove", (msg) =>
+		{
+			var board = document.getElementById(socket.id)
+			if(board)
+			{
+				console.log("ENTROU Ze")
+				board.remove();
+			}
+		});
 		return function cleanup() {
 			socket.off("connect", handleConnect);
 		};
@@ -37,6 +49,7 @@ export default function RoomPage() {
 
 	useEffect(() => {
 		socket.emit('joinRoom', {playerName: name, roomCode: roomCode})
+
 		socket.on('join', (msg) => 
 		{
 			if(socket.id != msg.roomOwner)

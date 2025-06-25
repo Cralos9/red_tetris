@@ -6,6 +6,7 @@ export class Player {
 		this.name = name
 		this.id = id
 		this.io = io
+		this.isAlive = true
 		this.input = new GameController()
 		this.game = 0
 	}
