@@ -57,9 +57,9 @@ export class Game {
 		this.lockDelay = 0
 		this.lockPiece = false
 		this.linesCleared = 0
+		this.frames = 0
 
 		this.targets = targets
-
 		this.garbageQueue = []
 	}
 
@@ -140,7 +140,7 @@ export class Game {
 			const nextY = y - lineNbr
 			for (let x = 0; x < COLUMNS; x++) {
 				if (nextY > -1) {
-					this.field[y - lineNbr][x] = this.field[y][x]
+					this.field[nextY][x] = this.field[y][x]
 				}
 			}
 		}
@@ -161,12 +161,17 @@ export class Game {
 		log("Current Piece Row:", this.Piece.row)
 		this.linesCleared = 0
 		
+		if (this.frames % 60 === 0) {
+			this.input.softDropPiece(1)
+		}
+
 		this.Piece.undraw(this.field)
 
 		if (this.input.hold === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
 		}
+
 		if (this.input.hardDrop === true) {
 			this.hardDrop()
 			this.lockPiece = true
@@ -208,5 +213,6 @@ export class Game {
 			console.log("GameOver")
 			this.running = false
 		}
+		this.frames += 1
 	}
 }

@@ -62,7 +62,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 				player.input.rotatePiece(-1)
 				break
 			case keyBinds.SOFTDROP:
-				player.input.pushDownPiece(1)
+				player.input.softDropPiece(1)
 				break
 			case keyBinds.HOLD:
 				player.input.holdPiece(true)
