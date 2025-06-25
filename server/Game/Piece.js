@@ -1,4 +1,4 @@
-import { log } from "./debug.js"
+import { log } from "../debug.js"
 import { COLUMNS, ROWS } from "./gameParams.js"
 import { getRotations, getSkirt, compare, getKicks } from "./utils.js"
 
