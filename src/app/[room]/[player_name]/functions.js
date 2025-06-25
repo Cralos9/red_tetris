@@ -1,8 +1,8 @@
 
 const gifs = [
-	"/images/blue_virus.gif",
-	"/images/yellow_virus.gif",
-	"/images/red_virus.gif"
+	"/images/blue_virus2.gif",
+	"/images/yellow_virus2.gif",
+	"/images/red_virus2.gif"
 ];
 
 function game(cells, field)
@@ -41,6 +41,8 @@ function get_lines(linesCleared)
 	const lines = {
 		1: 'Single',
 		2: 'Double',
+		3: 'Triple',
+		4: 'Home Run',
 	}
 	return(lines[linesCleared])
 }
@@ -78,13 +80,13 @@ function getColor(value)
 	const colors = {
 	"-1": '#ffffffCC',
 	0: 'transparent',
-	1: '#b2ffff',
-	2: '#d6a4ff',
-	3: '#a3c4ff',
-	4: '#ffd1a4',
-	5: '#ffffb2',
-	6: '#b2ffb2',       
-	7: '#ffb2b2'
+	1: '#00faff', 
+	2: '#c030ff',
+	3: '#3399ff',
+	4: '#ff9933',
+	5: '#ffff33',
+	6: '#33ff33',
+	7: '#ff3333'  
 	};
 	
 	return colors[value];

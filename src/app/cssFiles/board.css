@@ -30,6 +30,57 @@
 }
 
 
+
+.secondary-games {
+	display: flex;
+	flex-direction: row;
+	gap: 2vw;
+	padding: 20px;
+	width: fit-content;
+	position: absolute;
+	left : 2%;
+	top: 20%;
+	background: transparent;
+	border: none;
+	border-radius: 20px;
+	box-shadow: none;
+	overflow-x: auto;
+	z-index: 3;
+}
+
+.secondary-game {
+	display: grid;
+	grid-template-columns: repeat(10, 1fr);
+	grid-template-rows: repeat(20, 1fr);
+  background: rgba(70, 70, 70, 0.964);
+	width: 10vw;
+	height: 40vh;
+	border-left: 4px solid #0d0e0d;
+	border-right: 4px solid #0d0e0d;
+	border-bottom: 4px solid #0d0e0d;
+	border-top: none;
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+	text-align: center;
+	position: relative;
+	z-index: 1;
+}
+
+.wrapper {
+	display: grid;
+	grid-template-columns: repeat(10, 1fr);
+	column-gap: 10px;
+	row-gap: 1em;
+  }  
+
+
+.game-wrapper {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	top: 20%;
+	left: 32%;
+}
+
 /* .cell2 {
   position: relative;
   z-index: 5;
@@ -41,7 +92,7 @@
   position: relative;
   z-index: 5;
   border: 2px solid #000000;
-  box-shadow: inset 2px 2px 0 #4e4e4e57, inset -4px -4px 0 #44444459;
+  box-shadow: inset 4px 4px 0 #4e4e4e57, inset -4px -4px 0 #44444459;
 }
 
 .game-bottle {
@@ -50,7 +101,7 @@
   position: relative;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(20, 1fr);
-  background: rgba(126, 126, 126, 0.964);
+  background: rgba(70, 70, 70, 0.964);
   width: 400px;
   height: 700px;
   border-left: 20px solid #0d0e0d;
@@ -68,7 +119,7 @@
   position: relative;
   width: 150px;
   height: 150px;
-  background: rgba(126, 126, 126, 0.964);
+  background: rgba(70, 70, 70, 0.964);
   border: 10px solid #0d0e0d;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
   z-index: 4;
@@ -81,7 +132,7 @@
   position: relative;
   width: 190px;
   height: 300px;
-  background: rgba(126, 126, 126, 0.964);
+  background: rgba(70, 70, 70, 0.964);
   border: 10px solid #0d0e0d;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
   z-index: 4;

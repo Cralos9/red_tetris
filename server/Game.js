@@ -28,7 +28,7 @@ const formField = (hightestRow) => {
 		}
 		field[i] = arr
 	}
-	console.table(field)
+	// console.table(field)
 	return (field)
 }
 

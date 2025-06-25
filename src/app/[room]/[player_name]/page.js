@@ -39,6 +39,8 @@ export default function RoomPage() {
 		socket.emit('joinRoom', {playerName: name, roomCode: roomCode})
 		socket.on('join', (msg) => 
 		{
+			if(socket.id != msg.roomOwner)
+				document.getElementById('Start').style.visibility = 'hidden'
 			var otherBoards = msg.playerIds
 			console.log(otherBoards.length)
 			for(var i = 0; i <= otherBoards.length; i++)
@@ -84,8 +86,7 @@ export default function RoomPage() {
 					document.body.appendChild(lineClear);
 					setTimeout(() => {
 						lineClear.remove();
-					}, 2000);
-					msg.linesCleared =0;
+					}, 1000);
 				}
 			} 
 			else 
@@ -195,7 +196,7 @@ export default function RoomPage() {
 				</div>
 			</div>
 			<div className='button-container'>
-				<button onClick={scoreSave} className='buttons' disabled={isDisabled}>Start</button>
+				<button onClick={scoreSave} className='buttons' disabled={isDisabled} id='Start'>Start</button>
 				<button onClick={resetGame} className='buttons'>Reset</button>
 			</div>
 			<div className='secondary-games'></div>

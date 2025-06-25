@@ -5,6 +5,7 @@ export class Room extends Subject {
 	constructor() { 
 		super()
 		this.plMap = new Map()
+		this.owner = null;
 		console.log("Creating a Room")
 	}
 	
