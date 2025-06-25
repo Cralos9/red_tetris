@@ -156,4 +156,11 @@ export class Piece {
 	toString() {
 		return `Piece Color: ${this.color}`
 	}
+
+	toObject() {
+		return {
+			pattern: this.patterns[0],
+			color: this.color
+		}
+	}
 }
