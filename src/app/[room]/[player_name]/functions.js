@@ -105,7 +105,7 @@ function heldPieceDraw(heldPiece)
 		});
 		const centerX = 2;
 		const centerY = 2;
-		heldPiece.hold.forEach(([x, y]) => {
+		heldPiece.pattern.forEach(([x, y]) => {
 			const drawX = centerX + x;
 			const drawY = centerY + y;
 			const index = drawY * 6 + drawX;
@@ -130,7 +130,7 @@ function nextPieceDraw(nextPiece)
 	nextPiece.forEach((piece) => {
 		if (centerY > 8)
 			return;
-		piece.piece.forEach(([x, y]) => {
+		piece.pattern.forEach(([x, y]) => {
 			const drawX = centerX + x;
 			const drawY = centerY + y;
 			const index = drawY * 6 + drawX;

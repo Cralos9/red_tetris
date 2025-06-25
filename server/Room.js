@@ -28,4 +28,11 @@ export class Room extends Subject {
 		this.removeObserver(player)
 		this.notify(player, Events.LEAVE_PLAYER)
 	}
+
+	toObject() {
+		return {
+			playerIds: Array.from(this.plMap.keys()),
+			roomOwner: this.owner
+		}
+	}
 }
