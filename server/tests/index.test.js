@@ -1,7 +1,7 @@
 import { Bag } from "../Bag.js"
 import { getKicks, getRotations } from "../utils.js"
 import { Icoor, JLTSZoffsets, Ioffsets, Tcoor } from "../gameParams.js"
-import { Game } from "../game.js"
+import { Game } from "../Game.js"
 import { COLUMNS, ROWS } from "../gameParams.js"
 
 const bag = new Bag()
@@ -41,6 +41,7 @@ function completeLines(nbr, field) {
 	}
 }
 
+
 describe("PatternMatching (Mark Lines for Clear)", () => {
 	const game = new Game()
 	let nbrLines = 0
@@ -74,6 +75,24 @@ describe("PatternMatching (Mark Lines for Clear)", () => {
 	nbrLines = 4
 	test('Two Line Marked', () => {
 		expect(data.length).toEqual(nbrLines)
+	})
+})
+
+import { Room } from "../Room.js"
+import { Player } from "../Player.js"
+
+describe('Join and Leave Rooms', () => {
+	const room = new Room()
+	const player1 = new Player("LOl1", null, 123)
+	const player2 = new Player("LOl2", null, 124)
+	const player3 = new Player("Lol3", null, 125)
+
+	room.addPlayer(player1.id, player1)
+	room.addPlayer(player2.id, player2)
+	room.addPlayer(player3.id, player3)
+	test('Targets', () => {
+		room.leavePlayer(124)
+		expect(player1.targets.length).toEqual(1)
 	})
 })
 

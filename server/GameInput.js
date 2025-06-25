@@ -11,7 +11,7 @@ export class GameController {
 		this.x = input
 	}
 
-	pushDownPiece(input) {
+	softDropPiece(input) {
 		this.y = input
 	}
 

@@ -32,10 +32,8 @@ const formField = (hightestRow) => {
 	return (field)
 }
 
-var garbageQueue = [1]
-
 export class Game {
-	constructor(input) {
+	constructor(input, targets) {
 		this.Bag = new Bag()
 		//this.field = formField(ROWS - 15)
 		this.field = []
@@ -59,6 +57,10 @@ export class Game {
 		this.lockDelay = 0
 		this.lockPiece = false
 		this.linesCleared = 0
+		this.frames = 0
+
+		this.targets = targets
+		this.garbageQueue = []
 	}
 
 	patternMatch() {
@@ -99,6 +101,11 @@ export class Game {
 				}
 			}
 		}
+		if (linesNbr > 1) {
+			this.targets.forEach(target => {
+				target.game.garbageQueue.push(linesNbr - 1)
+			})
+		}
 		this.stackHeight += linesNbr
 		this.linesCleared = linesNbr
 	}
@@ -126,41 +133,45 @@ export class Game {
 		}
 	}
 
-	createGarbage(garbageQueue) {
-		garbageQueue.forEach(lineNbr => {
-			for (let y = this.stackHeight; y < ROWS; y++) {
-				const nextY = y - lineNbr
-				for (let x = 0; x < COLUMNS; x++) {
-					if (nextY > -1) {
-						this.field[y - lineNbr][x] = this.field[y][x]
-					}
-				}
-				garbageQueue = [0]
-			}
-			for (let i = 0; i < lineNbr; i++) {
-				const y = (ROWS - 1) - i
-				const gap = randomNbr(COLUMNS - 1)
-				for (let x = 0; x < COLUMNS; x++) {
-					if (x !== gap) {
-						this.field[y][x] = 8
-					} else {
-						this.field[y][x] = 0
-					}
+	createGarbage() {
+		const lineNbr = this.garbageQueue.shift()
+
+		for (let y = this.stackHeight; y < ROWS; y++) {
+			const nextY = y - lineNbr
+			for (let x = 0; x < COLUMNS; x++) {
+				if (nextY > -1) {
+					this.field[nextY][x] = this.field[y][x]
 				}
 			}
-		})
+		}
+		for (let i = 0; i < lineNbr; i++) {
+			const y = (ROWS - 1) - i
+			const gap = randomNbr(COLUMNS - 1)
+			for (let x = 0; x < COLUMNS; x++) {
+				if (x !== gap) {
+					this.field[y][x] = 8
+				} else {
+					this.field[y][x] = 0
+				}
+			}
+		}
 	}
 
 	update() {
 		log("Current Piece Row:", this.Piece.row)
 		this.linesCleared = 0
 		
+		if (this.frames % 60 === 0) {
+			this.input.softDropPiece(1)
+		}
+
 		this.Piece.undraw(this.field)
 
 		if (this.input.hold === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
 		}
+
 		if (this.input.hardDrop === true) {
 			this.hardDrop()
 			this.lockPiece = true
@@ -186,8 +197,8 @@ export class Game {
 			if (this.hitList.length) {
 				this.lineClear()
 			}
-			if (garbageQueue.length) {
-				this.createGarbage(garbageQueue)
+			if (this.garbageQueue.length) {
+				this.createGarbage()
 			}
 			this.holdLock = false
 			this.lockPiece = false
@@ -202,7 +213,6 @@ export class Game {
 			console.log("GameOver")
 			this.running = false
 		}
+		this.frames += 1
 	}
-
-	
 }
