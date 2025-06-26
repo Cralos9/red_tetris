@@ -11,9 +11,8 @@ export default function RoomPage() {
 
 	const name = params.player_name;
 	const score = 40000;
-	var game_amount = 3;
 	const [username, setUsername] = useState('');
-	const [isDisabled, setIsDisabled] = useState(false);
+	const [isDisabled, setIsDisabled] = useState(true);
 	
 	function end_game() {
 	  setIsDisabled(false);
@@ -45,11 +44,9 @@ export default function RoomPage() {
 			console.log("Board Remove Id: " ,msg.id)
 			var board = document.getElementById(msg.id)
 			if(board)
-			{
-				console.log("ENTROU Ze")
 				board.remove();
-			}
 		});
+
 		return function cleanup() {
 			socket.off("connect", handleConnect);
 		};
@@ -61,7 +58,7 @@ export default function RoomPage() {
 		socket.on('join', (msg) => 
 		{
 			if(socket.id != msg.roomOwner)
-				document.getElementById('Start').style.visibility = 'hidden'
+				document.getElementById('Start').style.visibility = 'visible'
 			var otherBoards = msg.playerIds
 			console.log(otherBoards.length)
 			for(var i = 0; i <= otherBoards.length; i++)

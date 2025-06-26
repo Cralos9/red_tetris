@@ -38,7 +38,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 			arr.push(socketId)
 		}
 
-		io.to(roomCode).emit('join', { playerIds: arr, roomOwner: room.owner })
+		io.to(roomCode).emit('join', { playerIds: arr, roomOwner: room.owner , })
 	}
 
 	const disconnection = (reason) => {
@@ -71,17 +71,12 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		}
 
 		for (const sockId of toRemove) 
-		{
 			room.leavePlayer(sockId)
-			socket.emit("Owner", {owner: room.owner})
-			const staleSocket = io.sockets.sockets.get(sockId)
-			if (staleSocket) 
-				staleSocket.leave(room.code)
-		}
-
+		
 		if (room.plMap.size === 0) {
 			RoomsMap.delete(room.code)
 		}
+		socket.emit("Owner", {owner: room.owner})
 	}, 10000)
 
 	socket.on('pong-check', () => {

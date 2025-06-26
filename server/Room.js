@@ -21,14 +21,16 @@ export class Room extends Subject {
 		return (this.plMap.get(playerId))
 	}
 
-	leavePlayer(socketId) {
+	leavePlayer(socketId, socket) {
 		console.log("This Player left the Room")
 		const player = this.plMap.get(socketId)
 		this.plMap.delete(socketId)
 		this.removeObserver(player)
 		this.notify(player, Events.LEAVE_PLAYER)
 		if (socketId == this.owner)
+		{
 			this.owner = this.plMap.keys().next().value
+		}
 		console.log("new owner:", this.owner)
 	}
 }

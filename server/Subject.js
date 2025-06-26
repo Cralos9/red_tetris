@@ -9,7 +9,7 @@ export class Subject {
 
 	removeObserver(elimObserver) {
 		this.observers = this.observers.filter(observer => elimObserver !== observer)
-		console.log("Observers List", this.observers)
+		// console.log("Observers List", this.observers)
 	}
 
 	notify(state, event) {
