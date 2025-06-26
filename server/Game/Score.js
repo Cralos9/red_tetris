@@ -1,4 +1,4 @@
-import { Observer } from "./Observer.js"
+import { Observer } from "../Publisher/Observer.js"
 
 export class ScoreManager extends Observer {
 	constructor() {

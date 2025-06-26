@@ -1,4 +1,4 @@
-import { log } from "./debug.js"
+import { log } from "../debug.js"
 import { COLUMNS, ROWS } from "./gameParams.js"
 import { getRotations, getSkirt, compare, getKicks } from "./utils.js"
 
@@ -155,5 +155,12 @@ export class Piece {
 
 	toString() {
 		return `Piece Color: ${this.color}`
+	}
+
+	toObject() {
+		return {
+			pattern: this.patterns[0],
+			color: this.color
+		}
 	}
 }

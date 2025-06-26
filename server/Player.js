@@ -1,6 +1,6 @@
-import { Game } from "./Game.js"
-import { GameController } from "./GameInput.js"
-import { Observer } from "./Observer.js"
+import { Game } from "./Game/Game.js"
+import { GameController } from "./Game/GameInput.js"
+import { Observer } from "./Observer/Observer.js"
 import { Events } from "./globalEvents.js"
 import { log } from "./debug.js"
 
@@ -30,7 +30,7 @@ export class Player extends Observer {
 			this.io.to(roomCode).emit('game', {
 				field: this.game.field,
 				linesCleared: this.game.linesCleared,
-				holdPiece: this.game.hold ? {hold: this.game.hold.patterns[0], color: this.game.hold.color} : 0,
+				holdPiece: this.game.hold ? this.game.hold.toObject() : 0,
 				nextPiece: this.game.Bag.nextPiecesArr(),
 				playerId: this.id,
 				running: this.game.running,

@@ -1,6 +1,6 @@
 import { Room } from "./Room.js"
 import { Player } from "./Player.js"
-import { keyBinds } from "./gameParams.js"
+import { keyBinds } from "./Game/gameParams.js"
 import { log } from "./debug.js"
 
 // Map socket.id to Players
@@ -32,13 +32,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 
 		room.addPlayer(socket.id, player)
 		socket.join(roomCode.toString())
-
-		const arr = []
-		for (const socketId of room.plMap.keys()) {
-			arr.push(socketId)
-		}
-
-		io.to(roomCode).emit('join', { playerIds: arr, roomOwner: room.owner , })
+		io.to(roomCode).emit('join', room.toObject())
 	}
 
 	const disconnection = (reason) => {
@@ -103,7 +97,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const key = payload.key
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
-		const player = room.plMap.get(socket.id)
+		const player = room.searchPlayer(socket.id)
 		log("KeyDown:", player.toString())
 		switch (key) {
 			case keyBinds.HARDDROP:
@@ -138,7 +132,6 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 	const startGame = (payload) => {
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
-		const player = room.plMap.get(socket.id)
 		if (room.owner != socket.id)
 		{
 			console.log("Not owner");
