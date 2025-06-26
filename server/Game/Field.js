@@ -1,4 +1,5 @@
 import { ROWS, COLUMNS } from "./gameParams.js"
+import { log } from "../debug.js"
 
 export class Field {
 	constructor() {
@@ -47,6 +48,7 @@ export class Field {
 				}
 			}
 		}
+		this.hitArr = []
 		this.stackHeight += linesNbr
 		this.linesCleared = linesNbr
 	}
@@ -54,10 +56,9 @@ export class Field {
 	checkMove(piece, x, y) { 
 		const pattern = piece.getCurrPattern()
 
-		for (let i = 0; pattern.length; i++) {
+		for (let i = 0; i < pattern.length; i++) {
 			const fx = piece.column + x + pattern[i][0]
 			const fy = piece.row + y + pattern[i][1]
-			console.log("Checking:", fx, fy)
 			if (fy >= ROWS || fx >= COLUMNS || fy < 0 || fx < 0) {
 				return (false)
 			} else if (this.field[fy][fx] > 0) {
@@ -80,13 +81,13 @@ export class Field {
 		const currY = piece.row
 		const currColor = piece.color
 		this.drawPiece(piece)
-		while (this.checkMove(piece, 0, 1) === true) {
-			piece.row++
-		}
-		piece.color = -1
-		this.drawPiece(piece)
-		piece.row = currY
-		piece.color = currColor
+		//while (this.checkMove(piece, 0, 1) === true) {
+		//	piece.row++
+		//}
+		//piece.color = -1
+		//this.drawPiece(piece)
+		//piece.row = currY
+		//piece.color = currColor
 	}
 
 	undraw(piece) {
