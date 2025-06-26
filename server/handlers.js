@@ -13,15 +13,11 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 	}
 
 	const joinRoom = (payload) => {
-		const playerName = payload.playerName
+		var playerName = payload.playerName
 		const roomCode = payload.roomCode
 
 		log("Player:", playerName)
 		log("Joined Room:", roomCode)
-
-		const player = new Player(playerName, io, socket.id)
-		player.isAlive = true
-
 		if (!RoomsMap.has(roomCode)) {
 			RoomsMap.set(roomCode, new Room())
 		}
@@ -29,6 +25,12 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 
 		if (room.plMap.size == 0)
 			room.owner = socket.id
+
+		if(socket.id == room.owner)
+			playerName += "(owner)"
+		const player = new Player(playerName, io, socket.id)
+		player.isAlive = true
+
 
 		room.addPlayer(socket.id, player)
 		socket.join(roomCode.toString())
@@ -71,7 +73,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 			RoomsMap.delete(room.code)
 		}
 		socket.emit("Owner", {owner: room.owner})
-	}, 10000)
+	}, 7000)
 
 	socket.on('pong-check', () => {
 		const room = findRoomBySocketId(socket.id)

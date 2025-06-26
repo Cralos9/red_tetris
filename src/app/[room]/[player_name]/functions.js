@@ -92,6 +92,17 @@ function getColor(value)
 	return colors[value];
 }
 
+function get_audio(linesCleared)
+{
+	const lines = {
+		1:new Audio("/sounds/single.mp3"),
+		2:new Audio("/sounds/double.mp3"),
+		3:new Audio("/sounds/triple.mp3"),
+		4:new Audio("/sounds/homerun.mp3"),
+	}
+	return(lines[linesCleared])
+}
+
 function heldPieceDraw(heldPiece)
 {
 	if (heldPiece != 0)
@@ -152,7 +163,8 @@ const gameDraw = {
 	add_cells,
 	add_secondary_cells,
 	game,
-	get_lines
+	get_lines,
+	get_audio,
 };
 
 export default gameDraw;
