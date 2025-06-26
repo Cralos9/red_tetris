@@ -135,6 +135,7 @@ export class Game {
 
 	createGarbage() {
 		const lineNbr = this.garbageQueue.shift()
+		const gap = randomNbr(COLUMNS - 1)
 
 		for (let y = this.stackHeight; y < ROWS; y++) {
 			const nextY = y - lineNbr
@@ -146,14 +147,9 @@ export class Game {
 		}
 		for (let i = 0; i < lineNbr; i++) {
 			const y = (ROWS - 1) - i
-			const gap = randomNbr(COLUMNS - 1)
-			for (let x = 0; x < COLUMNS; x++) {
-				if (x !== gap) {
-					this.field[y][x] = 8
-				} else {
-					this.field[y][x] = 0
-				}
-			}
+			const garbage = Array(COLUMNS).fill(8)
+			garbage[gap] = 0
+			this.field[y] = garbage
 		}
 	}
 
