@@ -80,7 +80,7 @@ export class Game {
 			this.input.softDropPiece(1)
 		}
 
-		this.field.draw(this.Piece)
+		this.field.undraw(this.Piece)
 
 		if (this.input.hold === true && this.holdLock === false) {
 			this.holdPiece()
