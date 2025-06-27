@@ -2,7 +2,7 @@ import { log } from "../debug.js"
 import { Bag } from "./Bag.js"
 import { Field } from "./Field.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
-import { randomNbr } from "./utils.js"
+import { getKicks } from "./utils.js"
 
 const coor = [[5,19],[5,18],[5,17],[5,16],[4,17],[6,17],[7,17]]
 
@@ -38,6 +38,8 @@ export class Game {
 		this.Bag = new Bag()
 		this.field = new Field()
 		this.input = input
+		this.row = 1
+		this.column = 5
 
 		this.running = true
 
@@ -50,7 +52,8 @@ export class Game {
 	}
 
 	holdPiece() {
-		this.Piece.reset()
+		this.row = 1
+		this.column = 5
 		log("Holding Piece:", this.Piece.toString())
 		if (this.hold === null) {
 			log("Empty Hold")
@@ -67,8 +70,35 @@ export class Game {
 	}
 
 	hardDrop() {
-		while (this.field.checkMove(this.Piece, 0, 1) === true) {
-			this.Piece.row++
+		while (this.field.checkMove(this.Piece, this.column, this.row + 1) === true) {
+			this.row++
+		}
+	}
+
+	movePiece() {
+		const newRow = this.row + this.input.y
+		const newColumn = this.column + this.input.x
+		if (this.field.checkDrop(this.Piece, this.column, newRow) === true) {
+			this.row = newRow
+		}
+		if (this.field.checkMove(this.Piece, newColumn, this.row) === true) {
+			this.column = newColumn
+		}
+	}
+
+	rotatePiece() {
+		const nextPiece = this.Piece.nextRotation(this.input.rot)
+		const kicks = getKicks(this.Piece.offset, nextPiece.offset)
+		
+		for (let i = 0; i < kicks.length; i++) {
+			const newColumn = this.column + kicks[i][0]
+			const newRow = this.row + kicks[i][1]
+			if (this.field.checkMove(nextPiece, newColumn, newRow) === true) {
+				this.row = newRow
+				this.column = newColumn
+				this.Piece = nextPiece
+				return
+			}
 		}
 	}
 
@@ -80,7 +110,7 @@ export class Game {
 			this.input.softDropPiece(1)
 		}
 
-		this.field.undraw(this.Piece)
+		this.field.undraw(this.Piece, this.column, this.row)
 
 		if (this.input.hold === true && this.holdLock === false) {
 			this.holdPiece()
@@ -91,21 +121,12 @@ export class Game {
 			this.hardDrop()
 			this.lockPiece = true
 		} else if (this.input.x || this.input.y) {
-			if (this.field.checkMove(this.Piece, this.input.x, this.input.y) === true) {
-				this.Piece.move(this.input.x, this.input.y)
-			}
+			this.movePiece()
 		} else if (this.input.rot) {
-			const kicks = this.Piece.getRotations(this.input.rot)
-			for (let i = 0; i < kicks.length; i++) {
-				if (this.field.checkMove(this.Piece, kicks[i][0], kicks[i][1]) === true) {
-					this.Piece.rotate(this.input.rot)
-					this.Piece.move(kicks[i][0], kicks[i][1])
-					break
-				}
-			}
+			this.rotatePiece()
 		}
 
-		if (this.field.checkMove(this.Piece, 0, 1) === true) {
+		if (this.field.checkDrop(this.Piece, this.column, this.row + 1) === true) {
 			this.lockDelay = 0
 		} else {
 			if (this.lockDelay === 30) {
@@ -116,7 +137,7 @@ export class Game {
 
 		if (this.lockPiece === true) {
 			log("Piece Locked")
-			this.field.draw(this.Piece)
+			this.field.draw(this.Piece, this.column, this.row, this.Piece.color)
 			this.field.patternMatch()
 			if (this.field.hitArr.length) {
 				this.field.lineClears()
@@ -124,11 +145,12 @@ export class Game {
 			this.holdLock = false
 			this.lockPiece = false
 			this.lockDelay = 0
-			this.Piece.reset()
+			this.row = 1
+			this.column = 5
 			this.Piece = this.Bag.getNextPiece()
 		}
 
-		this.field.draw(this.Piece)
+		this.field.draw(this.Piece, this.column, this.row)
 
 		if (this.field.stackHeight <= 0) {
 			console.log("GameOver")

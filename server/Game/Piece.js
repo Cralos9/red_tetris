@@ -1,61 +1,71 @@
-import { log } from "../debug.js"
-import { COLUMNS, ROWS } from "./gameParams.js"
 import { getRotations, getSkirt, compare, getKicks } from "./utils.js"
+import {
+	Icoor,
+	Tcoor,
+	Jcoor,
+	Lcoor,
+	Ocoor,
+	Scoor,
+	Zcoor,
+	JLTSZoffsets,
+	Ioffsets,
+	Ooffsets
+} from "./gameParams.js"
 
-export class Piece {
-	constructor(pieceCoor, pieceOffsets, color) {
-		this.patterns = pieceCoor
-		this.offsets = pieceOffsets
-		this.skirts = [getSkirt(pieceCoor[0])]
-		for (let i = 0; i < 3; i++) {
-			const tmp = getRotations(this.patterns[i]).sort(compare)
-			this.skirts.push(getSkirt(tmp))
-			this.patterns.push(tmp)
-		}
-		this.index = 0
-		this.row = 1
-		this.column = 5
+class Piece {
+	constructor(coor, offset, color) {
+		this.pattern = coor
+		this.skirt = getSkirt(coor)
+		this.offset = offset
 		this.color = color
+		this.next = null
+		this.before = null
 	}
 
-	move(x, y) {
-		this.column += x
-		this.row += y
-		log("Moved Piece to column:", this.column)
+	nextRotation(rot) {
+		if (rot === -1) {
+			return (this.before)
+		}
+		return (this.next)
 	}
 
-	getRotations(r) {
-		const rot = (this.index + r + 4) % 4
-		const kicks = getKicks(this.offsets[this.index], this.offsets[rot]) 
-		return (kicks)
-	}
+	getPattern() {return (this.pattern)}
 
-	rotate(r) {
-		this.index = (this.index + r + 4) % 4
-	}
-
-	getCurrSkirt() {
-		return this.skirts[this.index]
-	}
-
-	getCurrPattern() {
-		return this.patterns[this.index]
-	}
-
-	reset() {
-		this.row = 1
-		this.column = 5
-		this.index = 0
-	}
-
-	toString() {
-		return `Piece Color: ${this.color}`
-	}
+	getSkirt() {return (this.skirt)}
 
 	toObject() {
 		return {
-			pattern: this.patterns[0],
+			pattern: this.pattern,
 			color: this.color
 		}
 	}
 }
+
+function createPiece(coor, offsets, color) {
+	const root = new Piece(coor, offsets[0], color)
+	let prevPiece = root
+	let currPiece = root
+	for (let i = 1; i < 4; i++) {
+		const coor = getRotations(currPiece.pattern).sort(compare)
+		const newPiece = new Piece(coor, offsets[i], color)
+		currPiece.next = newPiece
+		currPiece.before = prevPiece
+		prevPiece = currPiece
+		currPiece = newPiece
+	}
+	currPiece.before = prevPiece
+	currPiece.next = root
+	root.before = currPiece
+	return (root)
+}
+
+export const Pieces = {
+	"I": createPiece(Icoor, Ioffsets, 1),
+	"T": createPiece(Tcoor, JLTSZoffsets, 2),
+	"J": createPiece(Jcoor, JLTSZoffsets, 3),
+	"L": createPiece(Lcoor, JLTSZoffsets, 4),
+	"O": createPiece(Ocoor, Ooffsets, 5),
+	"S": createPiece(Scoor, JLTSZoffsets, 6),
+	"Z": createPiece(Zcoor, JLTSZoffsets, 7),
+}
+

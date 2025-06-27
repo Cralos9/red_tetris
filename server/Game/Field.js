@@ -53,12 +53,12 @@ export class Field {
 		this.linesCleared = linesNbr
 	}
 
-	checkMove(piece, x, y) { 
-		const pattern = piece.getCurrPattern()
+	checkMove(piece, column, row) { 
+		const pattern = piece.getPattern()
 
 		for (let i = 0; i < pattern.length; i++) {
-			const fx = piece.column + x + pattern[i][0]
-			const fy = piece.row + y + pattern[i][1]
+			const fx = column + pattern[i][0]
+			const fy = row + pattern[i][1]
 			if (fy >= ROWS || fx >= COLUMNS || fy < 0 || fx < 0) {
 				return (false)
 			} else if (this.field[fy][fx] > 0) {
@@ -68,38 +68,46 @@ export class Field {
 		return (true)
 	}
 
-	drawPiece(piece) {
-		const pattern = piece.getCurrPattern()
+	checkDrop(piece, column, row) {
+		const skirt = piece.getSkirt()
+		
+		for (let i = 0; i < skirt.length; i++) {
+			const fx = column + skirt[i][0]
+			const fy = row + skirt[i][1]
+			if (fy >= ROWS) {
+				return (false)
+			} else if (this.field[fy][fx] > 0) {
+				return (false)
+			}
+		}
+		return (true)
+	}
 
-		for (let y = 0; y < pattern.length; y++) {
-			const arr = pattern[y]
-			this.field[piece.row + arr[1]][piece.column + arr[0]] = piece.color
+
+	drawPiece(piece, column, row, color) {
+		const pattern = piece.getPattern()
+
+		for (let i = 0; i < pattern.length; i++) {
+			const arr = pattern[i]
+			this.field[row + arr[1]][column + arr[0]] = color
 		}
 	}
 
-	draw(piece) {
-		const currY = piece.row
-		const currColor = piece.color
-		this.drawPiece(piece)
-		//while (this.checkMove(piece, 0, 1) === true) {
-		//	piece.row++
-		//}
-		//piece.color = -1
-		//this.drawPiece(piece)
-		//piece.row = currY
-		//piece.color = currColor
+	draw(piece, column, row) {
+		var ghostRow = row
+		while (this.checkDrop(piece, column, ghostRow + 1) === true) {
+			ghostRow++
+		}
+		this.drawPiece(piece, column, ghostRow, -1)
+		this.drawPiece(piece, column, row, piece.color)
 	}
 
-	undraw(piece) {
-		const currY = piece.row
-		const currColor = piece.color
-		piece.color = 0
-		this.drawPiece(piece)
-		while (this.checkMove(piece, 0, 1) === true) {
-			piece.row++
+	undraw(piece, column, row) {
+		var ghostRow = row
+		while (this.checkDrop(piece, column, ghostRow + 1) === true) {
+			ghostRow++
 		}
-		this.drawPiece(piece)
-		piece.row = currY
-		piece.color = currColor
+		this.drawPiece(piece, column, ghostRow, 0)
+		this.drawPiece(piece, column, row, 0)
 	}
 }
