@@ -1,4 +1,3 @@
-import { log } from "../debug.js"
 import { Bag } from "./Bag.js"
 import { Field } from "./Field.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
@@ -34,15 +33,13 @@ const formField = (hightestRow) => {
 }
 
 export class Game {
-	constructor(input, targets) {
+	constructor(input) {
 		this.Bag = new Bag()
 		this.field = new Field()
 		this.input = input
 		this.row = 1
 		this.column = 5
-
 		this.running = true
-
 		this.Piece = this.Bag.getNextPiece()
 		this.hold = null
 		this.holdLock = false
@@ -54,19 +51,14 @@ export class Game {
 	holdPiece() {
 		this.row = 1
 		this.column = 5
-		log("Holding Piece:", this.Piece.toString())
 		if (this.hold === null) {
-			log("Empty Hold")
 			this.hold = this.Piece
 			this.Piece = this.Bag.getNextPiece()
 		} else {
-			log("Hold with:", this.Piece.toString())
 			const tmp = this.Piece
 			this.Piece = this.hold
 			this.hold = tmp
 		}
-		log("Holded Piece:", this.hold.toString())
-		log("Current Piece:", this.Piece.toString())
 	}
 
 	hardDrop() {
@@ -103,7 +95,6 @@ export class Game {
 	}
 
 	update() {
-		log("Current Piece Row:", this.Piece.row)
 		this.field.linesCleared = 0
 		
 		if (this.frames % 60 === 0) {
@@ -136,7 +127,6 @@ export class Game {
 		}
 
 		if (this.lockPiece === true) {
-			log("Piece Locked")
 			this.field.draw(this.Piece, this.column, this.row, this.Piece.color)
 			this.field.patternMatch()
 			if (this.field.hitArr.length) {

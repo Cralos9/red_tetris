@@ -1,5 +1,4 @@
 import { ROWS, COLUMNS } from "./gameParams.js"
-import { log } from "../debug.js"
 
 export class Field {
 	constructor() {
@@ -38,7 +37,6 @@ export class Field {
 			}
 		})
 		for (let y = start; y >= this.stackHeight; y--) {
-			log("Moving Line,", y - linesNbr, "to,", y)
 			const nextY = y - linesNbr
 			for (let x = 0; x < this.field[y].length; x++) {
 				if (nextY > -1) {
