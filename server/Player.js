@@ -28,7 +28,7 @@ export class Player extends Observer {
 			this.input.holdPiece(false)
 			//console.table(this.game.field)
 			this.io.to(roomCode).emit('game', {
-				field: this.game.field,
+				field: this.game.field.field,
 				linesCleared: this.game.linesCleared,
 				holdPiece: this.game.hold ? this.game.hold.toObject() : 0,
 				nextPiece: this.game.Bag.nextPiecesArr(),

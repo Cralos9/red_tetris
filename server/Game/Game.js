@@ -67,7 +67,7 @@ export class Game {
 	}
 
 	hardDrop() {
-		while (this.Piece.checkCollision(this.field) === 0) {
+		while (this.field.checkMove(this.Piece, 0, 1) === true) {
 			this.Piece.row++
 		}
 	}
@@ -90,13 +90,22 @@ export class Game {
 		if (this.input.hardDrop === true) {
 			this.hardDrop()
 			this.lockPiece = true
-		} else {
-			this.Piece.move(this.input.x, this.field)
-			this.Piece.rotate(this.field, this.input.rot)
+		} else if (this.input.x || this.input.y) {
+			if (this.field.checkMove(this.Piece, this.input.x, this.input.y) === true) {
+				this.Piece.move(this.input.x, this.input.y)
+			}
+		} else if (this.input.rot) {
+			const kicks = this.Piece.getRotations(this.input.rot)
+			for (let i = 0; i < kicks.length; i++) {
+				if (this.field.checkMove(this.Piece, kicks[i][0], kicks[i][1]) === true) {
+					this.Piece.rotate(this.input.rot)
+					this.Piece.move(kicks[i][0], kicks[i][1])
+					break
+				}
+			}
 		}
 
-		if (this.field.checkMove(this.Piece, 0, 1) === 0) {
-			this.Piece.row += this.input.y
+		if (this.field.checkMove(this.Piece, 0, 1) === true) {
 			this.lockDelay = 0
 		} else {
 			if (this.lockDelay === 30) {
