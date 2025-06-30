@@ -2,6 +2,7 @@ import { log } from "../debug.js"
 import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
+import { Subject } from "../Observer/Subject.js"
 
 const coor = [[5,19],[5,18],[5,17],[5,16],[4,17],[6,17],[7,17]]
 
@@ -32,8 +33,9 @@ const formField = (hightestRow) => {
 	return (field)
 }
 
-export class Game {
+export class Game extends Subject {
 	constructor(input, targets) {
+		super()
 		this.Bag = new Bag()
 		//this.field = formField(ROWS - 15)
 		this.field = []
@@ -100,11 +102,6 @@ export class Game {
 					this.field[y][x] = 0
 				}
 			}
-		}
-		if (linesNbr > 1) {
-			this.targets.forEach(target => {
-				target.game.garbageQueue.push(linesNbr - 1)
-			})
 		}
 		this.stackHeight += linesNbr
 		this.linesCleared = linesNbr
@@ -196,6 +193,7 @@ export class Game {
 			this.patternMatch()
 			if (this.hitList.length) {
 				this.lineClear()
+				this.notify(this.linesCleared, "LINE_CLEAR")
 			}
 			if (this.garbageQueue.length) {
 				this.createGarbage()
