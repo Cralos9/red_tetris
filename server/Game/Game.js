@@ -125,9 +125,14 @@ export class Game extends Subject {
 	}
 
 	hardDrop() {
+		const dropRow = this.Piece.row
 		while (this.Piece.checkCollision(this.field) === 0) {
 			this.Piece.row++
 		}
+		this.notify({
+			dropRow: dropRow,
+			pieceRow: this.Piece.row
+		}, "HARD_DROP")
 	}
 
 	createGarbage() {
@@ -189,8 +194,8 @@ export class Game extends Subject {
 			this.patternMatch()
 			if (this.hitList.length) {
 				this.lineClear()
-				this.notify(this.linesCleared, "LINE_CLEAR")
 			}
+			this.notify(this.linesCleared, "LINE_CLEAR")
 			if (this.garbageQueue.length) {
 				this.createGarbage()
 			}

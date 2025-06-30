@@ -89,6 +89,7 @@ export default function RoomPage() {
 				return;
 			}
 			const field = msg.field;
+			console.log("Score:", msg.playerScore)
 			var cells 
 			if (msg.playerId === socket.id) 
 			{
