@@ -10,7 +10,6 @@ export default function RoomPage() {
 	const [gameOver, setGameOver] = useState(false);
 
 	const name = params.player_name;
-	const score = 40000;
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
 	
@@ -85,6 +84,7 @@ export default function RoomPage() {
 		socket.on('game', (msg) => {
 			if (!msg.running && msg.playerId === socket.id) 
 			{
+				scoreSave(msg.playerScore.score);
 				end_game();
 				return;
 			}
@@ -93,6 +93,8 @@ export default function RoomPage() {
 			var cells 
 			if (msg.playerId === socket.id) 
 			{
+				var score = document.getElementById('Score')
+				score.textContent = msg.playerScore.score
 				setGameOver(false)
 				cells = document.querySelectorAll('.game-bottle .cell');
 				const heldPiece = msg.holdPiece
@@ -161,7 +163,7 @@ export default function RoomPage() {
 		// setIsDisabled(false)
 	}
 
-	function scoreSave() {
+	function startGame() {
 		if (gameOver === true) {
 			end_game();
 			setGameOver(false);
@@ -170,6 +172,11 @@ export default function RoomPage() {
 		setIsDisabled(true);
 		socket.emit("startGame", {roomCode: roomCode});
 	
+
+	}
+
+	function scoreSave(score)
+	{
 		if (name && score !== undefined) {
 			localStorage.setItem("username", name);
 
@@ -225,7 +232,11 @@ export default function RoomPage() {
 				</div>
 			</div>
 			<div className='button-container'>
-				<button onClick={scoreSave} className='buttons' disabled={isDisabled} style={{visibility: 'hidden'}} id='Start'>Start</button>
+				<div className='scoreCard'>
+					<span className='score'>Score</span>
+					<span className='score' id ='Score'>0</span>
+				</div>
+				<button onClick={startGame} className='buttons' disabled={isDisabled} style={{visibility: 'hidden'}} id='Start'>Start</button>
 				<button onClick={resetGame} className='buttons'>Reset</button>
 			</div>
 			<div className='secondary-games'></div>
