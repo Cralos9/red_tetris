@@ -33,9 +33,9 @@ export default function RoomPage() {
 		
 		socket.on('Owner', (msg) =>
 		{
-			console.log("Socket oN owner")
-			if(socket.id === msg.owner)
-				document.getElementById('Start').style.visibility = 'visible'
+			const startBtn = document.getElementById('Start');
+			if (startBtn && socket.id === msg.owner)
+				startBtn.style.visibility = 'visible';
 		});
 
 		socket.on("boardRemove", (msg) =>
@@ -56,8 +56,10 @@ export default function RoomPage() {
 
 		socket.on('join', (msg) => 
 		{
-			if(socket.id == msg.roomOwner)
-				document.getElementById('Start').style.visibility = 'visible'
+			const startBtn = document.getElementById('Start');
+			console.log(msg)
+			if (startBtn && socket.id === msg.roomOwner)
+				startBtn.style.visibility = 'visible';
 			var otherBoards = msg.playerIds
 			var names = msg.playerNames
 			console.log(names)
@@ -89,7 +91,6 @@ export default function RoomPage() {
 				return;
 			}
 			const field = msg.field;
-			console.log("Score:", msg.playerScore)
 			var cells 
 			if (msg.playerId === socket.id) 
 			{
@@ -142,7 +143,7 @@ export default function RoomPage() {
 			}
 		}
 		
-		window.addEventListener('beforeunload', handleBeforeUnload);
+		// window.addEventListener('beforeunload', handleBeforeUnload);
 
 		document.addEventListener("keydown", e => {
 			socket.emit("keyDown", {key: e.key, roomCode: roomCode})
