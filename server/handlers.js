@@ -25,9 +25,6 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 
 		if (room.plMap.size == 0)
 			room.owner = socket.id
-
-		if(socket.id == room.owner)
-			playerName += "(owner)"
 		const player = new Player(playerName, io, socket.id)
 		player.isAlive = true
 

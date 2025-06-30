@@ -92,6 +92,7 @@ export default function RoomPage() {
 			var cells 
 			if (msg.playerId === socket.id) 
 			{
+				setGameOver(false)
 				cells = document.querySelectorAll('.game-bottle .cell');
 				const heldPiece = msg.holdPiece
 				const nextPiece = msg.nextPiece
@@ -208,6 +209,7 @@ export default function RoomPage() {
 				{gameOver && <div className='game-Over'>
 					Game Over
 					<img className='game-over-image'src="/images/ripmario.gif"></img>
+					<img className='game-over-image2'src="/images/rain.gif"></img>
 				</div>}
 				<nav>
 					<h1 className='room-info'>Room Code:{roomCode}      Username:{username}</h1>
