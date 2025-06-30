@@ -2,13 +2,16 @@ import { Game } from "./Game/Game.js"
 import { GameController } from "./Game/GameInput.js"
 import { Observer } from "./Observer/Observer.js"
 import { Events } from "./globalEvents.js"
-import { log } from "./debug.js"
+import { TargetManager } from "./Game/Target.js"
+import { ScoreManager } from "./Game/Score.js"
 
 export class Player extends Observer {
 	constructor(name, io, id) {
 		super()
 		this.targets = []
 		this.game = null
+		this.targetManager = null
+		this.score = null
 		this.name = name
 		this.id = id
 		this.io = io
@@ -17,7 +20,11 @@ export class Player extends Observer {
 	}
 
 	runGame(roomCode) {
+		this.score = new ScoreManager()
+		this.targetManager = new TargetManager(this.targets)
 		this.game = new Game(this.input, this.targets)
+		this.game.addObserver(this.targetManager)
+		this.game.addObserver(this.score)
 		const delay = 16 // Close to 60 FPS
 		const interval = setInterval(() => {
 			this.game.update()
@@ -33,6 +40,7 @@ export class Player extends Observer {
 				holdPiece: this.game.hold ? this.game.hold.toObject() : 0,
 				nextPiece: this.game.Bag.nextPiecesArr(),
 				playerId: this.id,
+				playerScore: this.score.toObject(),
 				running: this.game.running,
 			})
 			if (this.game.running === false) {
@@ -45,7 +53,7 @@ export class Player extends Observer {
 		switch (event) {
 			case Events.JOIN_PLAYER:
 				var joiner = state
-				log("Add Player to Targets:", joiner.id)
+				console.log("Add Player to Targets:", joiner.id)
 				this.targets.push(joiner)
 				break
 			case Events.LEAVE_PLAYER:

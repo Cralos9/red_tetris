@@ -2,6 +2,7 @@ import { log } from "../debug.js"
 import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
+import { Subject } from "../Observer/Subject.js"
 
 const coor = [[5,19],[5,18],[5,17],[5,16],[4,17],[6,17],[7,17]]
 
@@ -32,8 +33,9 @@ const formField = (hightestRow) => {
 	return (field)
 }
 
-export class Game {
+export class Game extends Subject {
 	constructor(input, targets) {
+		super()
 		this.Bag = new Bag()
 		//this.field = formField(ROWS - 15)
 		this.field = []
@@ -101,11 +103,6 @@ export class Game {
 				}
 			}
 		}
-		if (linesNbr > 1) {
-			this.targets.forEach(target => {
-				target.game.garbageQueue.push(linesNbr - 1)
-			})
-		}
 		this.stackHeight += linesNbr
 		this.linesCleared = linesNbr
 	}
@@ -128,13 +125,19 @@ export class Game {
 	}
 
 	hardDrop() {
+		const dropRow = this.Piece.row
 		while (this.Piece.checkCollision(this.field) === 0) {
 			this.Piece.row++
 		}
+		this.notify({
+			dropRow: dropRow,
+			pieceRow: this.Piece.row
+		}, "HARD_DROP")
 	}
 
 	createGarbage() {
 		const lineNbr = this.garbageQueue.shift()
+		const gap = randomNbr(COLUMNS - 1)
 
 		for (let y = this.stackHeight; y < ROWS; y++) {
 			const nextY = y - lineNbr
@@ -146,14 +149,9 @@ export class Game {
 		}
 		for (let i = 0; i < lineNbr; i++) {
 			const y = (ROWS - 1) - i
-			const gap = randomNbr(COLUMNS - 1)
-			for (let x = 0; x < COLUMNS; x++) {
-				if (x !== gap) {
-					this.field[y][x] = 8
-				} else {
-					this.field[y][x] = 0
-				}
-			}
+			const garbage = Array(COLUMNS).fill(8)
+			garbage[gap] = 0
+			this.field[y] = garbage
 		}
 	}
 
@@ -197,6 +195,7 @@ export class Game {
 			if (this.hitList.length) {
 				this.lineClear()
 			}
+			this.notify(this.linesCleared, "LINE_CLEAR")
 			if (this.garbageQueue.length) {
 				this.createGarbage()
 			}

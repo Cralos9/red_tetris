@@ -13,6 +13,16 @@ export const keyBinds = {
 	SOFTDROP: "ArrowDown"
 }
 
+export const ScoreTable = {
+	1: 100,
+	2: 300,
+	3: 500,
+	4: 800,
+	"COMBO": 50,
+	"SOFT_DROP": 1,
+	"HARD_DROP": 2
+}
+
 export const Icoor = [
 	[
 		[-1,0], [0,0], [1,0], [2,0]
