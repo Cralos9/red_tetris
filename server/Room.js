@@ -15,27 +15,33 @@ export class Room extends Subject {
 		player.targets = Array.from(this.plMap.values())
 		this.plMap.set(socketId, player)
 		this.addObserver(player)
+		Array.from(this.plMap.values()).forEach(player => {
+			console.log("playerName: ", player.name)
+		})
 	}
 
 	searchPlayer(playerId) {
 		return (this.plMap.get(playerId))
 	}
 
-	leavePlayer(socketId) {
+	leavePlayer(socketId, socket) {
 		console.log("This Player left the Room")
 		const player = this.plMap.get(socketId)
 		this.plMap.delete(socketId)
 		this.removeObserver(player)
 		this.notify(player, Events.LEAVE_PLAYER)
 		if (socketId == this.owner)
+		{
 			this.owner = this.plMap.keys().next().value
+		}
 		console.log("new owner:", this.owner)
 	}
 
 	toObject() {
 		return {
 			playerIds: Array.from(this.plMap.keys()),
-			roomOwner: this.owner
+			roomOwner: this.owner,
+			playerNames: Array.from(this.plMap.values()).map(player => player.name)
 		}
 	}
 }

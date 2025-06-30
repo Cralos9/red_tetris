@@ -11,7 +11,6 @@ export default function RoomPage() {
 
 	const name = params.player_name;
 	const score = 40000;
-	var game_amount = 3;
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
 	
@@ -45,11 +44,9 @@ export default function RoomPage() {
 			console.log("Board Remove Id: " ,msg.id)
 			var board = document.getElementById(msg.id)
 			if(board)
-			{
-				console.log("ENTROU Ze")
 				board.remove();
-			}
 		});
+
 		return function cleanup() {
 			socket.off("connect", handleConnect);
 		};
@@ -60,10 +57,11 @@ export default function RoomPage() {
 
 		socket.on('join', (msg) => 
 		{
-			if(socket.id != msg.roomOwner)
-				document.getElementById('Start').style.visibility = 'hidden'
+			if(socket.id == msg.roomOwner)
+				document.getElementById('Start').style.visibility = 'visible'
 			var otherBoards = msg.playerIds
-			console.log(otherBoards.length)
+			var names = msg.playerNames
+			console.log(names)
 			for(var i = 0; i <= otherBoards.length; i++)
 			{
 				if(otherBoards[i] === socket.id || otherBoards[i] === undefined)
@@ -72,8 +70,13 @@ export default function RoomPage() {
 				if (!otherBoard) 
 				{
 					otherBoard = document.createElement('div');
+					let nameLabel = document.createElement('span');
+					nameLabel.className = 'held-label';
+					nameLabel.textContent = names[i];
+					nameLabel.id = name[i]
 					otherBoard.className = 'secondary-game';
 					otherBoard.id = otherBoards[i];
+					otherBoard.appendChild(nameLabel);
 					gameDraw.add_secondary_cells(otherBoard, 200);
 					document.querySelector('.secondary-games').appendChild(otherBoard);
 				}
@@ -103,11 +106,13 @@ export default function RoomPage() {
 				
 					lineClear.className = 'lineClear';
 					lineClear.textContent = gameDraw.get_lines(msg.linesCleared)
+					const sound = gameDraw.get_audio(msg.linesCleared)
 					void lineClear.offsetWidth;
 					document.body.appendChild(lineClear);
 					setTimeout(() => {
 						lineClear.remove();
 					}, 1000);
+					sound.play();
 				}
 			} 
 			else 
@@ -217,7 +222,7 @@ export default function RoomPage() {
 				</div>
 			</div>
 			<div className='button-container'>
-				<button onClick={scoreSave} className='buttons' disabled={isDisabled} id='Start'>Start</button>
+				<button onClick={scoreSave} className='buttons' disabled={isDisabled} style={{visibility: 'hidden'}} id='Start'>Start</button>
 				<button onClick={resetGame} className='buttons'>Reset</button>
 			</div>
 			<div className='secondary-games'></div>
