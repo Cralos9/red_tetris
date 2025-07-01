@@ -173,9 +173,10 @@ export class Game extends Subject {
 		if (this.input.hardDrop === true) {
 			this.hardDrop()
 			this.lockPiece = true
-		} else {
-			this.Piece.move(this.input.x, this.field)
+		} else if (this.input.x || this.input.rot) {
+			this.Piece.move(this.field, this.input.x)
 			this.Piece.rotate(this.field, this.input.rot)
+			this.lockDelay = 0
 		}
 
 		if (this.Piece.checkCollision(this.field) === 0) {
