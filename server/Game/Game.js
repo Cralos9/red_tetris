@@ -34,7 +34,7 @@ const formField = (hightestRow) => {
 }
 
 export class Game extends Subject {
-	constructor(input, targets) {
+	constructor(input) {
 		super()
 		this.Bag = new Bag()
 		//this.field = formField(ROWS - 15)
@@ -61,7 +61,6 @@ export class Game extends Subject {
 		this.linesCleared = 0
 		this.frames = 0
 
-		this.targets = targets
 		this.garbageQueue = []
 	}
 

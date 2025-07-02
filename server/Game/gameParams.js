@@ -1,8 +1,6 @@
 export const ROWS = 20
 export const COLUMNS = 10
 
-export const SPEED = 1
-
 export const keyBinds = {
 	HARDDROP: " ",
 	HOLD: "c",

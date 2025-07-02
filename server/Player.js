@@ -22,7 +22,7 @@ export class Player extends Observer {
 	runGame(roomCode) {
 		this.score = new ScoreManager()
 		this.targetManager = new TargetManager(this.targets)
-		this.game = new Game(this.input, this.targets)
+		this.game = new Game(this.input)
 		this.game.addObserver(this.targetManager)
 		this.game.addObserver(this.score)
 		const delay = 16 // Close to 60 FPS
