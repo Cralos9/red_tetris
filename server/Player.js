@@ -31,8 +31,6 @@ export class Player extends Observer {
 			this.input.movePiece(0)
 			this.input.softDropPiece(0)
 			this.input.rotatePiece(0)
-			this.input.hardDropPiece(false)
-			this.input.holdPiece(false)
 			//console.table(this.game.field)
 			this.io.to(roomCode).emit('game', {
 				field: this.game.field,

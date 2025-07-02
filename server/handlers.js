@@ -1,6 +1,6 @@
 import { Room } from "./Room.js"
 import { Player } from "./Player.js"
-import { keyBinds } from "./Game/gameParams.js"
+import { KeyBinds } from "./Game/gameParams.js"
 import { log } from "./debug.js"
 
 // Map socket.id to Players
@@ -101,27 +101,20 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const room = RoomsMap.get(roomCode)
 		const player = room.searchPlayer(socket.id)
 		switch (key) {
-			case keyBinds.HARDDROP:
-				player.input.hardDropPiece(true)
-				break
-			case keyBinds.MOVELEFT:
+			case KeyBinds.MOVELEFT:
 				player.input.movePiece(-1)
 				break
-			case keyBinds.MOVERIGHT:
+			case KeyBinds.MOVERIGHT:
 				player.input.movePiece(1)
 				break
-			case keyBinds.ROTATERIGHT[0]:
-			case keyBinds.ROTATERIGHT[1]:
+			case KeyBinds.ROTATERIGHT:
 				player.input.rotatePiece(1)
 				break
-			case keyBinds.ROTATELEFT:
+			case KeyBinds.ROTATELEFT:
 				player.input.rotatePiece(-1)
 				break
-			case keyBinds.SOFTDROP:
+			case KeyBinds.SOFTDROP:
 				player.input.softDropPiece(1)
-				break
-			case keyBinds.HOLD:
-				player.input.holdPiece(true)
 				break
 			case "Escape":
 				player.stopGame()
@@ -129,6 +122,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 				console.log("Not Rec Key", key)
 				break
 		}
+		player.input.set(key, true)
 	}
 	const keyUp = (payload) => {
 		const key = payload.key
@@ -136,21 +130,15 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const room = RoomsMap.get(roomCode)
 		const player = room.searchPlayer(socket.id)
 		switch (key) {
-			case keyBinds.HARDDROP:
-				player.input.hardDropPiece(false)
-				break
-			case keyBinds.ROTATERIGHT[0]:
-			case keyBinds.ROTATERIGHT[1]:
-			case keyBinds.ROTATELEFT:
+			case KeyBinds.ROTATERIGHT:
+			case KeyBinds.ROTATELEFT:
 				player.input.rotatePiece(0)
-				break
-			case keyBinds.HOLD:
-				player.input.holdPiece(false)
 				break
 			default:
 				console.log("Not Rec Key", key)
 				break
 		}
+		player.input.set(key, false)
 	}
 	const startGame = (payload) => {
 		const roomCode = payload.roomCode

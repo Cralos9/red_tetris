@@ -1,13 +1,13 @@
 export const ROWS = 20
 export const COLUMNS = 10
 
-export const keyBinds = {
+export const KeyBinds = {
 	HARDDROP: " ",
 	HOLD: "c",
 	MOVELEFT: "ArrowLeft",
 	MOVERIGHT: "ArrowRight",
 	ROTATELEFT: "z",
-	ROTATERIGHT: ["x", 'ArrowUp'],
+	ROTATERIGHT: "ArrowUp",
 	SOFTDROP: "ArrowDown"
 }
 

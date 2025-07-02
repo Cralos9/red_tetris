@@ -1,6 +1,6 @@
 import { log } from "../debug.js"
 import { Bag } from "./Bag.js"
-import { ROWS, COLUMNS } from "./gameParams.js"
+import { ROWS, COLUMNS, KeyBinds } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
 import { Subject } from "../Observer/Subject.js"
 
@@ -164,12 +164,12 @@ export class Game extends Subject {
 
 		this.Piece.undraw(this.field)
 
-		if (this.input.hold === true && this.holdLock === false) {
+		if (this.input.consume(KeyBinds.HOLD) === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
 		}
 
-		if (this.input.hardDrop === true) {
+		if (this.input.consume(KeyBinds.HARDDROP) === true) {
 			this.hardDrop()
 			this.lockPiece = true
 		} else if (this.input.x || this.input.rot) {
