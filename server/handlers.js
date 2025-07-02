@@ -95,12 +95,11 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 
 
 export const gameHandlers = (io, socket, RoomsMap) => {
-	const gameInput = (payload) => {
+	const keyDown = (payload) => {
 		const key = payload.key
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
 		const player = room.searchPlayer(socket.id)
-		log("KeyDown:", player.toString())
 		switch (key) {
 			case keyBinds.HARDDROP:
 				player.input.hardDropPiece(true)
@@ -131,6 +130,28 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 				break
 		}
 	}
+	const keyUp = (payload) => {
+		const key = payload.key
+		const roomCode = payload.roomCode
+		const room = RoomsMap.get(roomCode)
+		const player = room.searchPlayer(socket.id)
+		switch (key) {
+			case keyBinds.HARDDROP:
+				player.input.hardDropPiece(false)
+				break
+			case keyBinds.ROTATERIGHT[0]:
+			case keyBinds.ROTATERIGHT[1]:
+			case keyBinds.ROTATELEFT:
+				player.input.rotatePiece(0)
+				break
+			case keyBinds.HOLD:
+				player.input.holdPiece(false)
+				break
+			default:
+				console.log("Not Rec Key", key)
+				break
+		}
+	}
 	const startGame = (payload) => {
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
@@ -145,5 +166,6 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		})
 	}
 	socket.on('startGame', startGame)
-	socket.on('keyDown', gameInput)
+	socket.on('keyDown', keyDown)
+	socket.on('keyUp', keyUp)
 }

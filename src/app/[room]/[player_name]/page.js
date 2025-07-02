@@ -144,6 +144,9 @@ export default function RoomPage() {
 		document.addEventListener("keydown", e => {
 			socket.emit("keyDown", {key: e.key, roomCode: roomCode})
 		})
+		document.addEventListener("keyup", e => {
+			socket.emit("keyUp", {key: e.key, roomCode: roomCode})
+		})
 		
 		// const game22 = document.querySelector('.secondary-games');
 		// game22.innerHTML = '';
