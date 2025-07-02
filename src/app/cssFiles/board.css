@@ -148,11 +148,12 @@
 .scoreCard{
 
   background: rgba(12, 12, 12, 0.964);
-	width: 15%;
+	width: 8vw;
+  height: 25vh;
 	box-shadow: 10px 10px 10px rgba(66, 66, 66, 0.719);
 	display: flex;
 	flex-direction: column;
-	padding: 60px;
+	padding: 50px;
 	gap: 15px;
 	text-align: center;
 	z-index: 1;
@@ -160,4 +161,49 @@
 	border-width: 10px;
 	border-color: #000000;
 
+}
+
+
+.countdown
+{
+	font-family: 'Press Start 2P';
+	font-weight: bold;
+	font-size: 60px;
+	position: absolute;
+	text-align: center;
+	top: 30vh;
+	left: 50vw;
+	color: #ffffff;
+	text-shadow: 5px 5px  #000000;
+	z-index: 5;
+}
+
+.game-Over
+{
+
+	font-family: 'Press Start 2P';
+	font-weight: bold;
+	font-size: 60px;
+	position: absolute;
+	text-align: center;
+	top: 30vh;
+	left: 40vw;
+	color: #ffffff;
+	text-shadow: 5px 5px  #000000;
+	z-index: 5;
+}
+
+.game-over-image2
+{
+	position: relative;
+	left: 5vw;
+	bottom : 13vw
+}
+  
+
+.game-over-image
+{
+	position: relative;
+	left: 5vw;
+	top : 5vw;
 }

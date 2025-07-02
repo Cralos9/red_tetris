@@ -165,12 +165,31 @@ export default function RoomPage() {
 	}
 
 	function startGame() {
+		let time = 3;
+	  
 		if (gameOver === true) {
-			end_game();
-			setGameOver(false);
+		  end_game();
+		  setGameOver(false);
 		}
+	  
 		console.log(gameOver);
 		setIsDisabled(true);
+	  
+		// var countdown = document.createElement('div');
+		// countdown.className = 'countdown';
+		// document.body.appendChild(countdown)
+		// const intervalId = setInterval(() => 
+		// {
+		// 	countdown.textContent = time;
+		// 	time--;
+		// 	console.log('Countdown:', time);
+		// 	if (time < 0) {
+		// 		clearInterval(intervalId);
+		// 		document.body.removeChild(countdown)
+		// 		socket.emit("startGame", { roomCode: roomCode });
+		// }
+		// }, 1000);
+		// if (time == 0)
 		socket.emit("startGame", {roomCode: roomCode});
 	
 
@@ -218,7 +237,6 @@ export default function RoomPage() {
 				{gameOver && <div className='game-Over'>
 					Game Over
 					<img className='game-over-image'src="/images/ripmario.gif"></img>
-					<img className='game-over-image2'src="/images/rain.gif"></img>
 				</div>}
 				<nav>
 					<h1 className='room-info'>Room Code:{roomCode}      Username:{username}</h1>
@@ -236,6 +254,8 @@ export default function RoomPage() {
 				<div className='scoreCard'>
 					<span className='score'>Score</span>
 					<span className='score' id ='Score'>0</span>
+					<span className='score'>Level</span>
+					<span className='score' id ='level'>0</span>
 				</div>
 				<button onClick={startGame} className='buttons' disabled={isDisabled} style={{visibility: 'hidden'}} id='Start'>Start</button>
 				<button onClick={resetGame} className='buttons'>Reset</button>

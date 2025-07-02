@@ -53,35 +53,6 @@
 	cursor: pointer;
 }
 
-.game-Over
-{
-
-	font-family: 'Press Start 2P';
-	font-weight: bold;
-	font-size: 60px;
-	position: absolute;
-	text-align: center;
-	top: 30vh;
-	left: 40vw;
-	color: #ffffff;
-	text-shadow: 5px 5px  #000000;
-	z-index: 5;
-}
-
-.game-over-image2
-{
-	position: relative;
-	left: 5vw;
-	bottom : 13vw
-}
-  
-
-.game-over-image
-{
-	position: relative;
-	left: 5vw;
-	top : 5vw;
-}
   
 
 .usercard
