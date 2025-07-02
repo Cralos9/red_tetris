@@ -102,19 +102,19 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const player = room.searchPlayer(socket.id)
 		switch (key) {
 			case KeyBinds.MOVELEFT:
-				player.input.movePiece(-1)
+				player.game.ctrl.movePiece(-1)
 				break
 			case KeyBinds.MOVERIGHT:
-				player.input.movePiece(1)
+				player.game.ctrl.movePiece(1)
 				break
 			case KeyBinds.ROTATERIGHT:
-				player.input.rotatePiece(1)
+				player.game.ctrl.rotatePiece(1)
 				break
 			case KeyBinds.ROTATELEFT:
-				player.input.rotatePiece(-1)
+				player.game.ctrl.rotatePiece(-1)
 				break
 			case KeyBinds.SOFTDROP:
-				player.input.softDropPiece(1)
+				player.game.ctrl.softDropPiece(1)
 				break
 			case "Escape":
 				player.stopGame()
@@ -132,7 +132,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		switch (key) {
 			case KeyBinds.ROTATERIGHT:
 			case KeyBinds.ROTATELEFT:
-				player.input.rotatePiece(0)
+				player.game.ctrl.rotatePiece(0)
 				break
 			default:
 				console.log("Not Rec Key", key)

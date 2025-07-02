@@ -3,6 +3,7 @@ import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS, KeyBinds } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
 import { Subject } from "../Observer/Subject.js"
+import { GameController } from "./GameInput.js"
 
 const coor = [[5,19],[5,18],[5,17],[5,16],[4,17],[6,17],[7,17]]
 
@@ -39,7 +40,7 @@ export class Game extends Subject {
 		this.Bag = new Bag()
 		//this.field = formField(ROWS - 15)
 		this.field = []
-		this.input = input
+		this.ctrl = new GameController(input)
 
 		this.running = true
 
@@ -159,27 +160,27 @@ export class Game extends Subject {
 		this.linesCleared = 0
 		
 		if (this.frames % 60 === 0) {
-			this.input.softDropPiece(1)
+			this.ctrl.softDropPiece(1)
 		}
 
 		this.Piece.undraw(this.field)
 
-		if (this.input.consume(KeyBinds.HOLD) === true && this.holdLock === false) {
+		if (this.ctrl.consume(KeyBinds.HOLD) === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
 		}
 
-		if (this.input.consume(KeyBinds.HARDDROP) === true) {
+		if (this.ctrl.consume(KeyBinds.HARDDROP) === true) {
 			this.hardDrop()
 			this.lockPiece = true
-		} else if (this.input.x || this.input.rot) {
-			this.Piece.move(this.field, this.input.x)
-			this.Piece.rotate(this.field, this.input.rot)
+		} else if (this.ctrl.x || this.ctrl.rot) {
+			this.Piece.move(this.field, this.ctrl.x)
+			this.Piece.rotate(this.field, this.ctrl.rot)
 			this.lockDelay = 0
 		}
 
 		if (this.Piece.checkCollision(this.field) === 0) {
-			this.Piece.row += this.input.y
+			this.Piece.row += this.ctrl.y
 			this.lockDelay = 0
 		} else {
 			if (this.lockDelay === 30) {
