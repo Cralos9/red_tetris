@@ -1,18 +1,22 @@
-import { KeyBinds } from "./gameParams.js"
-
 export class Input {
 	constructor() {
-		this.keys = new Map()
-		for (const key in KeyBinds) {
-			this.keys.set(KeyBinds[key], false)
+		this.keys = {
+			'z': false,
+			'x': false,
+			'ArrowLeft': false,
+			'ArrowUp': false,
+			'ArrowDown': false,
+			'ArrowRight': false,
+			'c': false,
+			' ': false
 		}
 	}
 
 	set(key, value) {
-		this.keys.set(key, value)
+		this.keys[key] = value
 	}
 
 	isPressed(key) {
-		return this.keys.get(key)
+		return (this.keys[key])
 	}
 }

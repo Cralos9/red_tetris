@@ -157,6 +157,7 @@ export class Game extends Subject {
 
 	update() {
 		log("Current Piece Row:", this.Piece.row)
+		const input = this.ctrl.keyStates()
 		this.linesCleared = 0
 		
 		if (this.frames % 60 === 0) {
@@ -170,12 +171,12 @@ export class Game extends Subject {
 			this.holdLock = true
 		}
 
-		if (this.ctrl.consume(KeyBinds.HARDDROP) === true) {
+		if (input.hardDrop === true) {
 			this.hardDrop()
 			this.lockPiece = true
-		} else if (this.ctrl.x || this.ctrl.rot) {
-			this.Piece.move(this.field, this.ctrl.x)
-			this.Piece.rotate(this.field, this.ctrl.rot)
+		} else if (input.x || input.rot) {
+			this.Piece.move(this.field, input.x)
+			this.Piece.rotate(this.field, input.rot)
 			this.lockDelay = 0
 		}
 
