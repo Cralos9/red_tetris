@@ -53,6 +53,11 @@ export default function Game() {
 	const user = localStorage.getItem("username");
 	router.push(`/${room}/${user}`);
   }
+  function options()
+  {
+	console.log("Teste")
+	router.push("/options");
+  }
 
   return (
 	<div className="main-container">
@@ -65,7 +70,10 @@ export default function Game() {
 			  <img className="mario-run" src="/images/mario.gif" />
 			  <img className="goomba-run" src="/images/goomba2.gif"  />
 			  <span className='text-container'>Play</span>
-		</button>
+			</button>
+			<button className='button' onClick={options}>
+				Options
+			</button>
 	  </form>
 	  <div className="usercard">
 		<h2 className='userTitle'>YOUR SCORES</h2>

@@ -129,6 +129,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		}
 	}
 	const startGame = (payload) => {
+		console.log(payload.ARR)
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
 		if (room.owner != socket.id)

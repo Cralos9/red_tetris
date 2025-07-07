@@ -190,7 +190,7 @@ export default function RoomPage() {
 		// }
 		// }, 1000);
 		// if (time == 0)
-		socket.emit("startGame", {roomCode: roomCode});
+		socket.emit("startGame", {roomCode: roomCode, ARR: localStorage.getItem("ARR") ? localStorage.getItem("ARR") : 5, DAS: localStorage.getItem("DAS") ? localStorage.getItem("DAS") : 10});
 	
 
 	}

@@ -72,6 +72,26 @@
 }
 
 
+input[type="range"] {
+	width: 400px;
+	margin: 0.5rem 0;
+	appearance: none;
+	height: 6px;
+	background: #ddd;
+	border-radius: 5px;
+	outline: none;
+	transition: background 0.3s;
+  }
+  
+  
+  input[type="range"]::-moz-range-thumb {
+	width: 50px;
+	/* padding: 5px; */
+	height: 25px;
+	background: #5e5e5e;
+	cursor: pointer;
+  }
+
 .main-container {
 	top: 5vh;
 	position: relative;
