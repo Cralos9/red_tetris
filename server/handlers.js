@@ -1,6 +1,5 @@
 import { Room } from "./Room.js"
 import { Player } from "./Player.js"
-import { KeyBinds } from "./Game/gameParams.js"
 import { log } from "./debug.js"
 
 // Map socket.id to Players
@@ -93,34 +92,14 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 	})
 }
 
-
 export const gameHandlers = (io, socket, RoomsMap) => {
 	const keyDown = (payload) => {
 		const key = payload.key
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
 		const player = room.searchPlayer(socket.id)
-		switch (key) {
-			case KeyBinds.MOVELEFT:
-				player.game.ctrl.movePiece(-1)
-				break
-			case KeyBinds.MOVERIGHT:
-				player.game.ctrl.movePiece(1)
-				break
-			case KeyBinds.ROTATERIGHT:
-				player.game.ctrl.rotatePiece(1)
-				break
-			case KeyBinds.ROTATELEFT:
-				player.game.ctrl.rotatePiece(-1)
-				break
-			case KeyBinds.SOFTDROP:
-				player.game.ctrl.softDropPiece(1)
-				break
-			case "Escape":
-				player.stopGame()
-			default:
-				console.log("Not Rec Key", key)
-				break
+		if (key === "Escape") {
+			player.stopGame()
 		}
 		player.input.set(key, true)
 	}
@@ -129,15 +108,6 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
 		const player = room.searchPlayer(socket.id)
-		switch (key) {
-			case KeyBinds.ROTATERIGHT:
-			case KeyBinds.ROTATELEFT:
-				player.game.ctrl.rotatePiece(0)
-				break
-			default:
-				console.log("Not Rec Key", key)
-				break
-		}
 		player.input.set(key, false)
 	}
 	const startGame = (payload) => {

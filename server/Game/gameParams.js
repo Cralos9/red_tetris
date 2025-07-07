@@ -1,14 +1,14 @@
 export const ROWS = 20
 export const COLUMNS = 10
 
-export const KeyBinds = {
-	HARDDROP: " ",
-	HOLD: "c",
-	MOVELEFT: "ArrowLeft",
-	MOVERIGHT: "ArrowRight",
-	ROTATELEFT: "z",
-	ROTATERIGHT: "ArrowUp",
-	SOFTDROP: "ArrowDown"
+export const Actions = {
+	HARD_DROP: 1,
+	SOFT_DROP: 2,
+	HOLD: 3,
+	ROTATE_LEFT: 4,
+	ROTATE_RIGHT: 5,
+	MOVE_RIGHT: 6,
+	MOVE_LEFT: 7
 }
 
 export const ScoreTable = {
