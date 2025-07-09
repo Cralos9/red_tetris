@@ -18,6 +18,10 @@ export class Piece {
 		this.color = color
 	}
 
+	getRow() { return (this.row) }
+	getColumn() { return (this.column) }
+	getColor() { return (this.color) }
+
 	checkCollision(field) {
 		const skirt = this.getCurrSkirt()
 

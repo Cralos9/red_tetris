@@ -3,19 +3,17 @@ import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
 import { Subject } from "../Observer/Subject.js"
+import { Field } from "./Field.js"
 
 export class Game extends Subject {
 	constructor(input) {
 		super()
 		this.Bag = new Bag()
-		this.field = Array(ROWS)
+		this.field = new Field()
 		this.input = input
 
 		this.running = true
 
-		for (let i = 0; i < ROWS; i++) {
-			this.field[i] = Array(COLUMNS).fill(0)
-		}
 
 		this.Piece = this.Bag.getNextPiece()
 		this.hitList = []
