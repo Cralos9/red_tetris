@@ -4,56 +4,22 @@ import { ROWS, COLUMNS } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
 import { Subject } from "../Observer/Subject.js"
 
-const coor = [[5,19],[5,18],[5,17],[5,16],[4,17],[6,17],[7,17]]
-
-const compare = (x, y) => {
-	for (let i = 0; i < coor.length; i++) {
-		if (coor[i][0] === x && coor[i][1] === y) {
-			return (true)
-		}
-	}
-	return (false)
-}
-
-const formField = (hightestRow) => {
-	const field = []
-
-	for (let i = ROWS - 1; i >= 0; i--) {
-		let arr = []
-		for (let k = 0; k < COLUMNS; k++) {
-			if (i >= hightestRow ) {//&& !compare(k, i)) {
-				arr[k] = 1
-			} else {
-				arr[k] = 0
-			}
-		}
-		field[i] = arr
-	}
-	// console.table(field)
-	return (field)
-}
-
 export class Game extends Subject {
 	constructor(input) {
 		super()
 		this.Bag = new Bag()
-		//this.field = formField(ROWS - 15)
-		this.field = []
+		this.field = Array(ROWS)
 		this.input = input
 
 		this.running = true
 
 		for (let i = 0; i < ROWS; i++) {
-			let arr = []
-			for (let j = 0; j < COLUMNS; j++) {
-				arr[j] = 0
-			}
-			this.field[i] = arr
+			this.field[i] = Array(COLUMNS).fill(0)
 		}
 
 		this.Piece = this.Bag.getNextPiece()
 		this.hitList = []
-		this.stackHeight = ROWS - 1
+		this.stackHeight = ROWS
 		this.hold = null
 		this.holdLock = false
 		this.lockDelay = 0
@@ -87,9 +53,7 @@ export class Game extends Subject {
 		const start = this.hitList ? this.hitList[0] : 0
 		
 		this.hitList.forEach(line => {
-			for (let i = 0; i < this.field[line]; i++) {
-				this.field[line][i] = 0
-			}
+			this.field[line].fill(0)
 		})
 		for (let y = start; y >= this.stackHeight; y--) {
 			log("Moving Line,", y - linesNbr, "to,", y)
