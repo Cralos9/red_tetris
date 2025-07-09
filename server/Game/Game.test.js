@@ -118,37 +118,62 @@ describe("Create Garbage Tests", () => {
 })
 
 describe("Line Clear Tests", () => {
-	const game = new Game()
-	var lineNbr = 0
-	const emptyField = Array(ROWS)
-	for (let i = 0; i < ROWS; i++) {
-		emptyField[i] = Array(COLUMNS).fill(0)
-	}
-
-	beforeEach(() => {
-		lineNbr += 1
-		for (let i = 0; i < lineNbr; i++) {
-			const line = (ROWS - 1) - i
-			game.field[line].fill(1)
+	describe("Perfect Clears (Empty Field)", () => {
+		const game = new Game()
+		var lineNbr = 0
+		const emptyField = Array(ROWS)
+		for (let i = 0; i < ROWS; i++) {
+			emptyField[i] = Array(COLUMNS).fill(0)
 		}
-		game.patternMatch()
-		game.lineClear()
+
+		beforeEach(() => {
+			lineNbr += 1
+			for (let i = 0; i < lineNbr; i++) {
+				const line = (ROWS - 1) - i
+				game.field[line].fill(1)
+			}
+			game.patternMatch()
+			game.lineClear()
+		})
+
+		const testFullClears = (lineNbr) => {
+			const outField = game.field
+			const expField = emptyField
+			expect(outField).toStrictEqual(expField)
+			const outLineNbr = game.linesCleared
+			const expLineNbr = lineNbr
+			expect(outLineNbr).toBe(expLineNbr)
+			const outStackHeight = game.stackHeight
+			const expStackHeight = ROWS
+			expect(outStackHeight).toBe(expStackHeight)
+		}
+
+		test('1 Line', () => { testFullClears(lineNbr) })
+		test('2 Line', () => { testFullClears(lineNbr) })
+		test('3 Line', () => { testFullClears(lineNbr) })
+		test('4 Line', () => { testFullClears(lineNbr) })
 	})
+	describe("Gap Clears", () => {
+		const game = new Game()
+		const gap = 5
+		var linenbr = 6
 
-	const testFullClears = (lineNbr) => {
-		const outField = game.field
-		const expField = emptyField
-		expect(outField).toStrictEqual(expField)
-		const outLineNbr = game.linesCleared
-		const expLineNbr = lineNbr
-		expect(outLineNbr).toBe(expLineNbr)
-		const outStackHeight = game.stackHeight
-		const expStackHeight = ROWS
-		expect(outStackHeight).toBe(expStackHeight)
-	}
+		beforeEach(() => {
+			for (let i = 0; i < linenbr; i++) {
+				const line = (ROWS - 1) - i
+				game.field[line].fill(1)
+			}
+			game.field[ROWS - linenbr][gap] = 0
+			game.patternMatch()
+			game.lineClear()
+		})
 
-	test('1 Line', () => { testFullClears(lineNbr) })
-	test('2 Line', () => { testFullClears(lineNbr) })
-	test('3 Line', () => { testFullClears(lineNbr) })
-	test('4 Line', () => { testFullClears(lineNbr) })
+		test("4 Lines", () => {
+			const line = ROWS - 1
+			const outFieldLeft = game.field[line]
+			const expFieldLeft = Array(COLUMNS).fill(1)
+			expFieldLeft[gap] = 0
+			expect(outFieldLeft).toStrictEqual(expFieldLeft)
+		})
+	})
 })
