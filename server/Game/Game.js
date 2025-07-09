@@ -22,6 +22,7 @@ export class Game extends Subject {
 		this.stackHeight = ROWS
 		this.hold = null
 		this.holdLock = false
+		this.lockDown = false
 		this.lockDelay = 0
 		this.lockPiece = false
 		this.linesCleared = 0
@@ -71,14 +72,14 @@ export class Game extends Subject {
 	}
 
 	holdPiece() {
-		this.Piece.reset()
 		log("Holding Piece:", this.Piece.toString())
 		if (this.hold === null) {
 			log("Empty Hold")
 			this.hold = this.Piece
-			this.Piece = this.Bag.getNextPiece()
+			this.newPiece()
 		} else {
 			log("Hold with:", this.Piece.toString())
+			this.Piece.reset()
 			const tmp = this.Piece
 			this.Piece = this.hold
 			this.hold = tmp
@@ -118,14 +119,19 @@ export class Game extends Subject {
 		}
 	}
 
+	newPiece() {
+		this.holdLock = false
+		this.lockPiece = false
+		this.lockDown = false
+		this.lockDelay = 0
+		this.Piece.reset()
+		this.Piece = this.Bag.getNextPiece()
+	}
+
 	update() {
 		log("Current Piece Row:", this.Piece.row)
 		this.linesCleared = 0
 		
-		if (this.frames % 60 === 0) {
-			this.input.softDropPiece(1)
-		}
-
 		this.Piece.undraw(this.field)
 
 		if (this.input.hold === true && this.holdLock === false) {
@@ -133,23 +139,31 @@ export class Game extends Subject {
 			this.holdLock = true
 		}
 
-		if (this.input.hardDrop === true) {
-			this.hardDrop()
-			this.lockPiece = true
-		} else if (this.input.x || this.input.rot) {
+		if (this.input.x) {
 			this.Piece.move(this.field, this.input.x)
+		}
+		if (this.input.rot) {
 			this.Piece.rotate(this.field, this.input.rot)
 			this.lockDelay = 0
 		}
+		if (this.input.y || (this.frames % 60 === 0)) {
+			if (this.Piece.checkCollision(this.field) === 0) {
+				this.Piece.row += 1
+				this.lockDelay = 0
+			} else {
+				this.lockDown = true
+			}
+		}
+		if (this.input.hardDrop === true) {
+			this.hardDrop()
+			this.lockPiece = true
+		}
 
-		if (this.Piece.checkCollision(this.field) === 0) {
-			this.Piece.row += this.input.y
-			this.lockDelay = 0
-		} else {
-			if (this.lockDelay === 30) {
+		if (this.lockDown === true) {
+			if (this.lockDelay >= 30) {
 				this.lockPiece = true
 			}
-			this.lockDelay++
+			this.lockDelay += 1
 		}
 
 		if (this.lockPiece === true) {
@@ -163,11 +177,7 @@ export class Game extends Subject {
 			if (this.garbageQueue.length) {
 				this.createGarbage()
 			}
-			this.holdLock = false
-			this.lockPiece = false
-			this.lockDelay = 0
-			this.Piece.reset()
-			this.Piece = this.Bag.getNextPiece()
+			this.newPiece()
 		}
 
 		this.Piece.draw(this.field)
