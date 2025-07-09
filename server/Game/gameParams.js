@@ -11,6 +11,18 @@ export const keyBinds = {
 	SOFTDROP: "ArrowDown"
 }
 
+// Possibly a common structure between front and back
+export const Colors = {
+	GHOST: -1,
+	BLUE: 1,
+	PURPLE: 2,
+	DARK_BLUE: 3,
+	ORANGE: 4,
+	YELLOW: 5,
+	GREEN: 6,
+	RED: 7,
+}
+
 export const ScoreTable = {
 	1: 100,
 	2: 300,

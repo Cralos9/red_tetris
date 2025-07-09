@@ -10,19 +10,20 @@ import {
 	Zcoor,
 	JLTSZoffsets,
 	Ioffsets,
-	Ooffsets
+	Ooffsets,
+	Colors	
 } from "./gameParams.js"
 
 export class Bag {
 	constructor () {
 		this.pieces = {
-			"I": new Piece(Icoor, Ioffsets, 1),
-			"T": new Piece(Tcoor, JLTSZoffsets, 2),
-			"J": new Piece(Jcoor, JLTSZoffsets, 3),
-			"L": new Piece(Lcoor, JLTSZoffsets, 4),
-			"O": new Piece(Ocoor, Ooffsets, 5),
-			"S": new Piece(Scoor, JLTSZoffsets, 6),
-			"Z": new Piece(Zcoor, JLTSZoffsets, 7),
+			"I": new Piece(Icoor, Ioffsets, Colors.BLUE),
+			"T": new Piece(Tcoor, JLTSZoffsets, Colors.PURPLE),
+			"J": new Piece(Jcoor, JLTSZoffsets, Colors.ORANGE),
+			"L": new Piece(Lcoor, JLTSZoffsets, Colors.DARK_BLUE),
+			"O": new Piece(Ocoor, Ooffsets, Colors.YELLOW),
+			"S": new Piece(Scoor, JLTSZoffsets, Colors.GREEN),
+			"Z": new Piece(Zcoor, JLTSZoffsets, Colors.RED),
 		}
 		this.stack = []
 		this.order = ["I", "T", "J", "L", "O", "S", "Z"]
