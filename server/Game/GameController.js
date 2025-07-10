@@ -82,6 +82,7 @@ export class GameController {
 		const move = this.axis(moveLeft, moveRight)
 		const rot = this.axis(rotateLeft, rotateRight)
 
+		this.keyboard.update()
 		return {
 			move: move,
 			softDrop: softDrop,
