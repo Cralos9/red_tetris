@@ -1,9 +1,7 @@
 import { Actions } from "./gameParams.js"
 
 const DAS = 20
-const ARR = 1
-
-const moveInfo = { dasDelay: 0, arrDelay: 0, }
+const ARR = 5
 
 export class GameController {
 	constructor(keyboard) {
@@ -17,10 +15,7 @@ export class GameController {
 			[Actions.MOVE_RIGHT]: ['ArrowRight'],
 			[Actions.MOVE_LEFT]: ['ArrowLeft']
 		}
-		this.actionState = {
-			[Actions.MOVE_LEFT]: { ...moveInfo },
-			[Actions.MOVE_RIGHT]: { ...moveInfo },
-		}
+		this.pieceDir = []
 		this.consum = []
 	}
 
@@ -48,41 +43,62 @@ export class GameController {
 	}
 
 	getMove(action) {
-		const moveInfo = this.actionState[action]
-		const isPressed = this.keyboard.isPressed(this.actions[action])
+		const isTap = this.keyboard.isTap(this.actions[action])
+		const heldtimer = this.keyboard.getHeldTime(this.actions[action])
 
-		if (isPressed === false) {
-			moveInfo.dasDelay = 0
-			moveInfo.arrDelay = 0
-			return (false)
-		}
-		if (moveInfo.dasDelay === 0) {
-			moveInfo.dasDelay += 1
+		if (isTap === true) {
 			return (true)
-		} else if (moveInfo.dasDelay < DAS) {
-			moveInfo.dasDelay += 1
-			return (false)
-		} else if (moveInfo.arrDelay < ARR) {
-			moveInfo.arrDelay += 1
+		}
+
+		if (heldtimer < DAS) {
 			return (false)
 		}
-		moveInfo.arr = 0
+
+		if (((heldtimer - DAS) + ARR) % ARR) {
+			return (false)
+		}
+
 		return (true)
 	}
 
+	getDir(actionArr) {
+		actionArr.forEach(action => {
+			const keys = this.actions[action]
+			const isPressed = this.keyboard.isPressed(keys)
+			const isTap = this.keyboard.isTap(keys)
+
+			if (isPressed === false) {
+				this.pieceDir = this.pieceDir.filter(actions => action !== actions)
+			} else if (isTap === true) {
+				this.pieceDir.push(action)
+			}
+
+		})
+		if (this.pieceDir.length <= 0) {
+			return (0)
+		}
+		const moveAction = this.pieceDir[this.pieceDir.length - 1]
+		var move = this.getMove(moveAction)
+		if (moveAction === Actions.MOVE_LEFT) {
+			move *= -1
+		} else if (moveAction === Actions.MOVE_RIGHT) {
+			move *= 1
+		}
+		return (move)
+	}
+
 	keyStates() {
+		this.keyboard.update()
+
 		const hardDrop = this.consumeKey(Actions.HARD_DROP)
 		const hold = this.consumeKey(Actions.HOLD)
 		const softDrop = this.keyboard.isPressed(this.actions[Actions.SOFT_DROP]) ? 1 : 0
-		const moveLeft = this.getMove(Actions.MOVE_LEFT)
-		const moveRight = this.getMove(Actions.MOVE_RIGHT)
 		const rotateRight = this.consumeKey(Actions.ROTATE_RIGHT)
 		const rotateLeft = this.consumeKey(Actions.ROTATE_LEFT)
 
-		const move = this.axis(moveLeft, moveRight)
+		const move = this.getDir([Actions.MOVE_LEFT, Actions.MOVE_RIGHT])
 		const rot = this.axis(rotateLeft, rotateRight)
 
-		this.keyboard.update()
 		return {
 			move: move,
 			softDrop: softDrop,

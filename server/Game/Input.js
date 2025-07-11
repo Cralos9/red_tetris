@@ -1,6 +1,7 @@
 export class Input {
 	constructor() {
 		this.pressed = false
+		this.tap = false
 		this.heldTimer = 0
 	}
 
@@ -11,12 +12,15 @@ export class Input {
 	update() {
 		if (this.pressed) {
 			this.heldTimer += 1
+			this.tap = this.heldTimer <= 1
 		} else {
 			this.heldTimer = 0
+			this.tap = false
 		}
 	}
 
 	getHeldTime() { return (this.heldTimer) }
+	getTap() { return (this.tap) }
 	getPress() { return (this.pressed) }
 }
 
@@ -48,6 +52,16 @@ export class Keyboard {
 		for (let i = 0; i < keys.length; i++) {
 			const key = keys[i]
 			if (this.keys[key].getPress()) {
+				return (true)
+			}
+		}
+		return (false)
+	}
+
+	isTap(keys) {
+		for (let i = 0; i < keys.length; i++) {
+			const key = keys[i]
+			if (this.keys[key].getTap()) {
 				return (true)
 			}
 		}
