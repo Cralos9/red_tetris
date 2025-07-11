@@ -6,11 +6,11 @@ import { Subject } from "../Observer/Subject.js"
 import { GameController } from "./GameController.js"
 
 export class Game extends Subject {
-	constructor(keyboard) {
+	constructor(ctrl) {
 		super()
 		this.Bag = new Bag()
 		this.field = Array(ROWS)
-		this.ctrl = new GameController(keyboard)
+		this.ctrl = ctrl
 
 		this.running = true
 

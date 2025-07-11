@@ -1,6 +1,7 @@
 import { Room } from "./Room.js"
 import { Player } from "./Player.js"
 import { log } from "./debug.js"
+import { Keybinds } from "./Game/gameParams.js"
 
 // Map socket.id to Players
 export const playerHandlers = (io, socket, RoomsMap) => {
@@ -25,9 +26,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 
 		if (room.plMap.size == 0)
 			room.owner = socket.id
-		const player = new Player(playerName, io, socket.id)
-		player.isAlive = true
-
+		const player = new Player(playerName, Keybinds, io, socket.id)
 
 		room.addPlayer(socket.id, player)
 		socket.join(roomCode.toString())
@@ -99,14 +98,14 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		if (key === "Escape") {
 			player.stopGame()
 		}
-		player.input.set(key, true)
+		player.keyboard.set(key, true)
 	}
 	const keyUp = (payload) => {
 		const key = payload.key
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
 		const player = room.searchPlayer(socket.id)
-		player.input.set(key, false)
+		player.keyboard.set(key, false)
 	}
 	const startGame = (payload) => {
 		const roomCode = payload.roomCode
