@@ -19,8 +19,8 @@ export class Bag {
 		this.pieces = {
 			"I": new Piece(Icoor, Ioffsets, Colors.BLUE),
 			"T": new Piece(Tcoor, JLTSZoffsets, Colors.PURPLE),
-			"J": new Piece(Jcoor, JLTSZoffsets, Colors.ORANGE),
-			"L": new Piece(Lcoor, JLTSZoffsets, Colors.DARK_BLUE),
+			"J": new Piece(Jcoor, JLTSZoffsets, Colors.DARK_BLUE),
+			"L": new Piece(Lcoor, JLTSZoffsets, Colors.ORANGE),
 			"O": new Piece(Ocoor, Ooffsets, Colors.YELLOW),
 			"S": new Piece(Scoor, JLTSZoffsets, Colors.GREEN),
 			"Z": new Piece(Zcoor, JLTSZoffsets, Colors.RED),
