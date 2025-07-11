@@ -4,9 +4,10 @@ import { Observer } from "./Observer/Observer.js"
 import { Events } from "./globalEvents.js"
 import { TargetManager } from "./Game/Target.js"
 import { ScoreManager } from "./Game/Score.js"
+import { GameController } from "./Game/GameController.js"
 
 export class Player extends Observer {
-	constructor(name, io, id) {
+	constructor(name, keybinds, io, id) {
 		super()
 		this.targets = []
 		this.game = null
@@ -16,13 +17,15 @@ export class Player extends Observer {
 		this.id = id
 		this.io = io
 		this.isAlive = true
-		this.input = new Keyboard()
+		this.keybinds = keybinds
+		this.keyboard = new Keyboard()
 	}
 
 	runGame(roomCode) {
 		this.score = new ScoreManager()
 		this.targetManager = new TargetManager(this.targets)
-		this.game = new Game(this.input)
+		const gameCtrl = new GameController(this.keyboard, this.keybinds)
+		this.game = new Game(gameCtrl)
 		this.game.addObserver(this.targetManager)
 		this.game.addObserver(this.score)
 		const delay = 16 // Close to 60 FPS

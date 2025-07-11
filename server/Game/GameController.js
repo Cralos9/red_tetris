@@ -1,20 +1,11 @@
 import { Actions } from "./gameParams.js"
 
-const DAS = 20
-const ARR = 2
-
 export class GameController {
-	constructor(keyboard) {
+	constructor(keyboard, keybinds) {
 		this.keyboard = keyboard
-		this.actions = {
-			[Actions.HARD_DROP]: [' '],
-			[Actions.SOFT_DROP]: ['ArrowDown'],
-			[Actions.HOLD]: ['c'],
-			[Actions.ROTATE_RIGHT]: ['x', 'ArrowUp'],
-			[Actions.ROTATE_LEFT]: ['z'],
-			[Actions.MOVE_RIGHT]: ['ArrowRight'],
-			[Actions.MOVE_LEFT]: ['ArrowLeft']
-		}
+		this.actions = keybinds.actions
+		this.DAS = keybinds.das
+		this.ARR = keybinds.arr
 		this.pieceDir = []
 		this.consum = []
 	}
@@ -50,11 +41,11 @@ export class GameController {
 			return (true)
 		}
 
-		if (heldtimer < DAS) {
+		if (heldtimer < this.DAS) {
 			return (false)
 		}
 
-		if (((heldtimer - DAS) + ARR) % ARR) {
+		if (((heldtimer - this.DAS) + this.ARR) % this.ARR) {
 			return (false)
 		}
 
