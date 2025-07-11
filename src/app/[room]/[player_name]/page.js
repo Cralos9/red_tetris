@@ -89,7 +89,7 @@ export default function RoomPage() {
 				return;
 			}
 			const field = msg.field;
-			console.log("Score:", msg.playerScore)
+			//console.log("Score:", msg.playerScore)
 			var cells 
 			if (msg.playerId === socket.id) 
 			{
@@ -143,6 +143,9 @@ export default function RoomPage() {
 
 		document.addEventListener("keydown", e => {
 			socket.emit("keyDown", {key: e.key, roomCode: roomCode})
+		})
+		document.addEventListener("keyup", e => {
+			socket.emit("keyUp", {key: e.key, roomCode: roomCode})
 		})
 		
 		// const game22 = document.querySelector('.secondary-games');

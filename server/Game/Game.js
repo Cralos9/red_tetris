@@ -3,13 +3,14 @@ import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
 import { Subject } from "../Observer/Subject.js"
+import { GameController } from "./GameController.js"
 
 export class Game extends Subject {
-	constructor(input) {
+	constructor(keyboard) {
 		super()
 		this.Bag = new Bag()
 		this.field = Array(ROWS)
-		this.input = input
+		this.ctrl = new GameController(keyboard)
 
 		this.running = true
 
@@ -130,23 +131,28 @@ export class Game extends Subject {
 
 	update() {
 		log("Current Piece Row:", this.Piece.row)
+		const actions = this.ctrl.keyStates()
 		this.linesCleared = 0
 		
 		this.Piece.undraw(this.field)
 
-		if (this.input.hold === true && this.holdLock === false) {
+		if (actions.hold === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
 		}
-
-		if (this.input.x) {
-			this.Piece.move(this.field, this.input.x)
+		if (actions.move) {
+			this.Piece.move(this.field, actions.move)
 		}
-		if (this.input.rot) {
-			this.Piece.rotate(this.field, this.input.rot)
+		if (actions.rot) {
+			this.Piece.rotate(this.field, actions.rot)
 			this.lockDelay = 0
 		}
-		if (this.input.y || (this.frames % 60 === 0)) {
+		if (actions.hardDrop === true) {
+			this.hardDrop()
+			this.lockPiece = true
+		}
+
+		if (actions.softDrop || (this.frames % 60 === 0)) {
 			if (this.Piece.checkCollision(this.field) === 0) {
 				this.Piece.row += 1
 				this.lockDelay = 0
@@ -154,13 +160,9 @@ export class Game extends Subject {
 				this.lockDown = true
 			}
 		}
-		if (this.input.hardDrop === true) {
-			this.hardDrop()
-			this.lockPiece = true
-		}
 
 		if (this.lockDown === true) {
-			if (this.lockDelay >= 30) {
+			if (this.lockDelay === 30) {
 				this.lockPiece = true
 			}
 			this.lockDelay += 1

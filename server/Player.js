@@ -1,5 +1,5 @@
 import { Game } from "./Game/Game.js"
-import { GameController } from "./Game/GameInput.js"
+import { Keyboard } from "./Game/Input.js"
 import { Observer } from "./Observer/Observer.js"
 import { Events } from "./globalEvents.js"
 import { TargetManager } from "./Game/Target.js"
@@ -16,7 +16,7 @@ export class Player extends Observer {
 		this.id = id
 		this.io = io
 		this.isAlive = true
-		this.input = new GameController()
+		this.input = new Keyboard()
 	}
 
 	runGame(roomCode) {
@@ -28,11 +28,6 @@ export class Player extends Observer {
 		const delay = 16 // Close to 60 FPS
 		const interval = setInterval(() => {
 			this.game.update()
-			this.input.movePiece(0)
-			this.input.softDropPiece(0)
-			this.input.rotatePiece(0)
-			this.input.hardDropPiece(false)
-			this.input.holdPiece(false)
 			//console.table(this.game.field)
 			this.io.to(roomCode).emit('game', {
 				field: this.game.field,
