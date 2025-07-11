@@ -15,14 +15,10 @@ export class ScoreManager extends Observer {
 		}
 		this.score += ScoreTable[linesCleared]
 		this.score += this.combo * ScoreTable["COMBO"]
-		console.log("Score:", this.score)
 	}
 
 	dropScore(dropType, pieceRow, dropPieceRow) {
-		console.log("State:", pieceRow, dropPieceRow)
-		console.log("Hard Drop:", ScoreTable["HARD_DROP"])
 		this.score += ScoreTable[dropType] * (pieceRow - dropPieceRow)
-		console.log("Score:", this.score)
 	}
 
 	update(state, event) {

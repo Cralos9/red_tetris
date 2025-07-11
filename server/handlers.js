@@ -1,6 +1,5 @@
 import { Room } from "./Room.js"
 import { Player } from "./Player.js"
-import { keyBinds } from "./Game/gameParams.js"
 import { log } from "./debug.js"
 
 // Map socket.id to Players
@@ -90,43 +89,23 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 	})
 }
 
-
 export const gameHandlers = (io, socket, RoomsMap) => {
-	const gameInput = (payload) => {
+	const keyDown = (payload) => {
 		const key = payload.key
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
 		const player = room.searchPlayer(socket.id)
-		log("KeyDown:", player.toString())
-		switch (key) {
-			case keyBinds.HARDDROP:
-				player.input.hardDropPiece(true)
-				break
-			case keyBinds.MOVELEFT:
-				player.input.movePiece(-1)
-				break
-			case keyBinds.MOVERIGHT:
-				player.input.movePiece(1)
-				break
-			case keyBinds.ROTATERIGHT[0]:
-			case keyBinds.ROTATERIGHT[1]:
-				player.input.rotatePiece(1)
-				break
-			case keyBinds.ROTATELEFT:
-				player.input.rotatePiece(-1)
-				break
-			case keyBinds.SOFTDROP:
-				player.input.softDropPiece(1)
-				break
-			case keyBinds.HOLD:
-				player.input.holdPiece(true)
-				break
-			case "Escape":
-				player.stopGame()
-			default:
-				console.log("Not Rec Key", key)
-				break
+		if (key === "Escape") {
+			player.stopGame()
 		}
+		player.input.set(key, true)
+	}
+	const keyUp = (payload) => {
+		const key = payload.key
+		const roomCode = payload.roomCode
+		const room = RoomsMap.get(roomCode)
+		const player = room.searchPlayer(socket.id)
+		player.input.set(key, false)
 	}
 	const startGame = (payload) => {
 		console.log(payload.ARR)
@@ -143,5 +122,6 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		})
 	}
 	socket.on('startGame', startGame)
-	socket.on('keyDown', gameInput)
+	socket.on('keyDown', keyDown)
+	socket.on('keyUp', keyUp)
 }

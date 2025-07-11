@@ -3,65 +3,32 @@ import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
 import { Subject } from "../Observer/Subject.js"
-
-const coor = [[5,19],[5,18],[5,17],[5,16],[4,17],[6,17],[7,17]]
-
-const compare = (x, y) => {
-	for (let i = 0; i < coor.length; i++) {
-		if (coor[i][0] === x && coor[i][1] === y) {
-			return (true)
-		}
-	}
-	return (false)
-}
-
-const formField = (hightestRow) => {
-	const field = []
-
-	for (let i = ROWS - 1; i >= 0; i--) {
-		let arr = []
-		for (let k = 0; k < COLUMNS; k++) {
-			if (i >= hightestRow ) {//&& !compare(k, i)) {
-				arr[k] = 1
-			} else {
-				arr[k] = 0
-			}
-		}
-		field[i] = arr
-	}
-	// console.table(field)
-	return (field)
-}
+import { GameController } from "./GameController.js"
 
 export class Game extends Subject {
-	constructor(input, targets) {
+	constructor(keyboard) {
 		super()
 		this.Bag = new Bag()
-		//this.field = formField(ROWS - 15)
-		this.field = []
-		this.input = input
+		this.field = Array(ROWS)
+		this.ctrl = new GameController(keyboard)
 
 		this.running = true
 
 		for (let i = 0; i < ROWS; i++) {
-			let arr = []
-			for (let j = 0; j < COLUMNS; j++) {
-				arr[j] = 0
-			}
-			this.field[i] = arr
+			this.field[i] = Array(COLUMNS).fill(0)
 		}
 
 		this.Piece = this.Bag.getNextPiece()
 		this.hitList = []
-		this.stackHeight = ROWS - 1
+		this.stackHeight = ROWS
 		this.hold = null
 		this.holdLock = false
+		this.lockDown = false
 		this.lockDelay = 0
 		this.lockPiece = false
 		this.linesCleared = 0
 		this.frames = 0
 
-		this.targets = targets
 		this.garbageQueue = []
 	}
 
@@ -83,39 +50,47 @@ export class Game extends Subject {
 		log("Marked Lines:", this.hitList)
 	}
 
+	replaceLine(row, replaceLineRow) {
+		if (replaceLineRow < 0) {
+			this.field[row].fill(0)
+			return
+		}
+		log("Replacing", row, "with", replaceLineRow)
+		for (let column = 0; column < COLUMNS; column++) {
+			this.field[row][column] = this.field[replaceLineRow][column]
+		}
+	}
+
 	lineClear() {
 		const linesNbr = this.hitList.length
-		const start = this.hitList ? this.hitList[0] : 0
+		const start = this.hitList[0]
 		
 		this.hitList.forEach(line => {
-			for (let i = 0; i < this.field[line]; i++) {
-				this.field[line][i] = 0
-			}
+			this.field[line].fill(0)
 		})
-		for (let y = start; y >= this.stackHeight; y--) {
-			log("Moving Line,", y - linesNbr, "to,", y)
-			const nextY = y - linesNbr
-			for (let x = 0; x < this.field[y].length; x++) {
-				if (nextY > -1) {
-					this.field[y][x] = this.field[nextY][x]
-				} else {
-					this.field[y][x] = 0
-				}
+		var offsetLine = 1
+		var row = start
+		while (row >= this.stackHeight) {
+			if (this.hitList.find(lineNbr => (row - offsetLine) === lineNbr)) {
+				offsetLine += 1
+				continue
 			}
+			this.replaceLine(row, row - offsetLine)
+			row--
 		}
 		this.stackHeight += linesNbr
 		this.linesCleared = linesNbr
 	}
 
 	holdPiece() {
-		this.Piece.reset()
 		log("Holding Piece:", this.Piece.toString())
 		if (this.hold === null) {
 			log("Empty Hold")
 			this.hold = this.Piece
-			this.Piece = this.Bag.getNextPiece()
+			this.newPiece()
 		} else {
 			log("Hold with:", this.Piece.toString())
+			this.Piece.reset()
 			const tmp = this.Piece
 			this.Piece = this.hold
 			this.hold = tmp
@@ -155,38 +130,57 @@ export class Game extends Subject {
 		}
 	}
 
+	newPiece() {
+		this.holdLock = false
+		this.lockPiece = false
+		this.lockDown = false
+		this.lockDelay = 0
+		this.Piece.reset()
+		this.Piece = this.Bag.getNextPiece()
+	}
+
 	update() {
 		log("Current Piece Row:", this.Piece.row)
+		const actions = this.ctrl.keyStates()
 		this.linesCleared = 0
 		
-		if (this.frames % 60 === 0) {
-			this.input.softDropPiece(1)
+		if (this.stackHeight <= 0) {
+			console.log("GameOver")
+			this.running = false
 		}
 
 		this.Piece.undraw(this.field)
 
-		if (this.input.hold === true && this.holdLock === false) {
+		if (actions.hold === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
 		}
-
-		if (this.input.hardDrop === true) {
-			this.hardDrop()
-			this.lockPiece = true
-		} else if (this.input.x || this.input.rot) {
-			this.Piece.move(this.field, this.input.x)
-			this.Piece.rotate(this.field, this.input.rot)
+		if (actions.move) {
+			this.Piece.move(this.field, actions.move)
+		}
+		if (actions.rot) {
+			this.Piece.rotate(this.field, actions.rot)
 			this.lockDelay = 0
 		}
+		if (actions.hardDrop === true) {
+			this.hardDrop()
+			this.lockPiece = true
+		}
 
-		if (this.Piece.checkCollision(this.field) === 0) {
-			this.Piece.row += this.input.y
-			this.lockDelay = 0
-		} else {
+		if (actions.softDrop || (this.frames % 60 === 0)) {
+			if (this.Piece.checkCollision(this.field) === 0) {
+				this.Piece.row += 1
+				this.lockDelay = 0
+			} else {
+				this.lockDown = true
+			}
+		}
+
+		if (this.lockDown === true) {
 			if (this.lockDelay === 30) {
 				this.lockPiece = true
 			}
-			this.lockDelay++
+			this.lockDelay += 1
 		}
 
 		if (this.lockPiece === true) {
@@ -200,19 +194,11 @@ export class Game extends Subject {
 			if (this.garbageQueue.length) {
 				this.createGarbage()
 			}
-			this.holdLock = false
-			this.lockPiece = false
-			this.lockDelay = 0
-			this.Piece.reset()
-			this.Piece = this.Bag.getNextPiece()
+			this.newPiece()
 		}
 
 		this.Piece.draw(this.field)
 
-		if (this.stackHeight <= 0) {
-			console.log("GameOver")
-			this.running = false
-		}
 		this.frames += 1
 	}
 }
