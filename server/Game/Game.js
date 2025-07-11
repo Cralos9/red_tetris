@@ -50,23 +50,34 @@ export class Game extends Subject {
 		log("Marked Lines:", this.hitList)
 	}
 
+	replaceLine(row, replaceLineRow) {
+		if (replaceLineRow < 0) {
+			this.field[row].fill(0)
+			return
+		}
+		console.log("Replacing", row, "with", replaceLineRow)
+		for (let column = 0; column < COLUMNS; column++) {
+			this.field[row][column] = this.field[replaceLineRow][column]
+		}
+	}
+
 	lineClear() {
 		const linesNbr = this.hitList.length
-		const start = this.hitList ? this.hitList[0] : 0
+		const start = this.hitList[0]
 		
 		this.hitList.forEach(line => {
 			this.field[line].fill(0)
 		})
-		for (let y = start; y >= this.stackHeight; y--) {
-			log("Moving Line,", y - linesNbr, "to,", y)
-			const nextY = y - linesNbr
-			for (let x = 0; x < this.field[y].length; x++) {
-				if (nextY > -1) {
-					this.field[y][x] = this.field[nextY][x]
-				} else {
-					this.field[y][x] = 0
-				}
+		console.log("LinesNbr:", linesNbr)
+		var offsetLine = 1
+		var row = start
+		while (row >= this.stackHeight) {
+			if (this.hitList.find(lineNbr => (row - offsetLine) === lineNbr)) {
+				offsetLine += 1
+				continue
 			}
+			this.replaceLine(row, row - offsetLine)
+			row--
 		}
 		this.stackHeight += linesNbr
 		this.linesCleared = linesNbr
