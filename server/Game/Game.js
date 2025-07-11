@@ -55,7 +55,7 @@ export class Game extends Subject {
 			this.field[row].fill(0)
 			return
 		}
-		console.log("Replacing", row, "with", replaceLineRow)
+		log("Replacing", row, "with", replaceLineRow)
 		for (let column = 0; column < COLUMNS; column++) {
 			this.field[row][column] = this.field[replaceLineRow][column]
 		}
@@ -68,7 +68,6 @@ export class Game extends Subject {
 		this.hitList.forEach(line => {
 			this.field[line].fill(0)
 		})
-		console.log("LinesNbr:", linesNbr)
 		var offsetLine = 1
 		var row = start
 		while (row >= this.stackHeight) {
@@ -145,6 +144,11 @@ export class Game extends Subject {
 		const actions = this.ctrl.keyStates()
 		this.linesCleared = 0
 		
+		if (this.stackHeight <= 0) {
+			console.log("GameOver")
+			this.running = false
+		}
+
 		this.Piece.undraw(this.field)
 
 		if (actions.hold === true && this.holdLock === false) {
@@ -195,10 +199,6 @@ export class Game extends Subject {
 
 		this.Piece.draw(this.field)
 
-		if (this.stackHeight <= 0) {
-			console.log("GameOver")
-			this.running = false
-		}
 		this.frames += 1
 	}
 }
