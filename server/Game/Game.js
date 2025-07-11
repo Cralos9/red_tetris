@@ -4,6 +4,7 @@ import { ROWS, COLUMNS } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
 import { Subject } from "../Observer/Subject.js"
 import { GameController } from "./GameController.js"
+import { LevelTable } from "./gameParams.js"
 
 export class Game extends Subject {
 	constructor(keyboard) {
@@ -28,6 +29,9 @@ export class Game extends Subject {
 		this.lockPiece = false
 		this.linesCleared = 0
 		this.frames = 0
+
+		this.level = 4
+		this.gravity = 0
 
 		this.garbageQueue = []
 	}
@@ -167,13 +171,14 @@ export class Game extends Subject {
 			this.lockPiece = true
 		}
 
-		if (actions.softDrop || (this.frames % 60 === 0)) {
+		if (actions.softDrop || this.gravity >= 1) {
 			if (this.Piece.checkCollision(this.field) === 0) {
 				this.Piece.row += 1
 				this.lockDelay = 0
 			} else {
 				this.lockDown = true
 			}
+			this.gravity = 0
 		}
 
 		if (this.lockDown === true) {
@@ -199,6 +204,6 @@ export class Game extends Subject {
 
 		this.Piece.draw(this.field)
 
-		this.frames += 1
+		this.gravity += LevelTable[this.level]
 	}
 }

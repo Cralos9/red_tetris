@@ -1,7 +1,7 @@
 import { Actions } from "./gameParams.js"
 
-const DAS = 20
-const ARR = 2
+const DAS = 10
+const ARR = 3
 
 export class GameController {
 	constructor(keyboard) {

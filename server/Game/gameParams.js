@@ -1,3 +1,4 @@
+export const FPS = 60
 export const ROWS = 20
 export const COLUMNS = 10
 
@@ -31,6 +32,15 @@ export const ScoreTable = {
 	"COMBO": 50,
 	"SOFT_DROP": 1,
 	"HARD_DROP": 2
+}
+
+export const LevelTable = {
+	1: 1/60,
+	2: 1/30,
+	3: 1/15,
+	4: 1/5,
+	5: 1,
+	6: 2
 }
 
 export const Icoor = [
