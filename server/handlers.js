@@ -107,7 +107,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		player.keyboard.set(key, false)
 	}
 	const startGame = (payload) => {
-		console.log(payload.ARR)
+		console.log(payload.options)
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
 		if (room.owner != socket.id)
