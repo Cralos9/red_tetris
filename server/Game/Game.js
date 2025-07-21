@@ -3,7 +3,6 @@ import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
 import { Subject } from "../Observer/Subject.js"
-import { GameController } from "./GameController.js"
 import { LevelTable } from "./gameParams.js"
 
 export class Game extends Subject {
