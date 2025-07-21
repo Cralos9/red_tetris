@@ -30,7 +30,7 @@ export class Game extends Subject {
 		this.linesCleared = 0
 		this.frames = 0
 
-		this.level = 4
+		this.level = 5
 		this.gravity = 0
 
 		this.garbageQueue = []
@@ -146,6 +146,7 @@ export class Game extends Subject {
 	update() {
 		log("Current Piece Row:", this.Piece.row)
 		const actions = this.ctrl.keyStates()
+
 		this.linesCleared = 0
 		
 		if (this.stackHeight <= 0) {
@@ -172,12 +173,15 @@ export class Game extends Subject {
 		}
 
 		if (actions.softDrop || this.gravity >= 1) {
-			if (this.Piece.checkCollision(this.field) === 0) {
-				this.Piece.row += 1
-				this.lockDelay = 0
-			} else {
-				this.lockDown = true
-			}
+			do {
+				if (this.Piece.checkCollision(this.field) === 0) {
+					this.Piece.row += 1
+					this.lockDelay = 0
+				} else {
+					this.lockDown = true
+				}
+				this.gravity -= 1
+			} while (this.gravity > 0 || actions.softDrop)
 			this.gravity = 0
 		}
 
