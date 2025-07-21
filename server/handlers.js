@@ -16,6 +16,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		const roomCode = payload.roomCode
 
 		log("Player:", playerName)
+		console.log(payload.options)
 		log("Joined Room:", roomCode)
 		if (!RoomsMap.has(roomCode)) {
 			RoomsMap.set(roomCode, new Room())
@@ -108,7 +109,6 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		player.input.set(key, false)
 	}
 	const startGame = (payload) => {
-		console.log(payload.options)
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
 		if (room.owner != socket.id)

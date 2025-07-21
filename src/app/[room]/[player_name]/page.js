@@ -3,6 +3,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { socket } from "../../../socket";
 import  gameDraw  from "./functions";
+import {Actions} from "../../../../server/Game/gameParams"
 
 export default function RoomPage() {
 	const params = useParams();
@@ -13,6 +14,7 @@ export default function RoomPage() {
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
 	
+
 	function end_game() {
 	  setIsDisabled(false);
 	  setGameOver(true);
@@ -52,16 +54,19 @@ export default function RoomPage() {
 	}, []);
 
 	useEffect(() => {
-		
+
 		const options = {
+			actions : {
+				[Actions.MOVE_LEFT]: localStorage.getItem("left") || 'ArrowLeft',
+				[Actions.MOVE_RIGHT]: localStorage.getItem("right") || 'ArrowRight',
+				[Actions.ROTATE_LEFT]: localStorage.getItem("rotateLeft") || 'z',
+				[Actions.ROTATE_RIGHT]: localStorage.getItem("rotateRight") || 'x',
+				[Actions.HARD_DROP]: localStorage.getItem("hardDrop") || ' ',
+				[Actions.SOFT_DROP]: localStorage.getItem("softDrop") || 'ArrowDown',
+				[Actions.HOLD] : localStorage.getItem("holdPiece") || 'c',
+			},
 			ARR: localStorage.getItem("ARR") ||  5,
 			DAS: localStorage.getItem("DAS")  || 10,
-			left: localStorage.getItem("left") || 'ArrowLeft',
-			right: localStorage.getItem("right") || 'ArrowRight',
-			rotateLeft: localStorage.getItem("rotateLeft") || 'z',
-			rotateRight: localStorage.getItem("rotateRight") || 'x',
-			hardDrop: localStorage.getItem("hardDrop") || ' ',
-			softDrop: localStorage.getItem("softDrop") || 'ArrowDown',
 		}
 		socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options})
 
