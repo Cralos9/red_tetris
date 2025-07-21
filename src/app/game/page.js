@@ -55,7 +55,6 @@ export default function Game() {
   }
   function options()
   {
-	console.log("Teste")
 	router.push("/options");
   }
 
@@ -71,17 +70,20 @@ export default function Game() {
 			  <img className="goomba-run" src="/images/goomba2.gif"  />
 			  <span className='text-container'>Play</span>
 			</button>
-			<button className='button' onClick={options}>
+			<button type='button' className='button' onClick={options}>
 				Options
 			</button>
 	  </form>
 	  <div className="usercard">
-		<h2 className='userTitle'>YOUR SCORES</h2>
+		<h2 className="userTitle">YOUR SCORES</h2>
 		<h3 style={{ color: 'white' }}>USER SCORE</h3>
 		{scores.map((s, idx) => (
-		  <h3 key={idx} style={{ color: 'white' }}>{idx + 1} {s}</h3>
+			<div key={idx}>
+			<h3 style={{ color: 'white' }}>{idx + 1} {s}</h3>
+			{idx !== scores.length - 1 && <hr style={{color: 'white'}} />}
+			</div>
 		))}
-	  </div>
+		</div>
 	</div>
   );
 }

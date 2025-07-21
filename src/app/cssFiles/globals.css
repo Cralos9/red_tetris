@@ -62,7 +62,7 @@
 	box-shadow: 10px 10px 10px rgba(66, 66, 66, 0.719);
 	display: flex;
 	flex-direction: column;
-	padding: 60px;
+	padding: 40px;
 	gap: 15px;
 	text-align: center;
 	z-index: 1;

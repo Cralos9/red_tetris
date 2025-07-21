@@ -113,6 +113,8 @@ export default function RoomPage() {
 			{
 				var score = document.getElementById('Score')
 				score.textContent = msg.playerScore.score
+				var level = document.getElementById('Level');
+				level.textContent = msg.level
 				setGameOver(false)
 				cells = document.querySelectorAll('.game-bottle .cell');
 				const heldPiece = msg.holdPiece
@@ -276,7 +278,7 @@ export default function RoomPage() {
 					<span className='score'>Score</span>
 					<span className='score' id ='Score'>0</span>
 					<span className='score'>Level</span>
-					<span className='score' id ='level'>0</span>
+					<span className='score' id ='Level'>0</span>
 				</div>
 				<button onClick={startGame} className='buttons' disabled={isDisabled} style={{visibility: 'hidden'}} id='Start'>Start</button>
 				<button onClick={resetGame} className='buttons'>Reset</button>

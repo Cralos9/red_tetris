@@ -85,7 +85,7 @@ export default function Keys() {
           onClick={() => changeKey('left')}
           style={{ color: 'white' }}
         >
-          Move Left {keys.left}
+          Move Left: '{keys.left === ' ' ? 'Space' : keys.left}'
         </button>
   
         <button
@@ -93,7 +93,7 @@ export default function Keys() {
           onClick={() => changeKey('right')}
           style={{ color: 'white' }}
         >
-          Move Right {keys.right}
+          Move Right: '{keys.right === ' ' ? 'Space' : keys.right}'
         </button>
   
         <button
@@ -101,7 +101,7 @@ export default function Keys() {
           onClick={() => changeKey('rotateLeft')}
           style={{ color: 'white' }}
         >
-          Rotate Left {keys.rotateLeft}
+          Rotate Left: '{keys.rotateLeft === ' ' ? 'Space' : keys.rotateLeft}'
         </button>
   
         <button
@@ -109,7 +109,7 @@ export default function Keys() {
           onClick={() => changeKey('rotateRight')}
           style={{ color: 'white' }}
         >
-          Rotate Right {keys.rotateRight}
+          Rotate Right: '{keys.rotateRight === ' ' ? 'Space' : keys.rotateRight}'
         </button>
   
         <button
@@ -117,7 +117,7 @@ export default function Keys() {
           onClick={() => changeKey('hardDrop')}
           style={{ color: 'white' }}
         >
-          Hard Drop {keys.hardDrop === ' ' ? 'Space' : keys.hardDrop}
+          Hard Drop: '{keys.hardDrop === ' ' ? 'Space' : keys.hardDrop}'
         </button>
   
         <button
@@ -125,7 +125,7 @@ export default function Keys() {
           onClick={() => changeKey('softDrop')}
           style={{ color: 'white' }}
         >
-          Soft Drop {keys.softDrop}
+          Soft Drop: '{keys.softDrop === ' ' ? 'Space' : keys.softDrop}'
         </button>
   
         <div className="button-row">
