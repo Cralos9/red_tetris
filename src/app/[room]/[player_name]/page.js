@@ -52,7 +52,18 @@ export default function RoomPage() {
 	}, []);
 
 	useEffect(() => {
-		socket.emit('joinRoom', {playerName: name, roomCode: roomCode})
+		
+		const options = {
+			ARR: localStorage.getItem("ARR") ||  5,
+			DAS: localStorage.getItem("DAS")  || 10,
+			left: localStorage.getItem("left") || 'ArrowLeft',
+			right: localStorage.getItem("right") || 'ArrowRight',
+			rotateLeft: localStorage.getItem("rotateLeft") || 'z',
+			rotateRight: localStorage.getItem("rotateRight") || 'x',
+			hardDrop: localStorage.getItem("hardDrop") || ' ',
+			softDrop: localStorage.getItem("softDrop") || 'ArrowDown',
+		}
+		socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options})
 
 		socket.on('join', (msg) => 
 		{
@@ -194,17 +205,8 @@ export default function RoomPage() {
 		// }
 		// }, 1000);
 		// if (time == 0)
-		const options = {
-			ARR: localStorage.getItem("ARR") ||  5,
-			DAS: localStorage.getItem("DAS")  || 10,
-			left: localStorage.getItem("left") || 'ArrowLeft',
-			right: localStorage.getItem("right") || 'ArrowRight',
-			rotateLeft: localStorage.getItem("rotateLeft") || 'z',
-			rotateRight: localStorage.getItem("rotateRight") || 'x',
-			hardDrop: localStorage.getItem("hardDrop") || ' ',
-			softDrop: localStorage.getItem("softDrop") || 'ArrowDown',
-		}
-		socket.emit("startGame", {roomCode: roomCode, options: options});
+
+		socket.emit("startGame", {roomCode: roomCode});
 	
 
 	}
