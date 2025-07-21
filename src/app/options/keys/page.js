@@ -13,6 +13,7 @@ export default function Keys() {
     rotateRight: '',
     hardDrop: '',
     softDrop: '',
+    holdPiece: '',
   });
   
   useEffect(() => {
@@ -23,6 +24,7 @@ export default function Keys() {
       rotateRight: localStorage.getItem("rotateRight") || 'x',
       hardDrop: localStorage.getItem("hardDrop") || ' ',
       softDrop: localStorage.getItem("softDrop") || 'ArrowDown',
+      holdPiece: localStorage.getItem("holdPiece") || 'c',
     });
   }, []);
 
@@ -81,6 +83,9 @@ export default function Keys() {
         </button>
         <button onClick={() => changeKey('softDrop')} style={{ color: 'white' }}>
           Soft Drop {keys.softDrop}
+        </button>
+        <button onClick={() => changeKey('holdPiece')} style={{ color: 'white' }}>
+          Hold Piece {keys.holdPiece}
         </button>
         <div className="button-row">
           <button className="button2" onClick={apply_options}>
