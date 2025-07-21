@@ -63,6 +63,19 @@ export default function Keys() {
     router.push('/options');
   };
 
+  function reset_options()
+  {
+    setKeys({
+        left: 'ArrowLeft',
+        right: 'ArrowRight',
+        rotateLeft: 'z',
+        rotateRight: 'x',
+        hardDrop: ' ',
+        softDrop: 'ArrowDown',
+        holdPiece: 'c',
+      });
+  }
+
   return (
     <div className="main-container">
       <div className="usercard">
@@ -91,7 +104,7 @@ export default function Keys() {
           <button className="button2" onClick={apply_options}>
             Apply
           </button>
-          <button className="button2">Reset</button>
+          <button className="button2" onClick={reset_options}>Reset</button>
         </div>
         {editingKey && <p style={{ color: 'white' }}>Press a key to bind: {editingKey}</p>}
       </div>

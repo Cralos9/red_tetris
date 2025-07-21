@@ -57,13 +57,13 @@ export default function RoomPage() {
 
 		const options = {
 			actions : {
-				[Actions.MOVE_LEFT]: localStorage.getItem("left") || 'ArrowLeft',
-				[Actions.MOVE_RIGHT]: localStorage.getItem("right") || 'ArrowRight',
-				[Actions.ROTATE_LEFT]: localStorage.getItem("rotateLeft") || 'z',
-				[Actions.ROTATE_RIGHT]: localStorage.getItem("rotateRight") || 'x',
-				[Actions.HARD_DROP]: localStorage.getItem("hardDrop") || ' ',
-				[Actions.SOFT_DROP]: localStorage.getItem("softDrop") || 'ArrowDown',
-				[Actions.HOLD] : localStorage.getItem("holdPiece") || 'c',
+				[Actions.MOVE_LEFT]: [localStorage.getItem("left")] || ['ArrowLeft'],
+				[Actions.MOVE_RIGHT]: [localStorage.getItem("right")] || ['ArrowRight'],
+				[Actions.ROTATE_LEFT]: [localStorage.getItem("rotateLeft")] || ['z'],
+				[Actions.ROTATE_RIGHT]: [localStorage.getItem("rotateRight")] || ['x'],
+				[Actions.HARD_DROP]: [localStorage.getItem("hardDrop")] || [' '],
+				[Actions.SOFT_DROP]: [localStorage.getItem("softDrop")] || ['ArrowDown'],
+				[Actions.HOLD] : [localStorage.getItem("holdPiece")] || ['c'],
 			},
 			ARR: localStorage.getItem("ARR") ||  5,
 			DAS: localStorage.getItem("DAS")  || 10,

@@ -20,18 +20,23 @@ export default function Options() {
   const maxDAS = 20;
   const maxARR = 10;
 
-  function apply_options()
-  {
-	localStorage.setItem("DAS", value);
-	localStorage.setItem("ARR", arrValue);
-	router.push('/game');
-  }
+  	function apply_options()
+  	{
+		localStorage.setItem("DAS", value);
+		localStorage.setItem("ARR", arrValue);
+		router.push('/game');
+  	}
 
 	function keysPush()
 	{
 		router.push('options/keys')
 	}
 
+	function reset_options()
+	{
+		setValue(10);
+		setArrValue(5);
+	}
 
   return (
 	<div className="main-container">
@@ -62,7 +67,7 @@ export default function Options() {
 		<button className='button' onClick={keysPush}>Keys</button>
 		<div className="button-row">
 			<button className="button2" onClick={apply_options}>Apply</button>
-			<button className="button2">Reset</button>
+			<button className="button2" onClick={reset_options}>Reset</button>
 		</div>
 	  </div>
 	</div>
