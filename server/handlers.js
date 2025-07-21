@@ -1,7 +1,6 @@
 import { Room } from "./Room.js"
 import { Player } from "./Player.js"
 import { log } from "./debug.js"
-import { Keybinds } from "./Game/gameParams.js"
 
 // Map socket.id to Players
 export const playerHandlers = (io, socket, RoomsMap) => {

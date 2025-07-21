@@ -27,6 +27,7 @@ export class Input {
 export class Keyboard {
 	constructor() {
 		this.keys = {
+			'v': new Input(),
 			'z': new Input(),
 			'x': new Input(),
 			'c': new Input(),
