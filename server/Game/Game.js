@@ -30,10 +30,17 @@ export class Game extends Subject {
 		this.linesCleared = 0
 		this.frames = 0
 
-		this.level = 5
+		this.level = 1
 		this.gravity = 0
 
 		this.garbageQueue = []
+	}
+
+	changeLevel() {
+		this.level += 1
+		if (this.level === 10) {
+			this.level = 10
+		}
 	}
 
 	patternMatch() {
@@ -172,16 +179,13 @@ export class Game extends Subject {
 			this.lockPiece = true
 		}
 
-		if (actions.softDrop || this.gravity >= 1) {
-			do {
-				if (this.Piece.checkCollision(this.field) === 0) {
-					this.Piece.row += 1
-					this.lockDelay = 0
-				} else {
-					this.lockDown = true
-				}
-				this.gravity -= 1
-			} while (this.gravity > 0 || actions.softDrop)
+		if (actions.softDrop || this.gravity >= LevelTable[this.level]) {
+			if (this.Piece.checkCollision(this.field) === 0) {
+				this.Piece.row += 1
+				this.lockDelay = 0
+			} else {
+				this.lockDown = true
+			}
 			this.gravity = 0
 		}
 
@@ -208,6 +212,6 @@ export class Game extends Subject {
 
 		this.Piece.draw(this.field)
 
-		this.gravity += LevelTable[this.level]
+		this.gravity += 1
 	}
 }

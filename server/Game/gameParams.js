@@ -35,12 +35,16 @@ export const ScoreTable = {
 }
 
 export const LevelTable = {
-	1: 1/60,
-	2: 1/30,
-	3: 1/15,
-	4: 1/5,
-	5: 1,
-	6: 2
+	1: 60,
+	2: 50,
+	3: 40,
+	4: 30,
+	5: 25,
+	6: 20,
+	7: 15,
+	8: 10,
+	9: 5,
+	10: 1
 }
 
 export const Icoor = [

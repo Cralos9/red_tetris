@@ -20,6 +20,17 @@ export class Room extends Subject {
 		})
 	}
 
+	startGame(roomCode) {
+		this.plMap.forEach(player => {
+			player.runGame(roomCode)
+		})
+
+		setInterval(() => {
+			console.log("Changing Level")
+			this.notify(null, Events.UPDATE_LEVEL)
+		}, 20000)
+	}
+
 	searchPlayer(playerId) {
 		return (this.plMap.get(playerId))
 	}

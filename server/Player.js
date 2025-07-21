@@ -57,6 +57,9 @@ export class Player extends Observer {
 				this.targets = this.targets.filter(player => player.id !== leaver.id)
 				this.io.emit("boardRemove", {id : leaver.id})
 				break
+			case Events.UPDATE_LEVEL:
+				this.game.changeLevel()
+				break
 			default:
 				break
 		}
