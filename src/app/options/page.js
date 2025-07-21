@@ -2,7 +2,6 @@
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
 import { useEffect} from 'react';
-
 export default function Options() {
 	const [value, setValue] = useState(10);
 	const [arrValue, setArrValue] = useState(5);
@@ -27,6 +26,11 @@ export default function Options() {
 	localStorage.setItem("ARR", arrValue);
 	router.push('/game');
   }
+
+	function keysPush()
+	{
+		router.push('options/keys')
+	}
 
 
   return (
@@ -55,9 +59,10 @@ export default function Options() {
 		  />
 		  <p>{arrValue} Frames</p>
 		</button>
+		<button className='button' onClick={keysPush}>Keys</button>
 		<div className="button-row">
-		<button className="button2" onClick={apply_options}>Apply</button>
-		<button className="button2">Reset</button>
+			<button className="button2" onClick={apply_options}>Apply</button>
+			<button className="button2">Reset</button>
 		</div>
 	  </div>
 	</div>

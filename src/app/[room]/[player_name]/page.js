@@ -194,7 +194,17 @@ export default function RoomPage() {
 		// }
 		// }, 1000);
 		// if (time == 0)
-		socket.emit("startGame", {roomCode: roomCode, ARR: localStorage.getItem("ARR") ? localStorage.getItem("ARR") : 5, DAS: localStorage.getItem("DAS") ? localStorage.getItem("DAS") : 10});
+		const options = {
+			ARR: localStorage.getItem("ARR") ||  5,
+			DAS: localStorage.getItem("DAS")  || 10,
+			left: localStorage.getItem("left") || 'ArrowLeft',
+			right: localStorage.getItem("right") || 'ArrowRight',
+			rotateLeft: localStorage.getItem("rotateLeft") || 'z',
+			rotateRight: localStorage.getItem("rotateRight") || 'x',
+			hardDrop: localStorage.getItem("hardDrop") || ' ',
+			softDrop: localStorage.getItem("softDrop") || 'ArrowDown',
+		}
+		socket.emit("startGame", {roomCode: roomCode, options: options});
 	
 
 	}
