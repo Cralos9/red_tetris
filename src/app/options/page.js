@@ -46,7 +46,7 @@ export default function Options() {
 		  <input
 			type="range"
 			min="0"
-			max={maxDAS}
+			max={maxDAS - 1}
 			value={maxDAS - value}
 			onChange={(e) => setValue(maxDAS - Number(e.target.value))}
 		  />
@@ -58,7 +58,7 @@ export default function Options() {
 		  <input
 			type="range"
 			min="0"
-			max={maxARR}
+			max={maxARR - 1}
 			value={maxARR - arrValue}
 			onChange={(e) => setArrValue(maxARR - Number(e.target.value))}
 		  />
@@ -70,6 +70,8 @@ export default function Options() {
 			<button className="button2" onClick={reset_options}>Reset</button>
 		</div>
 	  </div>
+	  <span style={{fontSize: '10px'}}>DAS: delayed auto shift (How long you have to hold down the button to before a piece starts flying to the wall)</span>
+	  <span style={{fontSize: '10px'}}>ARR: auto repeat rate (how quickly the pieces move from right to left)</span>
 	</div>
   );
 }

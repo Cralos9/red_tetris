@@ -6,6 +6,7 @@ import { useEffect} from 'react';
 export default function Keys() {
   const router = useRouter();
 
+
   const [keys, setKeys] = useState({
     left: '',
     right: '',
@@ -79,34 +80,60 @@ export default function Keys() {
   return (
     <div className="main-container">
       <div className="usercard">
-        <button onClick={() => changeKey('left')} style={{ color: 'white' }}>
+        <button
+          className={`button3 ${editingKey === 'left' ? 'editing' : ''}`}
+          onClick={() => changeKey('left')}
+          style={{ color: 'white' }}
+        >
           Move Left {keys.left}
         </button>
-        <button onClick={() => changeKey('right')} style={{ color: 'white' }}>
+  
+        <button
+          className={editingKey === 'right' ? 'editing' : ''}
+          onClick={() => changeKey('right')}
+          style={{ color: 'white' }}
+        >
           Move Right {keys.right}
         </button>
-        <button onClick={() => changeKey('rotateLeft')} style={{ color: 'white' }}>
+  
+        <button
+          className={editingKey === 'rotateLeft' ? 'editing' : ''}
+          onClick={() => changeKey('rotateLeft')}
+          style={{ color: 'white' }}
+        >
           Rotate Left {keys.rotateLeft}
         </button>
-        <button onClick={() => changeKey('rotateRight')} style={{ color: 'white' }}>
+  
+        <button
+          className={editingKey === 'rotateRight' ? 'editing' : ''}
+          onClick={() => changeKey('rotateRight')}
+          style={{ color: 'white' }}
+        >
           Rotate Right {keys.rotateRight}
         </button>
-        <button onClick={() => changeKey('hardDrop')} style={{ color: 'white' }}>
+  
+        <button
+          className={editingKey === 'hardDrop' ? 'editing' : ''}
+          onClick={() => changeKey('hardDrop')}
+          style={{ color: 'white' }}
+        >
           Hard Drop {keys.hardDrop === ' ' ? 'Space' : keys.hardDrop}
         </button>
-        <button onClick={() => changeKey('softDrop')} style={{ color: 'white' }}>
+  
+        <button
+          className={editingKey === 'softDrop' ? 'editing' : ''}
+          onClick={() => changeKey('softDrop')}
+          style={{ color: 'white' }}
+        >
           Soft Drop {keys.softDrop}
         </button>
-        <button onClick={() => changeKey('holdPiece')} style={{ color: 'white' }}>
-          Hold Piece {keys.holdPiece}
-        </button>
+  
         <div className="button-row">
           <button className="button2" onClick={apply_options}>
             Apply
           </button>
           <button className="button2" onClick={reset_options}>Reset</button>
         </div>
-        {editingKey && <p style={{ color: 'white' }}>Press a key to bind: {editingKey}</p>}
       </div>
     </div>
   );

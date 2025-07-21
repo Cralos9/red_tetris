@@ -91,6 +91,12 @@ button.button2 {
 	cursor: pointer;
 }
 
+button.editing {
+	background-color: #ffffff;
+	border: 2px solid #ffffff;
+	color: black !important;
+  }
+
 .button2:hover
 {
 	color: #000000;
