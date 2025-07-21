@@ -5,6 +5,7 @@ import { Events } from "./globalEvents.js"
 import { TargetManager } from "./Game/Target.js"
 import { ScoreManager } from "./Game/Score.js"
 import { GameController } from "./Game/GameController.js"
+import { TICKS } from "./Game/gameParams.js"
 
 export class Player extends Observer {
 	constructor(name, keybinds, io, id) {
@@ -28,7 +29,7 @@ export class Player extends Observer {
 		this.game = new Game(gameCtrl)
 		this.game.addObserver(this.targetManager)
 		this.game.addObserver(this.score)
-		const delay = 16 // Close to 60 FPS
+		const delay = Math.round(1 / TICKS)
 		const interval = setInterval(() => {
 			this.game.update()
 			//console.table(this.game.field)

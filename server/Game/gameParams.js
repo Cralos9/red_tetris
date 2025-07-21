@@ -1,4 +1,4 @@
-export const FPS = 60
+export const TICKS = 60
 export const ROWS = 20
 export const COLUMNS = 10
 
