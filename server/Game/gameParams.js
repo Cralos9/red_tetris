@@ -23,20 +23,6 @@ export const Colors = {
 	RED: 7,
 }
 
-export const Keybinds = {
-	actions: {
-		[Actions.HARD_DROP]: [' '],
-		[Actions.SOFT_DROP]: ['ArrowDown'],
-		[Actions.HOLD]: ['c'],
-		[Actions.ROTATE_RIGHT]: ['x', 'ArrowUp'],
-		[Actions.ROTATE_LEFT]: ['z'],
-		[Actions.MOVE_RIGHT]: ['ArrowRight'],
-		[Actions.MOVE_LEFT]: ['ArrowLeft']
-	},
-	das: 13,
-	arr: 3,
-}
-
 export const ScoreTable = {
 	1: 100,
 	2: 300,
