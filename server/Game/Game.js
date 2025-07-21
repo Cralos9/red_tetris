@@ -4,6 +4,7 @@ import { ROWS, COLUMNS } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
 import { Subject } from "../Observer/Subject.js"
 import { GameController } from "./GameController.js"
+import { LevelTable } from "./gameParams.js"
 
 export class Game extends Subject {
 	constructor(ctrl) {
@@ -29,7 +30,17 @@ export class Game extends Subject {
 		this.linesCleared = 0
 		this.frames = 0
 
+		this.level = 1
+		this.gravity = 0
+
 		this.garbageQueue = []
+	}
+
+	changeLevel() {
+		this.level += 1
+		if (this.level > 10) {
+			this.level = 10
+		}
 	}
 
 	patternMatch() {
@@ -84,13 +95,13 @@ export class Game extends Subject {
 
 	holdPiece() {
 		log("Holding Piece:", this.Piece.toString())
+		this.resetPiece()
 		if (this.hold === null) {
 			log("Empty Hold")
 			this.hold = this.Piece
-			this.newPiece()
+			this.Piece = this.Bag.getNextPiece()
 		} else {
 			log("Hold with:", this.Piece.toString())
-			this.Piece.reset()
 			const tmp = this.Piece
 			this.Piece = this.hold
 			this.hold = tmp
@@ -130,18 +141,19 @@ export class Game extends Subject {
 		}
 	}
 
-	newPiece() {
+	resetPiece() {
 		this.holdLock = false
 		this.lockPiece = false
 		this.lockDown = false
 		this.lockDelay = 0
+		this.gravity = 0
 		this.Piece.reset()
-		this.Piece = this.Bag.getNextPiece()
 	}
 
 	update() {
 		log("Current Piece Row:", this.Piece.row)
 		const actions = this.ctrl.keyStates()
+
 		this.linesCleared = 0
 		
 		if (this.stackHeight <= 0) {
@@ -167,13 +179,14 @@ export class Game extends Subject {
 			this.lockPiece = true
 		}
 
-		if (actions.softDrop || (this.frames % 60 === 0)) {
+		if (actions.softDrop || this.gravity >= LevelTable[this.level]) {
 			if (this.Piece.checkCollision(this.field) === 0) {
 				this.Piece.row += 1
 				this.lockDelay = 0
 			} else {
 				this.lockDown = true
 			}
+			this.gravity = 0
 		}
 
 		if (this.lockDown === true) {
@@ -194,11 +207,12 @@ export class Game extends Subject {
 			if (this.garbageQueue.length) {
 				this.createGarbage()
 			}
-			this.newPiece()
+			this.resetPiece()
+			this.Piece = this.Bag.getNextPiece()
 		}
 
 		this.Piece.draw(this.field)
 
-		this.frames += 1
+		this.gravity += 1
 	}
 }

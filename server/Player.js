@@ -37,6 +37,7 @@ export class Player extends Observer {
 				linesCleared: this.game.linesCleared,
 				holdPiece: this.game.hold ? this.game.hold.toObject() : 0,
 				nextPiece: this.game.Bag.nextPiecesArr(),
+				level: this.game.level,
 				playerId: this.id,
 				playerScore: this.score.toObject(),
 				running: this.game.running,
@@ -59,6 +60,9 @@ export class Player extends Observer {
 				console.log("Remove Player:", leaver.id)
 				this.targets = this.targets.filter(player => player.id !== leaver.id)
 				this.io.emit("boardRemove", {id : leaver.id})
+				break
+			case Events.UPDATE_LEVEL:
+				this.game.changeLevel()
 				break
 			default:
 				break

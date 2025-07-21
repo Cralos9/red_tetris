@@ -115,10 +115,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 			console.log("Not owner");
 			return;
 		}
-		room.plMap.forEach(player => {
-			log("Game Started,", player.toString())
-			player.runGame(roomCode)
-		})
+		room.startGame(roomCode)
 	}
 	socket.on('startGame', startGame)
 	socket.on('keyDown', keyDown)
