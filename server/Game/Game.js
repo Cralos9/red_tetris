@@ -38,7 +38,7 @@ export class Game extends Subject {
 
 	changeLevel() {
 		this.level += 1
-		if (this.level === 10) {
+		if (this.level > 10) {
 			this.level = 10
 		}
 	}
@@ -95,13 +95,13 @@ export class Game extends Subject {
 
 	holdPiece() {
 		log("Holding Piece:", this.Piece.toString())
+		this.resetPiece()
 		if (this.hold === null) {
 			log("Empty Hold")
 			this.hold = this.Piece
-			this.newPiece()
+			this.Piece = this.Bag.getNextPiece()
 		} else {
 			log("Hold with:", this.Piece.toString())
-			this.Piece.reset()
 			const tmp = this.Piece
 			this.Piece = this.hold
 			this.hold = tmp
@@ -141,13 +141,13 @@ export class Game extends Subject {
 		}
 	}
 
-	newPiece() {
+	resetPiece() {
 		this.holdLock = false
 		this.lockPiece = false
 		this.lockDown = false
 		this.lockDelay = 0
+		this.gravity = 0
 		this.Piece.reset()
-		this.Piece = this.Bag.getNextPiece()
 	}
 
 	update() {
@@ -207,7 +207,8 @@ export class Game extends Subject {
 			if (this.garbageQueue.length) {
 				this.createGarbage()
 			}
-			this.newPiece()
+			this.resetPiece()
+			this.Piece = this.Bag.getNextPiece()
 		}
 
 		this.Piece.draw(this.field)

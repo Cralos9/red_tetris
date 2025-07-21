@@ -34,6 +34,7 @@ export class Player extends Observer {
 				linesCleared: this.game.linesCleared,
 				holdPiece: this.game.hold ? this.game.hold.toObject() : 0,
 				nextPiece: this.game.Bag.nextPiecesArr(),
+				level: this.game.level,
 				playerId: this.id,
 				playerScore: this.score.toObject(),
 				running: this.game.running,
