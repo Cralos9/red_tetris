@@ -15,6 +15,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 	const joinRoom = (payload) => {
 		var playerName = payload.playerName
 		const roomCode = payload.roomCode
+		const options = payload.options
 
 		log("Player:", playerName)
 		log("Joined Room:", roomCode)
@@ -25,7 +26,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 
 		if (room.plMap.size == 0)
 			room.owner = socket.id
-		const player = new Player(playerName, Keybinds, io, socket.id)
+		const player = new Player(playerName, options, io, socket.id)
 
 		room.addPlayer(socket.id, player)
 		socket.join(roomCode.toString())

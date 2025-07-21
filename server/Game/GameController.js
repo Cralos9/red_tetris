@@ -4,8 +4,8 @@ export class GameController {
 	constructor(keyboard, keybinds) {
 		this.keyboard = keyboard
 		this.actions = keybinds.actions
-		this.DAS = keybinds.das
-		this.ARR = keybinds.arr
+		this.DAS = keybinds.DAS
+		this.ARR = keybinds.ARR
 		this.pieceDir = []
 		this.consum = []
 	}
