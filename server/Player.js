@@ -29,7 +29,7 @@ export class Player extends Observer {
 		this.game = new Game(gameCtrl)
 		this.game.addObserver(this.targetManager)
 		this.game.addObserver(this.score)
-		const delay = Math.round(1 / TICKS)
+		const delay = Math.round((1 / TICKS) * 1000)
 		const interval = setInterval(() => {
 			this.game.update()
 			//console.table(this.game.field)
