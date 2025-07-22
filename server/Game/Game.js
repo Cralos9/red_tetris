@@ -181,6 +181,7 @@ export class Game extends Subject {
 		if (actions.softDrop || this.gravity >= LevelTable[this.level]) {
 			if (this.Piece.checkCollision(this.field) === 0) {
 				this.Piece.row += 1
+				this.lockDown = false
 				this.lockDelay = 0
 			} else {
 				this.lockDown = true
