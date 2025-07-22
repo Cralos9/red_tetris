@@ -28,7 +28,7 @@ export class Room extends Subject {
 		setInterval(() => {
 			console.log("Changing Level")
 			this.notify(null, Events.UPDATE_LEVEL)
-		}, 20000)
+		}, 30000)
 	}
 
 	searchPlayer(playerId) {
