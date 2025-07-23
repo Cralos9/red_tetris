@@ -9,6 +9,7 @@ export default function RoomPage() {
 	const params = useParams();
 	const roomCode = params.room;
 	const [gameOver, setGameOver] = useState(false);
+	const [allGamesOver, setAllGamesOver] = useState(false);
 
 	const name = params.player_name;
 	const [username, setUsername] = useState('');
@@ -18,6 +19,9 @@ export default function RoomPage() {
 	function end_game() {
 	  setIsDisabled(false);
 	  setGameOver(true);
+	  setInterval(() => {
+		  setAllGamesOver(true);
+	  }, 3000);
 	}
 
 	function getOrdinal(n) {
@@ -83,7 +87,7 @@ export default function RoomPage() {
 				startBtn.style.visibility = 'visible';
 			var otherBoards = msg.playerIds
 			var names = msg.playerNames
-			console.log(names)
+			console.log("ID: " ,msg.playerIds)
 			for(var i = 0; i <= otherBoards.length; i++)
 			{
 				if(otherBoards[i] === socket.id || otherBoards[i] === undefined)
@@ -100,7 +104,11 @@ export default function RoomPage() {
 					otherBoard.id = otherBoards[i];
 					otherBoard.appendChild(nameLabel);
 					gameDraw.add_secondary_cells(otherBoard, 200);
-					document.querySelector('.secondary-games').appendChild(otherBoard);
+					console.log("i: %i   i%2 : %i", i, i%2);
+					if((i - 1) % 2 == 0)
+						document.querySelector('.secondary-games').appendChild(otherBoard);
+					else
+						document.querySelector('.secondary-games-right').appendChild(otherBoard);
 				}
 			}
 		})
@@ -264,7 +272,8 @@ export default function RoomPage() {
 		<div>
 				{gameOver && <div className='game-Over'>
 					Game Over
-					<div style={{width: '30vw'}}className='usercard'>
+
+					{allGamesOver && <div style={{width: '30vw'}} className='usercard'>
 						Leaderboard
 				
 						{/*
@@ -283,32 +292,36 @@ export default function RoomPage() {
 							{idx !== scores.length - 1 && <hr style={{color: 'white'}} />}
 							</div>
 						))}
-					</div>
-{/* 						
-						<img className='game-over-image'src="/images/ripmario.gif"></img> */}
+					</div>}
+					{/*<img className='game-over-image'src="/images/ripmario.gif"></img> */}
 				</div>}
 				<nav>
 					<h1 className='room-info'>Room Code:{roomCode}      Username:{username}</h1>
 				</nav>
-			<div className="game-wrapper">
-				<div className="held-piece">
-					<span className="held-label">Held Piece</span>
+				<div className='main-layout'>
+						<div className='secondary-games'></div>
+						<div className="game-wrapper">
+							<div className="held-piece">
+							<span className="held-label">Held Piece</span>
+							</div>
+							<div className="game-bottle"></div>
+							<div className="next-piece">
+							<span className="held-label">Next Pieces</span>
+							</div>
+						</div>
+
+						<div className='button-container'>
+							<div className='scoreCard'>
+							<span className='score'>Score</span>
+							<span className='score' id='Score'>0</span>
+							<span className='score'>Level</span>
+							<span className='score' id='Level'>0</span>
+							</div>
+							<button onClick={startGame} className='buttons' disabled={isDisabled} style={{ visibility: 'hidden' }} id='Start'>Start</button>
+						</div>
+
+					<div className='secondary-games-right'></div>
 				</div>
-				<div className="game-bottle"></div>
-				<div className="next-piece">
-					<span className="held-label">Next Pieces</span>
-				</div>
-			</div>
-			<div className='button-container'>
-				<div className='scoreCard'>
-					<span className='score'>Score</span>
-					<span className='score' id ='Score'>0</span>
-					<span className='score'>Level</span>
-					<span className='score' id ='Level'>0</span>
-				</div>
-				<button onClick={startGame} className='buttons' disabled={isDisabled} style={{visibility: 'hidden'}} id='Start'>Start</button>
-			</div>
-			<div className='secondary-games'></div>
 		</div>
 	);
 }

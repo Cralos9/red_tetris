@@ -7,7 +7,7 @@
     color: rgb(0, 0, 0);
     font-size: 1.1em;
     text-decoration:solid;
-    z-index: 9;
+    z-index: 99;
     white-space: nowrap;
 }
 
@@ -31,39 +31,64 @@
 }
 
 
+.main-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 4vw;
+  padding: 20px;
+  width: 100%;
+  position: relative;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
 
-.secondary-games {
-	display: flex;
-	flex-direction: row;
-	gap: 5vw;
-	padding: 40px;
-	width: fit-content;
-	position: absolute;
-	left : 2%;
-	top: 20%;
-	background: transparent;
-	border: none;
-	border-radius: 20px;
-	box-shadow: none;
-	overflow-x: auto;
-	z-index: 3;
+.secondary-games{
+  align-content: flex-start;
+  left: -17%;
+}
+
+.secondary-games-right
+{
+  left: 20%;
+  align-content: flex-start;
+}
+
+.secondary-games,
+.secondary-games-right {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  overflow: hidden;
+  gap: 30px;
+  top: 10%;
+  width: 28%;
+  position: relative;
+  max-height: 80vh;
 }
 
 .secondary-game {
-	display: grid;
-	grid-template-columns: repeat(10, 1fr);
-	grid-template-rows: repeat(20, 1fr);
-  background: rgba(70, 70, 70, 0.964);
-	width: 10vw;
-	height: 40vh;
-	border-left: 4px solid #0d0e0d;
-	border-right: 4px solid #0d0e0d;
-	border-bottom: 4px solid #0d0e0d;
-	border-top: none;
-	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
-	text-align: center;
-	position: relative;
-	z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(20, 1fr);
+  background: rgba(70, 70, 70, 0.9);
+  width: 8vw;
+  height: 30vh;
+  border: 4px solid #0d0e0d;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+  position: relative;
+  margin: 0 auto;
+  z-index: 2;
+  text-align: center;
+}
+
+
+.game-wrapper {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  top: 10%;
+  
 }
 
 .wrapper {
@@ -73,14 +98,6 @@
 	row-gap: 1em;
   }  
 
-
-.game-wrapper {
-	position: absolute;
-	display: flex;
-	justify-content: center;
-	top: 20%;
-	left: 32%;
-}
 
 /* .cell2 {
   position: relative;
@@ -112,6 +129,15 @@
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
   text-align: center;
 }
+
+.main-layout {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+  width: 100%;
+  height: 80%;
+}
+
 
 .held-piece {
   display: grid;
@@ -191,7 +217,7 @@
 	position: absolute;
 	text-align: center;
   font-size: 20px;
-  /* width: 80vw; */
+  width: 30vw;
 	top: 30vh;
 	left: 35vw;
 	color: #ffffff;

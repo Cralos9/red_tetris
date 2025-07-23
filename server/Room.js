@@ -46,7 +46,6 @@ export class Room extends Subject {
 		{
 			this.owner = this.plMap.keys().next().value
 		}
-		console.log("new owner:", this.owner)
 	}
 
 	toObject() {

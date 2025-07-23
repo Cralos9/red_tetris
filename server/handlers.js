@@ -17,7 +17,6 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		const options = payload.options
 
 		log("Player:", playerName)
-		console.log(payload.options)
 		log("Joined Room:", roomCode)
 		if (!RoomsMap.has(roomCode)) {
 			RoomsMap.set(roomCode, new Room())
@@ -73,7 +72,6 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 
 	socket.on('pong-check', () => {
 		const room = findRoomBySocketId(socket.id)
-		console.log("answered ping")
 		if (room) {
 			const player = room.plMap.get(socket.id)
 			if (player) player.isAlive = true
