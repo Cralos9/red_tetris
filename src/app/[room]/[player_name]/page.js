@@ -13,7 +13,7 @@ export default function RoomPage() {
 	const name = params.player_name;
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
-	
+	const scores = ["stonks" , "AAAAAA", "ESTEVS", "Arnaldo"];
 
 	function end_game() {
 	  setIsDisabled(false);
@@ -258,8 +258,28 @@ export default function RoomPage() {
 	return (
 		<div>
 				{gameOver && <div className='game-Over'>
-					Game Over
-					<img className='game-over-image'src="/images/ripmario.gif"></img>
+					
+					{/* <img className='game-over-image'src="/images/ripmario.gif"></img> */}
+					<div className='usercard'>
+						Leaderboard
+				
+						{/*
+						 //// For Object ///
+						 {Object.entries(scores).map(([key, value], idx) => (
+							<div key={key}>
+								<h3 style={{ color: 'white' }}>{key} {value}</h3>
+								{idx !== Object.entries(scores).length - 1 && <hr style={{ color: 'white' }} />}
+							</div>
+							))} */}
+
+						{ 	/* /// For array// */
+						scores.map((s, idx) => (
+							<div key={idx}>
+							<h3 style={{ color: 'white' }}>{idx + 1} {s}</h3>
+							{idx !== scores.length - 1 && <hr style={{color: 'white'}} />}
+							</div>
+						))}
+					</div>
 				</div>}
 				<nav>
 					<h1 className='room-info'>Room Code:{roomCode}      Username:{username}</h1>
@@ -281,7 +301,6 @@ export default function RoomPage() {
 					<span className='score' id ='Level'>0</span>
 				</div>
 				<button onClick={startGame} className='buttons' disabled={isDisabled} style={{visibility: 'hidden'}} id='Start'>Start</button>
-				<button onClick={resetGame} className='buttons'>Reset</button>
 			</div>
 			<div className='secondary-games'></div>
 		</div>

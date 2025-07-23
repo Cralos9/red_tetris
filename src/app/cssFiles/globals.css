@@ -57,6 +57,7 @@
 
 .usercard
 {
+	position: relative;
 	background: rgba(56, 56, 56, 0.964);
 	width: 35%;
 	box-shadow: 10px 10px 10px rgba(66, 66, 66, 0.719);
@@ -65,7 +66,7 @@
 	padding: 40px;
 	gap: 15px;
 	text-align: center;
-	z-index: 1;
+	z-index: 99;
 	border-radius: 10px;
 	border-width: 10px;
 	border-color: #000000;

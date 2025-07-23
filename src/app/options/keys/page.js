@@ -37,6 +37,7 @@ export default function Keys() {
     const handler = (e) => {
       e.preventDefault();
       if (e.key) {
+        console.log(e)
         const keyInUse = Object.entries(keys).find(
           ([otherAction, value]) => value === e.key && otherAction !== action
         );
@@ -50,12 +51,13 @@ export default function Keys() {
           }));
           setEditingKey(null);
         }
-  
-        document.removeEventListener('keydown', handler);
       }
+      document.removeEventListener('keydown', handler);
+      document.removeEventListener('mousedown', handler);
     };
   
     document.addEventListener('keydown', handler);
+    document.addEventListener('mousedown', handler);
   };
 
   const apply_options = () => {

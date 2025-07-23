@@ -26,9 +26,10 @@ export class Room extends Subject {
 		})
 
 		setInterval(() => {
-			console.log("Changing Level")
-			this.notify(null, Events.UPDATE_LEVEL)
-		}, 30000)
+			const now = new Date().toLocaleTimeString();
+			console.log(`[${now}] Changing Level`);
+			this.notify(null, Events.UPDATE_LEVEL);
+		}, 30000);
 	}
 
 	searchPlayer(playerId) {

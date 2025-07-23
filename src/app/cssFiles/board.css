@@ -160,6 +160,7 @@
 	gap: 10px;
 	text-align: center;
 	z-index: 7;
+  position: relative;
 	border-radius: 10px;
 	border-width: 10px; 
 	border-color: #000000;
@@ -183,17 +184,18 @@
 
 .game-Over
 {
-
+  z-index: 99;
 	font-family: 'Press Start 2P';
 	font-weight: bold;
 	font-size: 60px;
 	position: absolute;
 	text-align: center;
+  font-size: 20px;
+  width: 80vw;
 	top: 30vh;
-	left: 40vw;
+	left: 35vw;
 	color: #ffffff;
 	text-shadow: 5px 5px  #000000;
-	z-index: 5;
 }
 
 .game-over-image2
