@@ -7,6 +7,13 @@ export default function Game() {
   const router = useRouter();
   const [scores, setScores] = useState([]);
 
+
+  function getOrdinal(n) {
+	const s = ["th", "st", "nd", "rd"],
+		  v = n % 100;
+	return (n + (s[(v - 20) % 10] || s[v] || s[0]));
+  }
+
   useEffect(() => {
 	const foundScores = [];
   
@@ -79,7 +86,7 @@ export default function Game() {
 		<h3 style={{ color: 'white' }}>USER SCORE</h3>
 		{scores.map((s, idx) => (
 			<div key={idx}>
-			<h3 style={{ color: 'white' }}>{idx + 1} {s}</h3>
+			<h3 style={{ color: 'white' }}>{getOrdinal(idx + 1)} {s}</h3>
 			{idx !== scores.length - 1 && <hr style={{color: 'white'}} />}
 			</div>
 		))}

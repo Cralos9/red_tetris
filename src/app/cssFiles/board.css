@@ -191,7 +191,7 @@
 	position: absolute;
 	text-align: center;
   font-size: 20px;
-  width: 80vw;
+  /* width: 80vw; */
 	top: 30vh;
 	left: 35vw;
 	color: #ffffff;

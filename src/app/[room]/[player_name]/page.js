@@ -20,6 +20,11 @@ export default function RoomPage() {
 	  setGameOver(true);
 	}
 
+	function getOrdinal(n) {
+		const s = ["th", "st", "nd", "rd"],
+			  v = n % 100;
+		return (n + (s[(v - 20) % 10] || s[v] || s[0]));
+	  }
 	useEffect(() => {
 		socket.connect();
 	  
@@ -258,28 +263,29 @@ export default function RoomPage() {
 	return (
 		<div>
 				{gameOver && <div className='game-Over'>
-					
-					{/* <img className='game-over-image'src="/images/ripmario.gif"></img> */}
-					<div className='usercard'>
+					Game Over
+					<div style={{width: '30vw'}}className='usercard'>
 						Leaderboard
 				
 						{/*
 						 //// For Object ///
 						 {Object.entries(scores).map(([key, value], idx) => (
 							<div key={key}>
-								<h3 style={{ color: 'white' }}>{key} {value}</h3>
-								{idx !== Object.entries(scores).length - 1 && <hr style={{ color: 'white' }} />}
+							<h3 style={{ color: 'white' }}>{key} {value}</h3>
+							{idx !== Object.entries(scores).length - 1 && <hr style={{ color: 'white' }} />}
 							</div>
 							))} */}
 
 						{ 	/* /// For array// */
 						scores.map((s, idx) => (
 							<div key={idx}>
-							<h3 style={{ color: 'white' }}>{idx + 1} {s}</h3>
+							<h3 style={{ color: 'white' }}>{getOrdinal(idx + 1)} {s}</h3>
 							{idx !== scores.length - 1 && <hr style={{color: 'white'}} />}
 							</div>
 						))}
 					</div>
+{/* 						
+						<img className='game-over-image'src="/images/ripmario.gif"></img> */}
 				</div>}
 				<nav>
 					<h1 className='room-info'>Room Code:{roomCode}      Username:{username}</h1>
