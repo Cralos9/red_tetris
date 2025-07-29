@@ -26,15 +26,11 @@ export class Player {
 		this.room = room
 	}
 
-	setIngame(flag) {
-		this.inGame = flag
-	}
-
 	changeLevel() {
 		this.game.changeLevel()
 	}
 
-	runGame(roomCode) {
+	runGame() {
 		this.inGame = true
 		this.score = new ScoreManager()
 		this.targetManager = new TargetManager(this.targets)
@@ -44,7 +40,7 @@ export class Player {
 		this.gameInterval = setInterval(() => {
 			this.game.update()
 			//console.table(this.game.field)
-			this.io.to(roomCode).emit('game', {
+			this.io.to(this.room.getCode()).emit('game', {
 				field: this.game.field,
 				linesCleared: this.game.linesCleared,
 				holdPiece: this.game.hold ? this.game.hold.toObject() : 0,
@@ -56,6 +52,7 @@ export class Player {
 			})
 			if (this.game.running === false) {
 				this.room.handleGame(this)
+				this.inGame = false
 				clearInterval(this.gameInterval)
 			}
 		}, DELTA_TIME)

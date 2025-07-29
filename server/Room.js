@@ -8,7 +8,12 @@ export class Room {
 		this.owner = null;
 		this.leaderboard = []
 		this.levelInterval = null
+		this.gameRunning = false
 		console.log("Creating a Room")
+	}
+
+	getCode() {
+		return (this.code)
 	}
 	
 	addPlayer(socketId, newPlayer) {
@@ -25,8 +30,9 @@ export class Room {
 
 	startGame() {
 		this.leaderboard = []
+		this.gameRunning = true
 		this.plMap.forEach(player => {
-			player.runGame(this.code)
+			player.runGame()
 		})
 
 		this.levelInterval = setInterval(() => {
@@ -49,9 +55,11 @@ export class Room {
 			})
 		}
 		if (this.leaderboard.length === this.plMap.size) {
-			this.plMap.forEach(player => {
-				player.setIngame(false)
-			})
+			// Need to think if this flag makes sense when you are watching other people games
+			//this.plMap.forEach(player => {
+			//	player.setIngame(false)
+			//})
+			this.gameRunning = false
 			this.io.to(this.code).emit('endGame', {
 				leaderboard: this.leaderboard
 			})
