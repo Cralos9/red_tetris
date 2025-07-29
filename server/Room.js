@@ -1,3 +1,5 @@
+import { LEVEL_INTERVAL } from "./Game/gameParams.js";
+
 export class Room {
 	constructor(roomCode, io) { 
 		this.code = roomCode
@@ -33,7 +35,7 @@ export class Room {
 			this.plMap.forEach(player => {
 				player.changeLevel()
 			})
-		}, 30000);
+		}, LEVEL_INTERVAL);
 	}
 
 	// Need a better function name

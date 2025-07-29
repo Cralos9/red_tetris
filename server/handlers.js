@@ -95,7 +95,6 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const room = RoomsMap.get(roomCode)
 		const player = room.searchPlayer(socket.id)
 		if (player && player.inGame === true) {
-			console.log("Key:", key)
 			if (key === "Escape") {
 				player.stopGame()
 			} else {
