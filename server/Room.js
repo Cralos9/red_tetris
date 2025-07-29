@@ -1,20 +1,19 @@
-import { Subject } from "./Observer/Subject.js"
-import { Events } from "./globalEvents.js"
-
-export class Room extends Subject {
+export class Room {
 	constructor() { 
-		super()
 		this.plMap = new Map()
 		this.owner = null;
+		this.placements = []
+		this.levelInterval = null
 		console.log("Creating a Room")
 	}
 	
-	addPlayer(socketId, player) {
+	addPlayer(socketId, newPlayer) {
 		console.log("This Player joined the Room")
-		this.notify(player, Events.JOIN_PLAYER)
-		player.targets = Array.from(this.plMap.values())
-		this.plMap.set(socketId, player)
-		this.addObserver(player)
+		this.plMap.forEach(player => {
+			player.targets.push(newPlayer)
+			newPlayer.targets.push(player)
+		})
+		this.plMap.set(socketId, newPlayer)
 		Array.from(this.plMap.values()).forEach(player => {
 			console.log("playerName: ", player.name)
 		})
@@ -25,23 +24,36 @@ export class Room extends Subject {
 			player.runGame(roomCode)
 		})
 
-		setInterval(() => {
+		this.levelInterval = setInterval(() => {
 			const now = new Date().toLocaleTimeString();
 			console.log(`[${now}] Changing Level`);
-			this.notify(null, Events.UPDATE_LEVEL);
+			this.plMap.forEach(player => {
+				player.changeLevel()
+			})
 		}, 30000);
+	}
+
+	// Need a better function name
+	handleGame(player) {
+		this.placements.push(player)
+		
+		if (this.placements.length >= this.plMap.size - 1) {
+			// Socket msg everyone in room
+			clearInterval(this.levelInterval)
+			console.log("Game Finished")
+		}
 	}
 
 	searchPlayer(playerId) {
 		return (this.plMap.get(playerId))
 	}
 
-	leavePlayer(socketId, socket) {
+	leavePlayer(socketId) {
 		console.log("This Player left the Room")
-		const player = this.plMap.get(socketId)
+		this.plMap.forEach(player => {
+			player.targets.filter(player => player.id !== socketId)
+		})
 		this.plMap.delete(socketId)
-		this.removeObserver(player)
-		this.notify(player, Events.LEAVE_PLAYER)
 		if (socketId == this.owner)
 		{
 			this.owner = this.plMap.keys().next().value

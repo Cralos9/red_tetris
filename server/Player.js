@@ -1,25 +1,31 @@
 import { Game } from "./Game/Game.js"
 import { Keyboard } from "./Game/Input.js"
-import { Observer } from "./Observer/Observer.js"
-import { Events } from "./globalEvents.js"
 import { TargetManager } from "./Game/Target.js"
 import { ScoreManager } from "./Game/Score.js"
 import { GameController } from "./Game/GameController.js"
 import { TICKS } from "./Game/gameParams.js"
 
-export class Player extends Observer {
+export class Player {
 	constructor(name, keybinds, io, id) {
-		super()
 		this.targets = []
 		this.game = null
 		this.targetManager = null
 		this.score = null
+		this.room = null
 		this.name = name
 		this.id = id
 		this.io = io
 		this.isAlive = true
 		this.keybinds = keybinds
 		this.keyboard = new Keyboard()
+	}
+
+	setRoom(room) {
+		this.room = room
+	}
+
+	changeLevel() {
+		this.game.changeLevel()
 	}
 
 	runGame(roomCode) {
@@ -45,29 +51,9 @@ export class Player extends Observer {
 			})
 			if (this.game.running === false) {
 				clearInterval(interval)
+				this.room.handleGame(this)
 			}
 		}, delay)
-	}
-
-	update(state, event) {
-		switch (event) {
-			case Events.JOIN_PLAYER:
-				var joiner = state
-				console.log("Add Player to Targets:", joiner.id)
-				this.targets.push(joiner)
-				break
-			case Events.LEAVE_PLAYER:
-				var leaver = state
-				console.log("Remove Player:", leaver.id)
-				this.targets = this.targets.filter(player => player.id !== leaver.id)
-				this.io.emit("boardRemove", {id : leaver.id})
-				break
-			case Events.UPDATE_LEVEL:
-				this.game.changeLevel()
-				break
-			default:
-				break
-		}
 	}
 
 	stopGame() {

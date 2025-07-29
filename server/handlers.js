@@ -25,8 +25,9 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 
 		if (room.plMap.size == 0)
 			room.owner = socket.id
-		const player = new Player(playerName, options, io, socket.id)
+		const player = new Player(playerName, options, io, socket.id, room)
 
+		player.setRoom(room)
 		room.addPlayer(socket.id, player)
 		socket.join(roomCode.toString())
 		io.to(roomCode).emit('join', room.toObject())
