@@ -19,6 +19,7 @@ export class Player {
 		this.isAlive = true
 		this.keybinds = keybinds
 		this.keyboard = new Keyboard()
+		this.inGame = false
 	}
 
 	setRoom(room) {
@@ -30,6 +31,7 @@ export class Player {
 	}
 
 	runGame(roomCode) {
+		this.inGame = true
 		this.score = new ScoreManager()
 		this.targetManager = new TargetManager(this.targets)
 		this.game = new Game(new GameController(this.keyboard, this.keybinds))
@@ -50,13 +52,15 @@ export class Player {
 			})
 			if (this.game.running === false) {
 				this.stopGame()
+				this.room.handleGame(this)
+				clearInterval(this.gameInterval)
 			}
 		}, DELTA_TIME)
 	}
 
 	stopGame() {
-		clearInterval(this.gameInterval)
-		this.room.handleGame(this)
+		this.game.running = false // Temporary Flag (Helps to Test the Game)
+		this.inGame = false
 	}
 
 	toObject() {

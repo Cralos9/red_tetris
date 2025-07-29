@@ -40,11 +40,9 @@ export class Room {
 	handleGame(player) {
 		this.leaderboard.push(player.toObject())
 
-		if (this.placements.length >= this.plMap.size - 1) {
-			this.plMap.forEach(player => {
-				player.stopGame()
-			})
-			io.to(this.code).emit('endGame', {
+		if (this.leaderboard.length >= this.plMap.size - 1) {
+			player.stopGame()
+			this.io.to(this.code).emit('endGame', {
 				leaderboard: this.leaderboard
 			})
 			clearInterval(this.levelInterval)
@@ -63,8 +61,7 @@ export class Room {
 		})
 		this.plMap.delete(socketId)
 		this.io.to(this.code).emit("boardRemove", {id: socketId})
-		if (socketId == this.owner)
-		{
+		if (socketId == this.owner) {
 			this.owner = this.plMap.keys().next().value
 		}
 	}

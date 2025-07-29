@@ -94,17 +94,23 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
 		const player = room.searchPlayer(socket.id)
-		if (key === "Escape") {
-			player.stopGame()
+		if (player && player.inGame === true) {
+			console.log("Key:", key)
+			if (key === "Escape") {
+				player.stopGame()
+			} else {
+				player.keyboard.set(key, true)
+			}
 		}
-		player.keyboard.set(key, true)
 	}
 	const keyUp = (payload) => {
 		const key = payload.key
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
 		const player = room.searchPlayer(socket.id)
-		player.keyboard.set(key, false)
+		if (player && player.inGame === true) {
+			player.keyboard.set(key, false)
+		}
 	}
 	const startGame = (payload) => {
 		const roomCode = payload.roomCode
