@@ -19,7 +19,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		log("Player:", playerName)
 		log("Joined Room:", roomCode)
 		if (!RoomsMap.has(roomCode)) {
-			RoomsMap.set(roomCode, new Room())
+			RoomsMap.set(roomCode, new Room(roomCode, io))
 		}
 		const room = RoomsMap.get(roomCode)
 

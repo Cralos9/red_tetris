@@ -1,8 +1,10 @@
 export class Room {
-	constructor() { 
+	constructor(roomCode, io) { 
+		this.code = roomCode
+		this.io = io
 		this.plMap = new Map()
 		this.owner = null;
-		this.placements = []
+		this.leaderboard = []
 		this.levelInterval = null
 		console.log("Creating a Room")
 	}
@@ -19,9 +21,10 @@ export class Room {
 		})
 	}
 
-	startGame(roomCode) {
+	startGame() {
+		this.leaderboard = []
 		this.plMap.forEach(player => {
-			player.runGame(roomCode)
+			player.runGame(this.code)
 		})
 
 		this.levelInterval = setInterval(() => {
@@ -35,10 +38,15 @@ export class Room {
 
 	// Need a better function name
 	handleGame(player) {
-		this.placements.push(player)
-		
+		this.leaderboard.push(player.toObject())
+
 		if (this.placements.length >= this.plMap.size - 1) {
-			// Socket msg everyone in room
+			this.plMap.forEach(player => {
+				player.stopGame()
+			})
+			io.to(this.code).emit('endGame', {
+				leaderboard: this.leaderboard
+			})
 			clearInterval(this.levelInterval)
 			console.log("Game Finished")
 		}
@@ -54,6 +62,7 @@ export class Room {
 			player.targets.filter(player => player.id !== socketId)
 		})
 		this.plMap.delete(socketId)
+		this.io.to(this.code).emit("boardRemove", {id: socketId})
 		if (socketId == this.owner)
 		{
 			this.owner = this.plMap.keys().next().value

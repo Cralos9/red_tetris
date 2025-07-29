@@ -3,11 +3,12 @@ import { Keyboard } from "./Game/Input.js"
 import { TargetManager } from "./Game/Target.js"
 import { ScoreManager } from "./Game/Score.js"
 import { GameController } from "./Game/GameController.js"
-import { TICKS } from "./Game/gameParams.js"
+import { DELTA_TIME } from "./Game/gameParams.js"
 
 export class Player {
 	constructor(name, keybinds, io, id) {
 		this.targets = []
+		this.gameInterval = null
 		this.game = null
 		this.targetManager = null
 		this.score = null
@@ -31,12 +32,10 @@ export class Player {
 	runGame(roomCode) {
 		this.score = new ScoreManager()
 		this.targetManager = new TargetManager(this.targets)
-		const gameCtrl = new GameController(this.keyboard, this.keybinds)
-		this.game = new Game(gameCtrl)
+		this.game = new Game(new GameController(this.keyboard, this.keybinds))
 		this.game.addObserver(this.targetManager)
 		this.game.addObserver(this.score)
-		const delay = Math.round((1 / TICKS) * 1000)
-		const interval = setInterval(() => {
+		this.gameInterval = setInterval(() => {
 			this.game.update()
 			//console.table(this.game.field)
 			this.io.to(roomCode).emit('game', {
@@ -50,17 +49,19 @@ export class Player {
 				running: this.game.running,
 			})
 			if (this.game.running === false) {
-				clearInterval(interval)
-				this.room.handleGame(this)
+				this.stopGame()
 			}
-		}, delay)
+		}, DELTA_TIME)
 	}
 
 	stopGame() {
-		this.game.running = false
+		clearInterval(this.gameInterval)
+		this.room.handleGame(this)
 	}
 
-	toString() {
-		return `Player ${this.id}, ${this.name}`
+	toObject() {
+		return {
+			playerName: this.name
+		}
 	}
 }

@@ -1,4 +1,6 @@
-export const TICKS = 60
+const TICK_RATE = 60
+export const DELTA_TIME = Math.round((1 / TICK_RATE) * 1000)
+
 export const ROWS = 20
 export const COLUMNS = 10
 
