@@ -26,6 +26,10 @@ export class Player {
 		this.room = room
 	}
 
+	setIngame(flag) {
+		this.inGame = flag
+	}
+
 	changeLevel() {
 		this.game.changeLevel()
 	}
@@ -51,7 +55,6 @@ export class Player {
 				running: this.game.running,
 			})
 			if (this.game.running === false) {
-				this.stopGame()
 				this.room.handleGame(this)
 				clearInterval(this.gameInterval)
 			}
@@ -60,7 +63,6 @@ export class Player {
 
 	stopGame() {
 		this.game.running = false // Temporary Flag (Helps to Test the Game)
-		this.inGame = false
 	}
 
 	toObject() {

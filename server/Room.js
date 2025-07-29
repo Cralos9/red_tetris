@@ -42,8 +42,16 @@ export class Room {
 	handleGame(player) {
 		this.leaderboard.push(player.toObject())
 
+		// Need a solution, this if statement runs 2 times, for the 2 last players.
 		if (this.leaderboard.length >= this.plMap.size - 1) {
-			player.stopGame()
+			this.plMap.forEach(player => {
+				player.stopGame()
+			})
+		}
+		if (this.leaderboard.length === this.plMap.size) {
+			this.plMap.forEach(player => {
+				player.setIngame(false)
+			})
 			this.io.to(this.code).emit('endGame', {
 				leaderboard: this.leaderboard
 			})
