@@ -55,7 +55,8 @@ export class Player {
 				running: this.game.running,
 			})
 			if (this.game.running === false) {
-				this.room.handleGame(this)
+				console.log("Stopped", this.name, "Game")
+				this.room.handleLoss(this)
 				this.inGame = false
 				clearInterval(this.gameInterval)
 			}
@@ -63,7 +64,9 @@ export class Player {
 	}
 
 	stopGame() {
-		this.game.running = false // Temporary Flag (Helps to Test the Game)
+		if (this.game) {
+			this.game.running = false // Temporary Flag (Helps to Test the Game)
+		}
 	}
 
 	toObject() {

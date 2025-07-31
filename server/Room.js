@@ -12,9 +12,13 @@ export class Room {
 		console.log("Creating a Room")
 	}
 
-	getCode() {
-		return (this.code)
-	}
+	setOwner(newOwner) { this.owner = newOwner }
+
+	getOwner() { return (this.owner) }
+
+	getNbrOfPlayers() { return (this.plMap.size) }
+
+	getCode() { return (this.code) }
 	
 	addPlayer(socketId, newPlayer) {
 		console.log("This Player joined the Room")
@@ -23,13 +27,17 @@ export class Room {
 			newPlayer.targets.push(player)
 		})
 		this.plMap.set(socketId, newPlayer)
+		console.log("Room Array")
 		Array.from(this.plMap.values()).forEach(player => {
-			console.log("playerName: ", player.name)
+			console.log("- PlayerName:", player.name)
 		})
 	}
 
 	startGame() {
 		this.leaderboard = []
+		this.plMap.forEach(player => {
+			player.stopGame()
+		})
 		this.gameRunning = true
 		this.plMap.forEach(player => {
 			player.runGame()
@@ -45,7 +53,7 @@ export class Room {
 	}
 
 	// Need a better function name
-	handleGame(player) {
+	handleLoss(player) {
 		this.leaderboard.push(player.toObject())
 
 		// Need a solution, this if statement runs 2 times, for the 2 last players.
@@ -54,7 +62,7 @@ export class Room {
 				player.stopGame()
 			})
 		}
-		if (this.leaderboard.length === this.plMap.size) {
+		if (this.leaderboard.length >= this.plMap.size) {
 			// Need to think if this flag makes sense when you are watching other people games
 			//this.plMap.forEach(player => {
 			//	player.setIngame(false)
@@ -68,20 +76,22 @@ export class Room {
 		}
 	}
 
-	searchPlayer(playerId) {
-		return (this.plMap.get(playerId))
-	}
+	searchPlayer(playerId) { return (this.plMap.get(playerId)) }
 
-	leavePlayer(socketId) {
+	leavePlayer(leaverPlayer) {
 		console.log("This Player left the Room")
 		this.plMap.forEach(player => {
-			player.targets.filter(player => player.id !== socketId)
+			player.targets.filter(player => player.id !== leaverPlayer.id)
 		})
-		this.plMap.delete(socketId)
-		this.io.to(this.code).emit("boardRemove", {id: socketId})
-		if (socketId == this.owner) {
+		leaverPlayer.stopGame()
+		this.plMap.delete(leaverPlayer.id)
+		this.io.to(this.code).emit("boardRemove", {id: leaverPlayer.id})
+		if (leaverPlayer.id == this.owner) {
 			this.owner = this.plMap.keys().next().value
 		}
+		Array.from(this.plMap.values()).forEach(player => {
+			console.log("- PlayerName:", player.name)
+		})
 	}
 
 	toObject() {
