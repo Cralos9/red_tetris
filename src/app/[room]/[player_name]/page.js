@@ -9,19 +9,17 @@ export default function RoomPage() {
 	const params = useParams();
 	const roomCode = params.room;
 	const [gameOver, setGameOver] = useState(false);
-	const [allGamesOver, setAllGamesOver] = useState(false);
+	const [allGamesOver, setAllGamesOver] = useState(true);
 
+	var div;
 	const name = params.player_name;
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
-	const scores = ["stonks" , "AAAAAA", "ESTEVS", "Arnaldo"];
+	const [scores, setScores] = useState([]);
 
 	function end_game() {
 	  setIsDisabled(false);
 	  setGameOver(true);
-	  setInterval(() => {
-		  setAllGamesOver(true);
-	  }, 3000);
 	}
 
 	function getOrdinal(n) {
@@ -53,6 +51,10 @@ export default function RoomPage() {
 		{
 			console.log("Board Remove Id: " ,msg.id)
 			var board = document.getElementById(msg.id)
+			if(!board)
+				return
+			console.log(board);
+			div = board.parentElement;
 			if(board)
 				board.remove();
 		});
@@ -65,19 +67,29 @@ export default function RoomPage() {
 	useEffect(() => {
 
 		const options = {
-			actions : {
-				[Actions.MOVE_LEFT]: [localStorage.getItem("left")] || ['ArrowLeft'],
-				[Actions.MOVE_RIGHT]: [localStorage.getItem("right")] || ['ArrowRight'],
-				[Actions.ROTATE_LEFT]: [localStorage.getItem("rotateLeft")] || ['z'],
-				[Actions.ROTATE_RIGHT]: [localStorage.getItem("rotateRight")] || ['x'],
-				[Actions.HARD_DROP]: [localStorage.getItem("hardDrop")] || [' '],
-				[Actions.SOFT_DROP]: [localStorage.getItem("softDrop")] || ['ArrowDown'],
-				[Actions.HOLD] : [localStorage.getItem("holdPiece")] || ['c'],
+			actions: {
+			  [Actions.MOVE_LEFT]: localStorage.getItem("left") ? [localStorage.getItem("left")] : ['ArrowLeft'],
+			  [Actions.MOVE_RIGHT]: localStorage.getItem("right") ? [localStorage.getItem("right")] : ['ArrowRight'],
+			  [Actions.ROTATE_LEFT]: localStorage.getItem("rotateLeft") ? [localStorage.getItem("rotateLeft")] : ['z'],
+			  [Actions.ROTATE_RIGHT]: localStorage.getItem("rotateRight") ? [localStorage.getItem("rotateRight")] : ['x'],
+			  [Actions.HARD_DROP]: localStorage.getItem("hardDrop") ? [localStorage.getItem("hardDrop")] : [' '],
+			  [Actions.SOFT_DROP]: localStorage.getItem("softDrop") ? [localStorage.getItem("softDrop")] : ['ArrowDown'],
+			  [Actions.HOLD]: localStorage.getItem("holdPiece") ? [localStorage.getItem("holdPiece")] : ['c'],
 			},
-			ARR: localStorage.getItem("ARR") ||  5,
-			DAS: localStorage.getItem("DAS")  || 10,
-		}
+			ARR: parseInt(localStorage.getItem("ARR")) || 5,
+			DAS: parseInt(localStorage.getItem("DAS")) || 10,
+		  };
+		console.log("options: ", options);
 		socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options})
+
+
+		socket.on('endGame', (msg) =>
+		{
+			console.log("Msg: ", msg)
+			setScores(msg.leaderboard.reverse())
+			console.log("Scores: " ,scores);
+			setAllGamesOver(true);
+		})
 
 		socket.on('join', (msg) => 
 		{
@@ -105,7 +117,13 @@ export default function RoomPage() {
 					otherBoard.appendChild(nameLabel);
 					gameDraw.add_secondary_cells(otherBoard, 200);
 					console.log("i: %i   i%2 : %i", i, i%2);
-					if((i - 1) % 2 == 0)
+					if(div)
+					{
+						console.log("div: ", div)
+						div.appendChild(otherBoard)
+						div = null;
+					}
+					else if((i - 1) % 2 == 0)
 						document.querySelector('.secondary-games').appendChild(otherBoard);
 					else
 						document.querySelector('.secondary-games-right').appendChild(otherBoard);
@@ -133,6 +151,7 @@ export default function RoomPage() {
 				const heldPiece = msg.holdPiece
 				const nextPiece = msg.nextPiece
 				gameDraw.nextPieceDraw(nextPiece);
+				console.log("HELD: ",heldPiece)
 				gameDraw.heldPieceDraw(heldPiece);
 				const lineClear = document.createElement('div');
 				if (msg.linesCleared > 0) 
@@ -155,6 +174,8 @@ export default function RoomPage() {
 			else 
 			{
 				let otherBoard = document.getElementById(msg.playerId);
+				if(!otherBoard)
+					return
 				cells = otherBoard.querySelectorAll('.cell');
 			}
 			gameDraw.game(cells, field)
@@ -199,14 +220,18 @@ export default function RoomPage() {
 		// setIsDisabled(false)
 	}
 
-	function startGame() {
+	function startGame() 
+	{
 		let time = 3;
 	  
 		if (gameOver === true) {
 		  end_game();
 		  setGameOver(false);
 		}
-	  
+		if(allGamesOver == false)
+			return;
+		setAllGamesOver(false);
+		gameDraw.add_cells('.held-piece', 30)
 		console.log(gameOver);
 		setIsDisabled(true);
 	  
@@ -227,8 +252,6 @@ export default function RoomPage() {
 		// if (time == 0)
 
 		socket.emit("startGame", {roomCode: roomCode});
-	
-
 	}
 
 	function scoreSave(score)
@@ -276,22 +299,23 @@ export default function RoomPage() {
 					{allGamesOver && <div style={{width: '30vw'}} className='usercard'>
 						Leaderboard
 				
-						{/*
+{/* 						
 						 //// For Object ///
 						 {Object.entries(scores).map(([key, value], idx) => (
 							<div key={key}>
 							<h3 style={{ color: 'white' }}>{key} {value}</h3>
 							{idx !== Object.entries(scores).length - 1 && <hr style={{ color: 'white' }} />}
 							</div>
-							))} */}
+							))}  */}
 
 						{ 	/* /// For array// */
 						scores.map((s, idx) => (
 							<div key={idx}>
-							<h3 style={{ color: 'white' }}>{getOrdinal(idx + 1)} {s}</h3>
+							<h3 style={{ color: 'white' }}>{getOrdinal(idx + 1)} {s.playerName}</h3>
 							{idx !== scores.length - 1 && <hr style={{color: 'white'}} />}
 							</div>
-						))}
+						))
+						}
 					</div>}
 					{/*<img className='game-over-image'src="/images/ripmario.gif"></img> */}
 				</div>}
@@ -313,9 +337,9 @@ export default function RoomPage() {
 						<div className='button-container'>
 							<div className='scoreCard'>
 							<span className='score'>Score</span>
-							<span className='score' id='Score'>0</span>
+							<span className='score' style={{color :'orange'}} id='Score'>0</span>
 							<span className='score'>Level</span>
-							<span className='score' id='Level'>0</span>
+							<span className='score' style={{color :'orange'}} id='Level'>0</span>
 							</div>
 							<button onClick={startGame} className='buttons' disabled={isDisabled} style={{ visibility: 'hidden' }} id='Start'>Start</button>
 						</div>

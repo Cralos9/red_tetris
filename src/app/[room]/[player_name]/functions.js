@@ -63,7 +63,12 @@ function add_secondary_cells(div,  amount)
 	function add_cells(string,  amount)
 	{
 		const div = document.querySelector(string);
-		div.innerHTML = '';
+		
+		Array.from(div.childNodes).forEach(child => {
+			if (!(child.tagName === 'SPAN')) {
+			div.removeChild(child);
+			}
+		});
 		for (let i = 0; i < amount; i++) 
 		{
 			const cell = document.createElement('div');
@@ -112,7 +117,7 @@ function heldPieceDraw(heldPiece)
 		cells.forEach((cell) =>
 		{
 			cell.style.backgroundColor = getColor(0);
-			cell.style.border = '0px solid #222';
+			// cell.style.border = '0px solid #222';
 		});
 		const centerX = 2;
 		const centerY = 2;
@@ -136,7 +141,7 @@ function nextPieceDraw(nextPiece)
 	cells.forEach((cell) =>
 	{
 		cell.style.backgroundColor = getColor(0);
-		cell.style.border = '0px solid #222';
+		// cell.style.border = '0px solid #222';
 	});
 	nextPiece.forEach((piece) => {
 		if (centerY > 8)

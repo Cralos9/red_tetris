@@ -1,8 +1,11 @@
+
 .held-label 
 {
     position: absolute;
     top: -2em;
     left: 50%;
+    font-family: 'Luckiest Guy';
+    font-size: 25px;
     transform: translateX(-50%);
     color: rgb(0, 0, 0);
     font-size: 1.1em;
@@ -19,7 +22,6 @@
     border-radius: 2px;
     position: absolute;
     text-align: center;
-    border-width: 5px;
     border-style: solid;
     border-color: #ffffff;
     color: #ffffff;
@@ -71,8 +73,8 @@
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(20, 1fr);
   background: rgba(70, 70, 70, 0.9);
-  width: 8vw;
-  height: 30vh;
+  width: 6vw;
+  height: 20vh;
   border: 4px solid #0d0e0d;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
   position: relative;
@@ -86,7 +88,7 @@
   position: absolute;
   display: flex;
   justify-content: center;
-  top: 10%;
+  top: 12%;
   
 }
 
@@ -114,19 +116,18 @@
 
 .game-bottle {
   display: grid;
-  z-index: 4;
-  position: relative;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(20, 1fr);
-  background: rgba(70, 70, 70, 0.964);
-  width: 400px;
-  height: 700px;
-  border-left: 20px solid #0d0e0d;
-  border-right: 20px solid #0d0e0d;
-  border-bottom: 20px solid #0d0e0d;
-  border-top: none;
-  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
-  text-align: center;
+  width: 18vw;
+  aspect-ratio: 8 / 16;
+  background-color: #222;
+  border: 5px solid #0d0e0d;
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.1),
+              4px 4px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 1px;
+  position: relative;
 }
 
 .main-layout {
@@ -142,12 +143,17 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(5, 1fr);
+  width: 170px;
+  height: 170px;
+  aspect-ratio: 8 / 16;
+  background-color: #222;
+  border: 5px solid #0d0e0d;
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.1),
+              4px 4px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 1px;
   position: relative;
-  width: 150px;
-  height: 150px;
-  background: rgba(70, 70, 70, 0.964);
-  border: 10px solid #0d0e0d;
-  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
   z-index: 4;
 }
 
@@ -155,16 +161,24 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(10, 1fr);
-  position: relative;
   width: 190px;
   height: 300px;
-  background: rgba(70, 70, 70, 0.964);
-  border: 10px solid #0d0e0d;
-  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.719);
+  aspect-ratio: 8 / 16;
+  background-color: #222;
+  border: 5px solid #0d0e0d;
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.1),
+              4px 4px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 1px;
+  position: relative;
   z-index: 4;
 }
+
 .score {
   color: #ffffff;
+  font-family:  'Luckiest Guy';
+  font-size: 20px;
   display: flex;
   top: -1.5em;
   padding: 5px;
@@ -176,7 +190,7 @@
 .scoreCard{
 
   background: rgba(12, 12, 12, 0.964);
-	width: 8vw;
+	width: 9vw;
   height: 25vh;
 	box-shadow: 10px 10px 10px rgba(66, 66, 66, 0.719);
 	display: flex;
@@ -237,3 +251,4 @@
 	left: 5vw;
 	top : 5vw;
 }
+

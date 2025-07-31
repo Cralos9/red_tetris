@@ -1,3 +1,4 @@
+
 @import "tailwindcss";
 
 .header {
@@ -201,17 +202,17 @@ input[type="range"] {
 
 .mario-img{
 	position: fixed;
-	left: -5%;
+	left: 0%;
 	bottom: 0;
-	width: 30%;
-	height: 50%;
+	width: 25%;
+	height: 55%;
 	z-index: 0;
-	transform: rotatey(180deg);
+	/* transform: rotatey(180deg); */
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--background: #ffffff;
+		--background: #f0d29a;
 		--foreground: #000000;
 	}
 }
