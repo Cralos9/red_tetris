@@ -52,7 +52,7 @@ export class Room {
 		roomDebug.roomlog(this, "Starting Level Interval")
 		this.levelInterval = setInterval(() => {
 			const now = new Date().toLocaleTimeString();
-			console.log(`[${now}] Changing Level`);
+			roomDebug.roomlog(this, `[${now}] Changing Level`)
 			this.plMap.forEach(player => {
 				player.changeLevel()
 			})
