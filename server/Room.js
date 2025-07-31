@@ -30,8 +30,8 @@ export class Room {
 	addPlayer(newPlayer) {
 		roomDebug.roomlog(this, newPlayer.name, "joined")
 		this.plMap.forEach(player => {
-			player.targets.push(newPlayer)
-			newPlayer.targets.push(player)
+			player.getTargetManager().addTarget(newPlayer)
+			newPlayer.getTargetManager().addTarget(player)
 		})
 		this.plMap.set(newPlayer.id, newPlayer)
 		roomDebug.printPlMap(this)
@@ -85,7 +85,7 @@ export class Room {
 	leavePlayer(leaverPlayer) {
 		roomDebug.roomlog(this, leaverPlayer.name, "left")
 		this.plMap.forEach(player => {
-			player.targets = player.targets.filter(player => player.id !== leaverPlayer.id)
+			player.getTargetManager().removeTarget(leaverPlayer)
 		})
 		leaverPlayer.stopGame()
 		this.plMap.delete(leaverPlayer.id)

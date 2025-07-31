@@ -8,10 +8,9 @@ import { playerDebug } from "./debug.js"
 
 export class Player {
 	constructor(name, keybinds, io, id) {
-		this.targets = []
 		this.gameInterval = null
 		this.game = null
-		this.targetManager = null
+		this.targetManager = new TargetManager()
 		this.score = null
 		this.room = null
 		this.name = name
@@ -23,14 +22,14 @@ export class Player {
 		this.inGame = false
 	}
 
-	getTargets() { return (this.targets) }
+	getTargetManager() { return (this.targetManager) }
 
 	setRoom(room) {
 		this.room = room
 	}
 
 	setIngame(flag) {
-		this.inGame = false
+		this.inGame = flag
 	}
 
 	changeLevel() {
@@ -41,7 +40,6 @@ export class Player {
 		playerDebug.printTargets(this)
 		this.inGame = true
 		this.score = new ScoreManager()
-		this.targetManager = new TargetManager(this.targets)
 		this.game = new Game(new GameController(this.keyboard, this.keybinds))
 		this.game.addObserver(this.targetManager)
 		this.game.addObserver(this.score)
@@ -59,7 +57,7 @@ export class Player {
 				running: this.game.running,
 			})
 			if (this.game.running === false) {
-				console.log("Stopped", this.name, "Game")
+				playerDebug.playerlog(this, "Stopped the Game")
 				this.room.handleLoss(this)
 				this.inGame = false
 				clearInterval(this.gameInterval)

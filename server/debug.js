@@ -61,7 +61,7 @@ class PlayerDebug {
 	}
 
 	printTargets(player) {
-		const targets = player.getTargets()
+		const targets = player.getTargetManager().getTargets()
 		this.playerlog(player, "Printing Targets:")
 		targets.forEach(target => {
 			console.log("-", target.toString())
