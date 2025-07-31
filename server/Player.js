@@ -4,6 +4,7 @@ import { TargetManager } from "./Game/Target.js"
 import { ScoreManager } from "./Game/Score.js"
 import { GameController } from "./Game/GameController.js"
 import { DELTA_TIME } from "./Game/gameParams.js"
+import { playerDebug } from "./debug.js"
 
 export class Player {
 	constructor(name, keybinds, io, id) {
@@ -22,6 +23,8 @@ export class Player {
 		this.inGame = false
 	}
 
+	getTargets() { return (this.targets) }
+
 	setRoom(room) {
 		this.room = room
 	}
@@ -35,6 +38,7 @@ export class Player {
 	}
 
 	runGame() {
+		playerDebug.printTargets(this)
 		this.inGame = true
 		this.score = new ScoreManager()
 		this.targetManager = new TargetManager(this.targets)
@@ -67,6 +71,10 @@ export class Player {
 		if (this.game) {
 			this.game.running = false // Temporary Flag (Helps to Test the Game)
 		}
+	}
+
+	toString() {
+		return `${this.name}`
 	}
 
 	toObject() {

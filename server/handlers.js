@@ -28,7 +28,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		const player = new Player(playerName, options, io, socket.id, room)
 
 		player.setRoom(room)
-		room.addPlayer(socket.id, player)
+		room.addPlayer(player)
 		socket.join(roomCode.toString())
 		io.to(roomCode).emit('join', room.toObject())
 	}
@@ -38,7 +38,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		if (!room) {
 			return
 		}
-		const player = room.searchPlayer(socket.id)
+		const player = room.getPlayer(socket.id)
 		if (!player) {
 			return
 		}
@@ -66,7 +66,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		}
 
 		for (const sockId of toRemove)  {
-			room.leavePlayer(room.searchPlayer(sockId))
+			room.leavePlayer(room.getPlayer(sockId))
 		}
 		
 		if (room.getNbrOfPlayers() === 0) {
@@ -78,7 +78,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 	socket.on('pong-check', () => {
 		const room = findRoomBySocketId(socket.id)
 		if (room) {
-			const player = room.searchPlayer(socket.id)
+			const player = room.getPlayer(socket.id)
 			if (player) {
 				player.isAlive = true
 			}
@@ -99,7 +99,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const key = payload.key
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
-		const player = room.searchPlayer(socket.id)
+		const player = room.getPlayer(socket.id)
 		if (player && player.inGame === true) {
 			if (key === "Escape") {
 				player.stopGame()
@@ -112,7 +112,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const key = payload.key
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
-		const player = room.searchPlayer(socket.id)
+		const player = room.getPlayer(socket.id)
 		if (player && player.inGame === true) {
 			player.keyboard.set(key, false)
 		}
@@ -125,7 +125,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 			console.log("Not owner");
 			return;
 		}
-		room.startGame(roomCode)
+		room.startGame()
 	}
 	socket.on('startGame', startGame)
 	socket.on('keyDown', keyDown)

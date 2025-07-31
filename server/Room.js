@@ -1,4 +1,5 @@
 import { LEVEL_INTERVAL } from "./Game/gameParams.js";
+import { roomDebug } from "./debug.js";
 
 export class Room {
 	constructor(roomCode, io) { 
@@ -9,7 +10,7 @@ export class Room {
 		this.leaderboard = []
 		this.levelInterval = null
 		this.gameRunning = false
-		console.log("Creating a Room")
+		roomDebug.roomlog(this, "Created")
 	}
 
 	setOwner(newOwner) { this.owner = newOwner }
@@ -19,30 +20,36 @@ export class Room {
 	getNbrOfPlayers() { return (this.plMap.size) }
 
 	getCode() { return (this.code) }
-	
-	addPlayer(socketId, newPlayer) {
-		console.log("This Player joined the Room")
+
+	getPlayer(playerId) { return (this.plMap.get(playerId)) }
+
+	getPlMap() { return (this.plMap) }
+
+	getLeaderboard() { return (this.leaderboard) }
+
+	addPlayer(newPlayer) {
+		roomDebug.roomlog(this, newPlayer.name, "joined")
 		this.plMap.forEach(player => {
 			player.targets.push(newPlayer)
 			newPlayer.targets.push(player)
 		})
-		this.plMap.set(socketId, newPlayer)
-		console.log("Room Array")
-		Array.from(this.plMap.values()).forEach(player => {
-			console.log("- PlayerName:", player.name)
-		})
+		this.plMap.set(newPlayer.id, newPlayer)
+		roomDebug.printPlMap(this)
 	}
 
 	startGame() {
+		roomDebug.roomlog(this, "Starting Game")
 		this.leaderboard = []
 		this.plMap.forEach(player => {
 			player.stopGame()
 		})
+
 		this.gameRunning = true
 		this.plMap.forEach(player => {
 			player.runGame()
 		})
 
+		roomDebug.roomlog(this, "Starting Level Interval")
 		this.levelInterval = setInterval(() => {
 			const now = new Date().toLocaleTimeString();
 			console.log(`[${now}] Changing Level`);
@@ -52,7 +59,6 @@ export class Room {
 		}, LEVEL_INTERVAL);
 	}
 
-	// Need a better function name
 	handleLoss(player) {
 		this.leaderboard.push(player.toObject())
 
@@ -68,20 +74,18 @@ export class Room {
 			//	player.setIngame(false)
 			//})
 			this.gameRunning = false
+			roomDebug.printLeaderboard(this)
 			this.io.to(this.code).emit('endGame', {
 				leaderboard: this.leaderboard
 			})
 			clearInterval(this.levelInterval)
-			console.log("Game Finished")
 		}
 	}
 
-	searchPlayer(playerId) { return (this.plMap.get(playerId)) }
-
 	leavePlayer(leaverPlayer) {
-		console.log("This Player left the Room")
+		roomDebug.roomlog(this, leaverPlayer.name, "left")
 		this.plMap.forEach(player => {
-			player.targets.filter(player => player.id !== leaverPlayer.id)
+			player.targets = player.targets.filter(player => player.id !== leaverPlayer.id)
 		})
 		leaverPlayer.stopGame()
 		this.plMap.delete(leaverPlayer.id)
@@ -89,9 +93,7 @@ export class Room {
 		if (leaverPlayer.id == this.owner) {
 			this.owner = this.plMap.keys().next().value
 		}
-		Array.from(this.plMap.values()).forEach(player => {
-			console.log("- PlayerName:", player.name)
-		})
+		roomDebug.printPlMap(this)
 	}
 
 	toObject() {
