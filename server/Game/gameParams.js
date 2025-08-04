@@ -3,6 +3,9 @@ export const DELTA_TIME = Math.round((1 / TICK_RATE) * 1000)
 
 export const LEVEL_INTERVAL = 30000
 
+// Need to make this delay dynamic during the match
+export const GARBAGE_DELAY = 5000
+
 export const ROWS = 20
 export const COLUMNS = 10
 
