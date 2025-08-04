@@ -1,5 +1,4 @@
 import { Piece } from "./Piece.js"
-import { getRandomOrder } from "./utils.js"
 import {
 	Icoor,
 	Tcoor,
@@ -13,9 +12,12 @@ import {
 	Ooffsets,
 	Colors	
 } from "./gameParams.js"
+import { PRNG } from "../PRNG.js"
 
 export class Bag {
-	constructor () {
+	constructor(seed) {
+		debugger
+		this.PRNG = new PRNG(seed)
 		this.pieces = {
 			"I": new Piece(Icoor, Ioffsets, Colors.BLUE),
 			"T": new Piece(Tcoor, JLTSZoffsets, Colors.PURPLE),
@@ -27,16 +29,26 @@ export class Bag {
 		}
 		this.stack = []
 		this.order = ["I", "T", "J", "L", "O", "S", "Z"]
-		getRandomOrder(this.order)
+		this.getRandomOrder()
 		for (let i = 0; i < this.order.length; i++) {
 			this.stack.push(this.pieces[this.order[i]])
 		}
 		this.rotation = 7
 	}
 
+	getRandomOrder() {
+		debugger
+		for (let i = this.order.length - 1; i >= 0; i--) {
+			const rNbr = this.PRNG.randRange(0, i);
+			const tmp = this.order[i]
+			this.order[i] = this.order[rNbr]
+			this.order[rNbr] = tmp
+		}
+	}
+
 	getNextPiece() {
 		if (this.rotation === this.order.length) {
-			getRandomOrder(this.order)
+			this.getRandomOrder(this.order)
 			this.rotation = 0
 		}
 		this.stack.push(this.pieces[this.order[this.rotation]])

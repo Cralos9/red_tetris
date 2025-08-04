@@ -6,9 +6,9 @@ import { Subject } from "../Observer/Subject.js"
 import { LevelTable } from "./gameParams.js"
 
 export class Game extends Subject {
-	constructor(ctrl) {
+	constructor(ctrl, seed) {
 		super()
-		this.Bag = new Bag()
+		this.Bag = new Bag(seed)
 		this.field = Array(ROWS)
 		this.ctrl = ctrl
 

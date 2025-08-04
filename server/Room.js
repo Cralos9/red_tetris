@@ -1,5 +1,6 @@
 import { LEVEL_INTERVAL } from "./Game/gameParams.js";
 import { roomDebug } from "./debug.js";
+import { randomNbr } from "./Game/utils.js";
 
 export class Room {
 	constructor(roomCode, io) { 
@@ -44,9 +45,10 @@ export class Room {
 			player.stopGame()
 		})
 
+		const seed = randomNbr(23583485)
 		this.gameRunning = true
 		this.plMap.forEach(player => {
-			player.runGame()
+			player.runGame(seed)
 		})
 
 		roomDebug.roomlog(this, "Starting Level Interval")
