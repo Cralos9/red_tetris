@@ -15,10 +15,10 @@ export class TargetManager {
 	}
 
 	sendGarbage(linesCleared) {
-		linesCleared = linesCleared - 1
-		if (linesCleared > 0) {
+		linesCleared = this.cancelGarbage(linesCleared)
+		if (linesCleared > 1) {
 			this.targets.forEach(target => {
-				target.getTargetManager().receiveGarbage(linesCleared)
+				target.getTargetManager().receiveGarbage(linesCleared - 1)
 			})
 		}
 	}
@@ -34,8 +34,7 @@ export class TargetManager {
 		while (i < this.garbageQueue.length) {
 			const garbage = this.garbageQueue[i]
 			const elapsedTime = Date.now() - garbage.timer
-			console.log("GarbageTimer:", elapsedTime)
-			if (elapsedTime >= 5010) {
+			if (elapsedTime >= 10000) {
 				callback(garbage.lines)
 				this.garbageQueue.shift()
 				garbageCounter += 1
@@ -43,7 +42,19 @@ export class TargetManager {
 			}
 			i++
 		}
-		console.log("GarbageCounter:", garbageCounter)
+	}
+
+	cancelGarbage(linesCleared) {
+		console.log("Before GarbageQ:", this.garbageQueue)
+		while (this.garbageQueue.length !== 0 && linesCleared >= this.garbageQueue[0].lines) {
+			linesCleared -= this.garbageQueue[0].lines
+			this.garbageQueue.shift()
+		}
+		if (this.garbageQueue.length > 0 && linesCleared > 0) {
+			this.garbageQueue[0].lines -= linesCleared
+		}
+		console.log("After GarbageQ:", this.garbageQueue)
+		return (linesCleared)
 	}
 
 	update(state, event) {
@@ -52,7 +63,9 @@ export class TargetManager {
 			const linesCleared = state.linesCleared
 
 			this.sendGarbage(linesCleared)
-			this.handleGarbage(callback)
+			if (linesCleared === 0) {
+				this.handleGarbage(callback)
+			}
 		}
 
 		//switch (event) {
