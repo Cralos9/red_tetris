@@ -24,14 +24,41 @@ export class TargetManager {
 	}
 
 	receiveGarbage(garbageLines) {
-		this.garbageQueue.push(garbageLines)
+		const garbageInfo = {lines: garbageLines, timer: Date.now()}
+		this.garbageQueue.push(garbageInfo)
+	}
+
+	handleGarbage(callback) {
+		var i = 0
+		var garbageCounter = 0
+		while (i < this.garbageQueue.length) {
+			const garbage = this.garbageQueue[i]
+			const elapsedTime = Date.now() - garbage.timer
+			console.log("GarbageTimer:", elapsedTime)
+			if (elapsedTime >= 5010) {
+				callback(garbage.lines)
+				this.garbageQueue.shift()
+				garbageCounter += 1
+				continue
+			}
+			i++
+		}
+		console.log("GarbageCounter:", garbageCounter)
 	}
 
 	update(state, event) {
-		switch (event) {
-			case "LINE_CLEAR":
-				this.sendGarbage(state)
-				break
+		if (event === "LINE_CLEAR") {
+			const callback = state.callback
+			const linesCleared = state.linesCleared
+
+			this.sendGarbage(linesCleared)
+			this.handleGarbage(callback)
 		}
+
+		//switch (event) {
+		//	case "LINE_CLEAR":
+		//		this.sendGarbage(state)
+		//		break
+		//}
 	}
 }

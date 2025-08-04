@@ -33,6 +33,7 @@ export class Game extends Subject {
 		this.gravity = 0
 
 		this.garbageQueue = []
+		this.createGarbageBind = this.createGarbage.bind(this)
 	}
 
 	changeLevel() {
@@ -120,17 +121,13 @@ export class Game extends Subject {
 		}, "HARD_DROP")
 	}
 
-	createGarbage() {
-		const lineNbr = this.garbageQueue.shift()
+	createGarbage(garbageLines) {
+		const lineNbr = garbageLines
 		const gap = randomNbr(COLUMNS - 1)
 
 		for (let y = this.stackHeight; y < ROWS; y++) {
 			const nextY = y - lineNbr
-			for (let x = 0; x < COLUMNS; x++) {
-				if (nextY > -1) {
-					this.field[nextY][x] = this.field[y][x]
-				}
-			}
+			this.replaceLine(nextY, y)
 		}
 		for (let i = 0; i < lineNbr; i++) {
 			const y = (ROWS - 1) - i
@@ -138,6 +135,7 @@ export class Game extends Subject {
 			garbage[gap] = 0
 			this.field[y] = garbage
 		}
+		this.stackHeight -= lineNbr
 	}
 
 	resetPiece() {
@@ -203,7 +201,7 @@ export class Game extends Subject {
 			if (this.hitList.length) {
 				this.lineClear()
 			}
-			this.notify(this.linesCleared, "LINE_CLEAR")
+			this.notify({ callback: this.createGarbageBind, linesCleared: this.linesCleared }, "LINE_CLEAR")
 			if (this.garbageQueue.length) {
 				this.createGarbage()
 			}

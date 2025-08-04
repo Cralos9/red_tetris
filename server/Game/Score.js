@@ -22,14 +22,14 @@ export class ScoreManager extends Observer {
 	}
 
 	update(state, event) {
-		switch (event) {
-			case "LINE_CLEAR":
-				this.lineClearScore(state)
-				break
-			case "HARD_DROP":
-				this.dropScore(event, state.pieceRow, state.dropRow)
-				break
-		}
+		//switch (event) {
+		//	case "LINE_CLEAR":
+		//		this.lineClearScore(state)
+		//		break
+		//	case "HARD_DROP":
+		//		this.dropScore(event, state.pieceRow, state.dropRow)
+		//		break
+		//}
 	}
 
 	toObject() {
