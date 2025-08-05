@@ -29,7 +29,7 @@ export class Room {
 	getLeaderboard() { return (this.leaderboard) }
 
 	addPlayer(newPlayer) {
-		roomDebug.roomlog(this, newPlayer.name, "joined")
+		roomDebug.roomlog(this, "Player", newPlayer.name, "joined")
 		this.plMap.forEach(player => {
 			player.getTargetManager().addTarget(newPlayer)
 			newPlayer.getTargetManager().addTarget(player)
@@ -70,6 +70,7 @@ export class Room {
 				player.stopGame()
 			})
 		}
+
 		if (this.leaderboard.length >= this.plMap.size) {
 			// Need to think if this flag makes sense when you are watching other people games
 			//this.plMap.forEach(player => {
