@@ -60,6 +60,33 @@ function add_secondary_cells(div,  amount)
 	}
 }
 
+	function garbage_cell(string, garbage)
+	{
+		const div = document.querySelector(string);
+		Array.from(div.childNodes).forEach(child => {
+			if (!(child.tagName === 'SPAN')) {
+			div.removeChild(child);
+			}
+		});
+		for(let i = 0; i < garbage.length; i++)
+		{
+			console.log(garbage[i].lines)
+			for(let j = 0; j < garbage[i].lines; j++)
+			{
+				const cell = document.createElement('div');
+				cell.className = 'cell';
+				if(Date.now() - garbage[i].timer >= 4000)
+					cell.style.backgroundColor = 'red';
+				else if(Date.now() - garbage[i].timer >= 2000)
+					cell.style.backgroundColor = 'yellow';
+				else
+				cell.style.backgroundColor = 'grey';
+				div.appendChild(cell);
+			}
+		}
+	}
+
+
 	function add_cells(string,  amount)
 	{
 		const div = document.querySelector(string);
@@ -72,10 +99,7 @@ function add_secondary_cells(div,  amount)
 		for (let i = 0; i < amount; i++) 
 		{
 			const cell = document.createElement('div');
-			if (amount === 200)
 				cell.className = 'cell';
-			else
-				cell.className = 'cell2';
 			div.appendChild(cell);
 		}
 	}
@@ -113,7 +137,7 @@ function heldPieceDraw(heldPiece)
 	if (heldPiece != 0)
 	{
 		const held = document.querySelector('.held-piece');
-		const cells = held.querySelectorAll('.cell2');
+		const cells = held.querySelectorAll('.cell');
 		cells.forEach((cell) =>
 		{
 			cell.style.backgroundColor = getColor(0);
@@ -137,7 +161,7 @@ function nextPieceDraw(nextPiece)
 	const next = document.querySelector('.next-piece');
 	const centerX = 2;
 	let centerY = 2;
-	const cells = next.querySelectorAll('.cell2');
+	const cells = next.querySelectorAll('.cell');
 	cells.forEach((cell) =>
 	{
 		cell.style.backgroundColor = getColor(0);
@@ -170,6 +194,7 @@ const gameDraw = {
 	game,
 	get_lines,
 	get_audio,
+	garbage_cell,
 };
 
 export default gameDraw;

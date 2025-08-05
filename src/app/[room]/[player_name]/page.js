@@ -142,6 +142,8 @@ export default function RoomPage() {
 			var cells 
 			if (msg.playerId === socket.id) 
 			{
+				var j = 0;
+				var gLines = 0;
 				var score = document.getElementById('Score')
 				score.textContent = msg.playerScore.score
 				var level = document.getElementById('Level');
@@ -150,8 +152,8 @@ export default function RoomPage() {
 				cells = document.querySelectorAll('.game-bottle .cell');
 				const heldPiece = msg.holdPiece
 				const nextPiece = msg.nextPiece
+				gameDraw.garbage_cell('.garbage-bar',msg.targetManager.garbage);
 				gameDraw.nextPieceDraw(nextPiece);
-				console.log("HELD: ",heldPiece)
 				gameDraw.heldPieceDraw(heldPiece);
 				const lineClear = document.createElement('div');
 				if (msg.linesCleared > 0) 
@@ -328,6 +330,7 @@ export default function RoomPage() {
 							<div className="held-piece">
 							<span className="held-label">Held Piece</span>
 							</div>
+							<div className='garbage-bar'></div>
 							<div className="game-bottle"></div>
 							<div className="next-piece">
 							<span className="held-label">Next Pieces</span>
