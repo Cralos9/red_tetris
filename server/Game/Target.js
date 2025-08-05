@@ -70,7 +70,7 @@ export class TargetManager {
 
 	toObject() {
 		return {
-			garbage: this.garbageQueue
+			garbage: this.garbageStack.getArr()
 		}
 	}
 }
