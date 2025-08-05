@@ -39,13 +39,13 @@ export class Room {
 	}
 
 	startGame() {
-		roomDebug.roomlog(this, "Starting Game")
+		const seed = randomNbr(23583485)
+		roomDebug.roomlog(this, "Starting Game, seed:", seed)
 		this.leaderboard = []
 		this.plMap.forEach(player => {
 			player.stopGame()
 		})
 
-		const seed = randomNbr(23583485)
 		this.gameRunning = true
 		this.plMap.forEach(player => {
 			player.runGame(seed)
