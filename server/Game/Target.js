@@ -22,7 +22,7 @@ export class TargetManager {
 	}
 
 	sendGarbage(linesCleared) {
-		//linesCleared = this.cancelGarbage(linesCleared)
+		linesCleared = this.cancelGarbage(linesCleared)
 		if (linesCleared > 1) {
 			this.targets.forEach(target => {
 				const garbageInfo = {lines: linesCleared - 1, timer: Date.now()}
