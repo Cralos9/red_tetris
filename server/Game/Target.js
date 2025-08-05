@@ -1,13 +1,14 @@
 import { GARBAGE_DELAY } from "./gameParams.js"
+import { Stack } from "../Stack.js"
 
 export class TargetManager {
 	constructor() {
 		this.targets = []
-		this.garbageQueue = []
+		this.garbageStack = new Stack()
 	}
 
 	reset() {
-		this.garbageQueue = []
+		this.garbageQueue = new Stack()
 	}
 
 	getTargets() { return (this.targets) }
@@ -21,36 +22,32 @@ export class TargetManager {
 	}
 
 	sendGarbage(linesCleared) {
-		linesCleared = this.cancelGarbage(linesCleared)
+		//linesCleared = this.cancelGarbage(linesCleared)
 		if (linesCleared > 1) {
 			this.targets.forEach(target => {
 				const garbageInfo = {lines: linesCleared - 1, timer: Date.now()}
-				target.getTargetManager().garbageQueue.push(garbageInfo)
+				target.getTargetManager().garbageStack.push(garbageInfo)
 			})
 		}
 	}
 
 	receiveGarbage(callback) {
-		var i = 0
-		while (i < this.garbageQueue.length) {
-			const garbage = this.garbageQueue[i]
+		this.garbageStack.iteration(garbage => {
 			const elapsedTime = Date.now() - garbage.timer
 			if (elapsedTime >= GARBAGE_DELAY) {
 				callback(garbage.lines)
-				this.garbageQueue.shift()
-				continue
+				this.garbageStack.pop()
 			}
-			i++
-		}
+		})
 	}
 
 	cancelGarbage(linesCleared) {
-		while (this.garbageQueue.length !== 0 && linesCleared >= this.garbageQueue[0].lines) {
-			linesCleared -= this.garbageQueue[0].lines
-			this.garbageQueue.shift()
+		while (this.garbageStack.empty() === false && linesCleared >= this.garbageStack.top().lines) {
+			linesCleared -= this.garbageStack.top().lines
+			this.garbageStack.pop()
 		}
-		if (this.garbageQueue.length > 0 && linesCleared > 0) {
-			this.garbageQueue[0].lines -= linesCleared
+		if (this.garbageStack.size() > 0 && linesCleared > 0) {
+			this.garbageStack.top().lines -= linesCleared
 		}
 		return (linesCleared)
 	}
