@@ -13,6 +13,7 @@ import {
 	Colors	
 } from "./gameParams.js"
 import { PRNG } from "../PRNG.js"
+import { Stack } from "../Stack.js"
 
 export class Bag {
 	constructor(seed) {
@@ -27,7 +28,7 @@ export class Bag {
 			"S": new Piece(Scoor, JLTSZoffsets, Colors.GREEN),
 			"Z": new Piece(Zcoor, JLTSZoffsets, Colors.RED),
 		}
-		this.stack = []
+		this.stack = new Stack()
 		this.order = ["I", "T", "J", "L", "O", "S", "Z"]
 		this.getRandomOrder()
 		for (let i = 0; i < this.order.length; i++) {
@@ -53,12 +54,12 @@ export class Bag {
 		}
 		this.stack.push(this.pieces[this.order[this.rotation]])
 		this.rotation++
-		return (this.stack.shift())
+		return (this.stack.pop())
 	}
 
 	nextPiecesArr() {
 		const arr = []
-		this.stack.forEach(piece => {
+		this.stack.iteration(piece => {
 			arr.push(piece.toObject())
 		})
 		return (arr)
