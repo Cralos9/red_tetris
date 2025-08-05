@@ -39,6 +39,7 @@ export class Player {
 	runGame() {
 		playerDebug.printTargets(this)
 		this.inGame = true
+		this.targetManager.reset()
 		this.score = new ScoreManager()
 		this.game = new Game(new GameController(this.keyboard, this.keybinds))
 		this.game.addObserver(this.targetManager)
@@ -52,6 +53,7 @@ export class Player {
 				holdPiece: this.game.hold ? this.game.hold.toObject() : 0,
 				nextPiece: this.game.Bag.nextPiecesArr(),
 				level: this.game.level,
+				targetManager: this.targetManager.toObject(),
 				playerId: this.id,
 				playerScore: this.score.toObject(),
 				running: this.game.running,

@@ -6,6 +6,10 @@ export class TargetManager {
 		this.garbageQueue = []
 	}
 
+	reset() {
+		this.garbageQueue = []
+	}
+
 	getTargets() { return (this.targets) }
 
 	addTarget(newTarget) {
@@ -65,5 +69,11 @@ export class TargetManager {
 		//		this.sendGarbage(state)
 		//		break
 		//}
+	}
+
+	toObject() {
+		return {
+			garbage: this.garbageQueue
+		}
 	}
 }
