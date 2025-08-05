@@ -36,14 +36,22 @@ export class Player {
 		this.game.changeLevel()
 	}
 
+	reset() {
+		this.keyboard.reset()
+		this.targetManager.reset()
+		this.game = null
+		this.score = null
+	}
+
 	runGame(seed) {
 		playerDebug.printTargets(this)
 		this.inGame = true
-		this.targetManager.reset()
+		this.reset()
 		this.score = new ScoreManager()
 		this.game = new Game(new GameController(this.keyboard, this.keybinds), seed)
 		this.game.addObserver(this.targetManager)
 		this.game.addObserver(this.score)
+		playerDebug.printGameStatus(this)
 		this.gameInterval = setInterval(() => {
 			this.game.update()
 			//console.table(this.game.field)

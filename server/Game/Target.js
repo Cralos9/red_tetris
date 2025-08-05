@@ -11,6 +11,7 @@ export class TargetManager {
 		this.garbageQueue = new Stack()
 	}
 
+	getGarbageStack() { return (this.garbageStack) }
 	getTargets() { return (this.targets) }
 
 	addTarget(newTarget) {

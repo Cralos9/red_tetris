@@ -79,7 +79,6 @@ export class GameController {
 	}
 
 	keyStates() {
-		this.keyboard.update()
 
 		const hardDrop = this.consumeKey(Actions.HARD_DROP)
 		const hold = this.consumeKey(Actions.HOLD)
@@ -89,6 +88,8 @@ export class GameController {
 
 		const move = this.getDir([Actions.MOVE_LEFT, Actions.MOVE_RIGHT])
 		const rot = this.axis(rotateLeft, rotateRight)
+
+		this.keyboard.update()
 
 		return {
 			move: move,

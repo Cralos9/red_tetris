@@ -17,7 +17,6 @@ import { Stack } from "../Stack.js"
 
 export class Bag {
 	constructor(seed) {
-		debugger
 		this.PRNG = new PRNG(seed)
 		this.pieces = {
 			"I": new Piece(Icoor, Ioffsets, Colors.BLUE),
@@ -38,7 +37,6 @@ export class Bag {
 	}
 
 	getRandomOrder() {
-		debugger
 		for (let i = this.order.length - 1; i >= 0; i--) {
 			const rNbr = this.PRNG.randRange(0, i);
 			const tmp = this.order[i]

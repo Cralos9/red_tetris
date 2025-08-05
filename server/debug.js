@@ -68,6 +68,12 @@ class PlayerDebug {
 		})
 		this.playerlog(player, "Finish Targets:")
 	}
+
+	printGameStatus(player) {
+		this.playerlog(player, "Board:")
+		console.table(player.game.field)
+		this.playerlog(player, "GarbageStack:", player.getTargetManager().getGarbageStack().getArr())
+	}
 }
 
 export const playerDebug = new PlayerDebug()

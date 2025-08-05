@@ -19,6 +19,12 @@ export class Input {
 		}
 	}
 
+	reset() {
+		this.pressed = false
+		this.tap = false
+		this.heldTimer = 0
+	}
+
 	getHeldTime() { return (this.heldTimer) }
 	getTap() { return (this.tap) }
 	getPress() { return (this.pressed) }
@@ -58,6 +64,12 @@ export class Keyboard {
 			'ArrowRight': new Input(),
 			'ArrowUp':new Input(),
 			'ArrowDown': new Input(),
+		}
+	}
+
+	reset() {
+		for (const key in this.keys) {
+			this.keys[key].reset()
 		}
 	}
 
