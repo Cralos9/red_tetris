@@ -32,9 +32,6 @@ export class Game extends Subject {
 		this.level = 1
 		this.gravity = 0
 		this.combo = 0
-
-		this.garbageQueue = []
-		this.createGarbageBind = this.createGarbage.bind(this)
 	}
 
 	changeLevel() {
@@ -146,6 +143,7 @@ export class Game extends Subject {
 		const lineNbr = garbageLines
 		const gap = randomNbr(COLUMNS - 1)
 
+		console.log("Creating Garbage:", garbageLines)
 		for (let y = this.stackHeight; y < ROWS; y++) {
 			const nextY = y - lineNbr
 			this.replaceLine(nextY, y)
@@ -169,7 +167,6 @@ export class Game extends Subject {
 	}
 
 	update() {
-		log("Current Piece Row:", this.Piece.row)
 		const actions = this.ctrl.keyStates()
 
 		this.linesCleared = 0
@@ -215,19 +212,14 @@ export class Game extends Subject {
 		}
 
 		if (this.lockPiece === true) {
-			log("Piece Locked")
 			this.Piece.draw(this.field)
 			this.patternMatch()
 			this.lineClear()
 			this.notify({
-				callback: this.createGarbageBind,
 				linesCleared: this.linesCleared,
 				combo: this.combo,
 				level: this.level,
 			}, "LINE_CLEAR")
-			if (this.garbageQueue.length) {
-				this.createGarbage()
-			}
 			this.resetPiece()
 			this.Piece = this.Bag.getNextPiece()
 		}

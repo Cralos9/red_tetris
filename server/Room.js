@@ -8,92 +8,47 @@ export class Room {
 		this.io = io
 		this.plMap = new Map()
 		this.owner = null;
-		this.leaderboard = []
-		this.levelInterval = null
 		this.gameRunning = false
 		roomDebug.roomlog(this, "Created")
 	}
 
 	setOwner(newOwner) { this.owner = newOwner }
-
 	getOwner() { return (this.owner) }
-
 	getNbrOfPlayers() { return (this.plMap.size) }
-
 	getCode() { return (this.code) }
-
 	getPlayer(playerId) { return (this.plMap.get(playerId)) }
-
 	getPlMap() { return (this.plMap) }
-
-	getLeaderboard() { return (this.leaderboard) }
+	getGameManager() { return (this.gameManager) }
 
 	addPlayer(newPlayer) {
 		roomDebug.roomlog(this, "Player", newPlayer.name, "joined")
-		this.plMap.forEach(player => {
-			player.getTargetManager().addTarget(newPlayer)
-			newPlayer.getTargetManager().addTarget(player)
-		})
 		this.plMap.set(newPlayer.id, newPlayer)
 		roomDebug.printPlMap(this)
 	}
 
 	startGame() {
-		const seed = randomNbr(23583485)
-		roomDebug.roomlog(this, "Starting Game, seed:", seed)
-		this.leaderboard = []
-		this.plMap.forEach(player => {
-			player.stopGame()
-		})
-
+		if (this.gameRunning === true) { return }
+		this.gameManager = new GameManager(this, Array.from(this.plMap.values()))
 		this.gameRunning = true
-		this.plMap.forEach(player => {
-			player.runGame(seed)
-		})
-
-		roomDebug.roomlog(this, "Starting Level Interval")
-		this.levelInterval = setInterval(() => {
-			const now = new Date().toLocaleTimeString();
-			roomDebug.roomlog(this, `[${now}] Changing Level`)
-			this.plMap.forEach(player => {
-				player.changeLevel()
-			})
-		}, LEVEL_INTERVAL);
+		this.gameManager.startGame()
 	}
 
-	handleLoss(player) {
-		this.leaderboard.push(player.toObject())
-
-		// Need a solution, this if statement runs 2 times, for the 2 last players.
-		if (this.leaderboard.length >= this.plMap.size - 1) {
-			this.plMap.forEach(player => {
-				player.stopGame()
-			})
-		}
-
-		if (this.leaderboard.length >= this.plMap.size) {
-			// Need to think if this flag makes sense when you are watching other people games
-			//this.plMap.forEach(player => {
-			//	player.setIngame(false)
-			//})
-			this.gameRunning = false
-			roomDebug.printLeaderboard(this)
-			this.io.to(this.code).emit('endGame', {
-				leaderboard: this.leaderboard
-			})
-			clearInterval(this.levelInterval)
-		}
+	endGame() {
+		this.io.to(this.code).emit('endGame', {
+			leaderboard: this.gameManager.getLeaderboard()
+		})
+		this.gameRunning = false
+		this.gameManager = null
 	}
 
 	leavePlayer(leaverPlayer) {
 		roomDebug.roomlog(this, leaverPlayer.name, "left")
-		this.plMap.forEach(player => {
-			player.getTargetManager().removeTarget(leaverPlayer)
-		})
-		leaverPlayer.stopGame()
+		if (leaverPlayer.getInGame() === true) {
+			this.gameManager.removePlayer(leaverPlayer)
+		}
 		this.plMap.delete(leaverPlayer.id)
 		this.io.to(this.code).emit("boardRemove", {id: leaverPlayer.id})
-		if (leaverPlayer.id == this.owner) {
+		if (leaverPlayer.getId() == this.owner) {
 			this.owner = this.plMap.keys().next().value
 		}
 		roomDebug.printPlMap(this)
@@ -105,5 +60,64 @@ export class Room {
 			roomOwner: this.owner,
 			playerNames: Array.from(this.plMap.values()).map(player => player.name)
 		}
+	}
+}
+
+class GameManager {
+	constructor(room, gamePlayers) {
+		this.room = room
+		this.players = gamePlayers
+		this.leaderboard = []
+		this.levelInterval = null
+		this.seed = randomNbr(73458347)
+	}
+
+	getPlayers() { return (this.players) }
+	getSeed() { return (this.seed) }
+	getLeaderboard() { return (this.leaderboard) }
+	getOtherPlayers(filterPlayer) {
+		return (this.players.filter(player => player !== filterPlayer))
+	}
+
+	startGame() {
+		roomDebug.roomlog(this.room, "Starting Game, seed:", this.seed)
+		this.players.forEach(player => {
+			player.stopGame()
+			player.startGame(this.seed, this, this.room.getCode())
+		})
+
+		this.levelInterval = setInterval(() => {
+			const now = new Date().toLocaleTimeString();
+			roomDebug.roomlog(this.room, `[${now}] Changing Level`)
+			this.players.forEach(player => {
+				player.changeLevel()
+			})
+		}, LEVEL_INTERVAL);
+	}
+	
+	handleLoss(player) {
+		this.leaderboard.push(player.toObject())
+
+		// Need a solution, this if statement runs 2 times, for the 2 last players.
+		if (this.leaderboard.length >= this.players.length - 1) {
+			this.players.forEach(player => {
+				player.stopGame()
+			})
+		}
+
+		if (this.leaderboard.length >= this.players.length) {
+			// Need to think if this flag makes sense when you are watching other people games
+			//this.plMap.forEach(player => {
+			//	player.setIngame(false)
+			//})
+			roomDebug.printLeaderboard(this.room)
+			clearInterval(this.levelInterval)
+			this.room.endGame()
+		}
+	}
+
+	removePlayer(toRemove) {
+		this.players.filter(player => player.id !== toRemove.id)
+		toRemove.stopGame()
 	}
 }
