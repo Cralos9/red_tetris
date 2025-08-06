@@ -22,11 +22,11 @@ export class TargetManager {
 		this.targets = this.targets.filter(target => target !== removeTarget)
 	}
 
-	sendGarbage(linesCleared) {
+	sendGarbage(linesCleared, combo) {
 		linesCleared = this.cancelGarbage(linesCleared)
 		if (linesCleared > 1) {
 			this.targets.forEach(target => {
-				const garbageInfo = {lines: linesCleared - 1, timer: Date.now()}
+				const garbageInfo = {lines: (linesCleared - 1) + combo, timer: Date.now()}
 				target.getTargetManager().garbageStack.push(garbageInfo)
 			})
 		}
@@ -56,8 +56,9 @@ export class TargetManager {
 	update(state, event) {
 		const callback = state.callback
 		const linesCleared = state.linesCleared
+		const combo = state.combo
 
-		this.sendGarbage(linesCleared)
+		this.sendGarbage(linesCleared, combo)
 		if (linesCleared === 0) {
 			this.receiveGarbage(callback)
 		}

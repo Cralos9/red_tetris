@@ -5,26 +5,34 @@ export class ScoreManager extends Observer {
 	constructor() {
 		super()
 		this.score = 0
-		this.combo = 0
 	}
 
-	lineClearScore(linesCleared) {
+	lineClear(state) {
+		const linesCleared = state.linesCleared
+		const combo = state.combo
+		const level = state.level
+
 		if (linesCleared <= 0) {
-			this.combo = 0
 			return
 		}
-		this.score += ScoreTable[linesCleared]
-		this.score += this.combo * ScoreTable["COMBO"]
+		this.score += ScoreTable[linesCleared] * level
+		this.score += combo * ScoreTable["COMBO"] * level
 	}
 
-	dropScore(dropType, pieceRow, dropPieceRow) {
+	dropPiece(dropType, state) {
+		const pieceRow = state.pieceRow
+		const dropPieceRow = state.dropPieceRow
 		this.score += ScoreTable[dropType] * (pieceRow - dropPieceRow)
 	}
 
 	update(state, event) {
 		switch (event) {
+			case "SOFT_DROP":
 			case "HARD_DROP":
-				this.dropScore(event, state.pieceRow, state.dropRow)
+				this.dropPiece(event, state)
+				break
+			case "LINE_CLEAR":
+				this.lineClear(state)
 				break
 		}
 	}
