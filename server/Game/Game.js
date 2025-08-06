@@ -218,9 +218,7 @@ export class Game extends Subject {
 			log("Piece Locked")
 			this.Piece.draw(this.field)
 			this.patternMatch()
-			if (this.hitList.length) {
-				this.lineClear()
-			}
+			this.lineClear()
 			this.notify({
 				callback: this.createGarbageBind,
 				linesCleared: this.linesCleared,

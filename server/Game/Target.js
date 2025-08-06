@@ -24,9 +24,10 @@ export class TargetManager {
 
 	sendGarbage(linesCleared, combo) {
 		linesCleared = this.cancelGarbage(linesCleared)
-		if (linesCleared > 1) {
+		const garbageLines = (linesCleared - 1) + (combo - 1)
+		if (garbageLines > 0) {
 			this.targets.forEach(target => {
-				const garbageInfo = {lines: (linesCleared - 1) + combo, timer: Date.now()}
+				const garbageInfo = {lines: garbageLines, timer: Date.now()}
 				target.getTargetManager().garbageStack.push(garbageInfo)
 			})
 		}

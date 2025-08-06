@@ -21,7 +21,7 @@ export class ScoreManager extends Observer {
 
 	dropPiece(dropType, state) {
 		const pieceRow = state.pieceRow
-		const dropPieceRow = state.dropPieceRow
+		const dropPieceRow = state.dropRow
 		this.score += ScoreTable[dropType] * (pieceRow - dropPieceRow)
 	}
 
