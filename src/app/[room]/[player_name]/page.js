@@ -133,12 +133,12 @@ export default function RoomPage() {
 		socket.on('game', (msg) => {
 			if (!msg.running && msg.playerId === socket.id) 
 			{
-				scoreSave(msg.playerScore.score);
+				scoreSave(msg.playerScore);
 				end_game();
 				return;
 			}
 			const field = msg.field;
-			//console.log("Score:", msg.playerScore)
+			console.log("Score:", msg.playerScore)
 			var cells 
 			if (msg.playerId === socket.id) 
 			{
@@ -252,8 +252,8 @@ export default function RoomPage() {
 		// }
 		// }, 1000);
 		// if (time == 0)
-
 		socket.emit("startGame", {roomCode: roomCode});
+
 	}
 
 	function scoreSave(score)
