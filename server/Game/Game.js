@@ -140,10 +140,13 @@ export class Game extends Subject {
 	}
 
 	createGarbage(garbageLines) {
-		const lineNbr = garbageLines
+		var lineNbr = garbageLines
 		const gap = randomNbr(COLUMNS - 1)
 
-		console.log("Creating Garbage:", garbageLines)
+		if (this.stackHeight - lineNbr < 0) {
+			lineNbr = this.stackHeight // Small fix to the top-out freeze bug
+		}
+		console.log("Creating Garbage:", lineNbr)
 		for (let y = this.stackHeight; y < ROWS; y++) {
 			const nextY = y - lineNbr
 			this.replaceLine(nextY, y)
