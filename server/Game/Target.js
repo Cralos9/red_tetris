@@ -2,44 +2,38 @@ import { GARBAGE_DELAY } from "./gameParams.js"
 import { Stack } from "../Stack.js"
 
 export class TargetManager {
-	constructor() {
-		this.targets = []
+	constructor(garbageCallback, targets) {
+		this.targets = targets
+		this.createGarbage = garbageCallback
 		this.garbageStack = new Stack()
-	}
-
-	reset() {
-		this.garbageQueue = new Stack()
 	}
 
 	getGarbageStack() { return (this.garbageStack) }
 	getTargets() { return (this.targets) }
 
-	addTarget(newTarget) {
-		this.targets.push(newTarget)
-	}
-
-	removeTarget(removeTarget) {
-		this.targets = this.targets.filter(target => target !== removeTarget)
-	}
-
-	sendGarbage(linesCleared) {
+	sendGarbage(linesCleared, combo) {
 		linesCleared = this.cancelGarbage(linesCleared)
-		if (linesCleared > 1) {
+		const garbageLines = (linesCleared - 1) + (combo - 1)
+		if (garbageLines > 0) {
 			this.targets.forEach(target => {
-				const garbageInfo = {lines: linesCleared - 1, timer: Date.now()}
+				const garbageInfo = {lines: garbageLines, timer: Date.now()}
 				target.getTargetManager().garbageStack.push(garbageInfo)
 			})
 		}
 	}
 
-	receiveGarbage(callback) {
-		this.garbageStack.iteration(garbage => {
-			const elapsedTime = Date.now() - garbage.timer
+	receiveGarbage() {
+		const garbageArr = this.garbageStack.getArr()
+		var i = 0
+		while (i < garbageArr.length) {
+			const elapsedTime = Date.now() - garbageArr[i].timer
 			if (elapsedTime >= GARBAGE_DELAY) {
-				callback(garbage.lines)
+				this.createGarbage(garbageArr[i].lines)
 				this.garbageStack.pop()
+				continue
 			}
-		})
+			i++
+		}
 	}
 
 	cancelGarbage(linesCleared) {
@@ -54,19 +48,13 @@ export class TargetManager {
 	}
 
 	update(state, event) {
-		const callback = state.callback
 		const linesCleared = state.linesCleared
+		const combo = state.combo
 
-		this.sendGarbage(linesCleared)
+		this.sendGarbage(linesCleared, combo)
 		if (linesCleared === 0) {
-			this.receiveGarbage(callback)
+			this.receiveGarbage()
 		}
-
-		//switch (event) {
-		//	case "LINE_CLEAR":
-		//		this.sendGarbage(state)
-		//		break
-		//}
 	}
 
 	toObject() {

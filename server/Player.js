@@ -10,9 +10,8 @@ export class Player {
 	constructor(name, keybinds, io, id) {
 		this.gameInterval = null
 		this.game = null
-		this.targetManager = new TargetManager()
+		this.targetManager = null
 		this.score = null
-		this.room = null
 		this.name = name
 		this.id = id
 		this.io = io
@@ -22,11 +21,10 @@ export class Player {
 		this.inGame = false
 	}
 
+	getId() { return (this.id) }
+	getName() { return (this.name) }
+	getInGame() { return (this.inGame) }
 	getTargetManager() { return (this.targetManager) }
-
-	setRoom(room) {
-		this.room = room
-	}
 
 	setIngame(flag) {
 		this.inGame = flag
@@ -36,26 +34,20 @@ export class Player {
 		this.game.changeLevel()
 	}
 
-	reset() {
+	startGame(seed, gameManager, roomCode) {
 		this.keyboard.reset()
-		this.targetManager.reset()
-		this.game = null
-		this.score = null
-	}
-
-	runGame(seed) {
-		playerDebug.printTargets(this)
-		this.inGame = true
-		this.reset()
-		this.score = new ScoreManager()
 		this.game = new Game(new GameController(this.keyboard, this.keybinds), seed)
+		this.targetManager = new TargetManager(this.game.createGarbage.bind(this.game),
+			gameManager.getOtherPlayers(this))
+		this.score = new ScoreManager()
 		this.game.addObserver(this.targetManager)
 		this.game.addObserver(this.score)
-		playerDebug.printGameStatus(this)
+		this.inGame = true
+		playerDebug.printTargets(this)
 		this.gameInterval = setInterval(() => {
 			this.game.update()
 			//console.table(this.game.field)
-			this.io.to(this.room.getCode()).emit('game', {
+			this.io.to(roomCode).emit('game', {
 				field: this.game.field,
 				linesCleared: this.game.linesCleared,
 				holdPiece: this.game.hold ? this.game.hold.toObject() : 0,
@@ -67,8 +59,8 @@ export class Player {
 				running: this.game.running,
 			})
 			if (this.game.running === false) {
-				playerDebug.playerlog(this, "Stopped the Game")
-				this.room.handleLoss(this)
+				playerDebug.playerlog(this, "Lost the Game")
+				gameManager.handleLoss(this)
 				this.inGame = false
 				clearInterval(this.gameInterval)
 			}
@@ -76,7 +68,7 @@ export class Player {
 	}
 
 	stopGame() {
-		if (this.game) {
+		if (this.inGame === true) {
 			this.game.running = false // Temporary Flag (Helps to Test the Game)
 		}
 	}

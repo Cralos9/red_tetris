@@ -31,9 +31,7 @@ export class Game extends Subject {
 
 		this.level = 1
 		this.gravity = 0
-
-		this.garbageQueue = []
-		this.createGarbageBind = this.createGarbage.bind(this)
+		this.combo = 0
 	}
 
 	changeLevel() {
@@ -76,6 +74,11 @@ export class Game extends Subject {
 		const linesNbr = this.hitList.length
 		const start = this.hitList[0]
 		
+		if (this.hitList.length === 0) {
+			this.combo = 0
+			return
+		}
+
 		this.hitList.forEach(line => {
 			this.field[line].fill(0)
 		})
@@ -89,6 +92,7 @@ export class Game extends Subject {
 			this.replaceLine(row, row - offsetLine)
 			row--
 		}
+		this.combo += 1
 		this.stackHeight += linesNbr
 		this.linesCleared = linesNbr
 	}
@@ -112,7 +116,7 @@ export class Game extends Subject {
 
 	hardDrop() {
 		const dropRow = this.Piece.row
-		while (this.Piece.checkCollision(this.field) === 0) {
+		while (this.Piece.checkCollision(this.field) === false) {
 			this.Piece.row++
 		}
 		this.notify({
@@ -121,10 +125,28 @@ export class Game extends Subject {
 		}, "HARD_DROP")
 	}
 
+	softDrop() {
+		const collision = this.Piece.checkCollision(this.field)
+		
+		if (collision === false) {
+			this.Piece.row += 1
+			this.lockDown = false
+			this.lockDelay = 0
+		} else {
+			this.lockDown = true
+		}
+		this.gravity = 0
+		return (collision)
+	}
+
 	createGarbage(garbageLines) {
-		const lineNbr = garbageLines
+		var lineNbr = garbageLines
 		const gap = randomNbr(COLUMNS - 1)
 
+		if (this.stackHeight - lineNbr < 0) {
+			lineNbr = this.stackHeight // Small fix to the top-out freeze bug
+		}
+		console.log("Creating Garbage:", lineNbr)
 		for (let y = this.stackHeight; y < ROWS; y++) {
 			const nextY = y - lineNbr
 			this.replaceLine(nextY, y)
@@ -148,7 +170,6 @@ export class Game extends Subject {
 	}
 
 	update() {
-		log("Current Piece Row:", this.Piece.row)
 		const actions = this.ctrl.keyStates()
 
 		this.linesCleared = 0
@@ -175,16 +196,15 @@ export class Game extends Subject {
 			this.hardDrop()
 			this.lockPiece = true
 		}
-
-		if (this.lockDown === true || actions.softDrop || this.gravity >= LevelTable[this.level]) {
-			if (this.Piece.checkCollision(this.field) === 0) {
-				this.Piece.row += 1
-				this.lockDown = false
-				this.lockDelay = 0
-			} else {
-				this.lockDown = true
+		if (actions.softDrop) {
+			if (this.softDrop() === false) {
+				this.notify({
+					pieceRow: this.Piece.row,
+					dropRow: this.Piece.row - 1
+				}, "SOFT_DROP")
 			}
-			this.gravity = 0
+		} else if (this.lockDown === true || this.gravity >= LevelTable[this.level]) {
+			this.softDrop()
 		}
 
 		if (this.lockDown === true) {
@@ -195,16 +215,14 @@ export class Game extends Subject {
 		}
 
 		if (this.lockPiece === true) {
-			log("Piece Locked")
 			this.Piece.draw(this.field)
 			this.patternMatch()
-			if (this.hitList.length) {
-				this.lineClear()
-			}
-			this.notify({ callback: this.createGarbageBind, linesCleared: this.linesCleared }, "LINE_CLEAR")
-			if (this.garbageQueue.length) {
-				this.createGarbage()
-			}
+			this.lineClear()
+			this.notify({
+				linesCleared: this.linesCleared,
+				combo: this.combo,
+				level: this.level,
+			}, "LINE_CLEAR")
 			this.resetPiece()
 			this.Piece = this.Bag.getNextPiece()
 		}

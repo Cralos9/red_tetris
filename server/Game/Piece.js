@@ -28,10 +28,10 @@ export class Piece {
 			const x = this.column + arr[0]
 			log("Checking:", y, x)
 			if (y === ROWS || y > -1 && field[y][x] > 0) {
-				return (1)
+				return (true)
 			}
 		}
-		return (0)
+		return (false)
 	}
 
 	drawPiece(field, color) {
@@ -46,7 +46,7 @@ export class Piece {
 
 	undraw(field) {
 		const y = this.row
-		while (this.checkCollision(field) === 0) {
+		while (this.checkCollision(field) === false) {
 			this.row++
 		}
 		this.drawPiece(field, 0)
@@ -56,7 +56,7 @@ export class Piece {
 
 	draw(field) {
 		const y = this.row
-		while (this.checkCollision(field) === 0) {
+		while (this.checkCollision(field) === false) {
 			this.row++
 		}
 		this.drawPiece(field, Colors.GHOST)

@@ -42,7 +42,7 @@ class RoomDebug {
 	}
 
 	printLeaderboard(room) {
-		const leaderboard = room.getLeaderboard().toReversed()
+		const leaderboard = room.getGameManager().getLeaderboard().toReversed()
 		this.roomlog(room, "Printing Leaderboard:")
 		for (let place = 0; place < leaderboard.length; place++) {
 			console.log(place + 1, "-", leaderboard[place].playerName)
@@ -63,16 +63,12 @@ class PlayerDebug {
 	printTargets(player) {
 		const targets = player.getTargetManager().getTargets()
 		this.playerlog(player, "Printing Targets:")
-		targets.forEach(target => {
-			console.log("-", target.toString())
-		})
+		if (targets !== null) {
+			targets.forEach(target => {
+				console.log("-", target.toString())
+			})
+		}
 		this.playerlog(player, "Finish Targets:")
-	}
-
-	printGameStatus(player) {
-		this.playerlog(player, "Board:")
-		console.table(player.game.field)
-		this.playerlog(player, "GarbageStack:", player.getTargetManager().getGarbageStack().getArr())
 	}
 }
 
