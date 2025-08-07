@@ -53,6 +53,7 @@ export class Player {
 				holdPiece: this.game.hold ? this.game.hold.toObject() : 0,
 				nextPiece: this.game.Bag.nextPiecesArr(),
 				level: this.game.level,
+				combo: this.game.combo,
 				targetManager: this.targetManager.toObject(),
 				playerId: this.id,
 				playerScore: this.score.toObject(),
