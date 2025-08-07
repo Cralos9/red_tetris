@@ -83,7 +83,7 @@ function add_secondary_cells(div,  amount)
 				else if(Date.now() - garbage[i].timer >= 2000)
 					cell.style.backgroundColor = 'yellow';
 				else
-				cell.style.backgroundColor = 'grey';
+					cell.style.backgroundColor = 'grey';
 				div.appendChild(cell);
 			}
 		}
