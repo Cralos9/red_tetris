@@ -71,11 +71,11 @@ function add_secondary_cells(div,  amount)
 		let glines = 0;
 		for(let i = 0; i < garbage.length; i++)
 		{
+			glines += garbage[i].lines;
+			if (glines > 20)
+				return;
 			for(let j = 0; j < garbage[i].lines; j++)
 			{
-				glines += garbage[i].lines;
-				if (glines >= 20)
-					return;
 				const cell = document.createElement('div');
 				cell.className = 'cell';
 				if(Date.now() - garbage[i].timer >= 4000)
