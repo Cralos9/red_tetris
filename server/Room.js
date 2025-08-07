@@ -117,7 +117,7 @@ class GameManager {
 	}
 
 	removePlayer(toRemove) {
-		this.players.filter(player => player.id !== toRemove.id)
 		toRemove.stopGame()
+		// Is it worth to remove the player from the array of players
 	}
 }
