@@ -1,4 +1,4 @@
-import { Actions } from "./gameParams.js"
+import { ACTIONS } from "../../common.js"
 
 export class GameController {
 	constructor(keyboard, keybinds) {
@@ -70,23 +70,22 @@ export class GameController {
 		}
 		const moveAction = this.pieceDir[this.pieceDir.length - 1]
 		var move = this.getMove(moveAction)
-		if (moveAction === Actions.MOVE_LEFT) {
+		if (moveAction === ACTIONS.MOVE_LEFT) {
 			move *= -1
-		} else if (moveAction === Actions.MOVE_RIGHT) {
+		} else if (moveAction === ACTIONS.MOVE_RIGHT) {
 			move *= 1
 		}
 		return (move)
 	}
 
 	keyStates() {
+		const hardDrop = this.consumeKey(ACTIONS.HARD_DROP)
+		const hold = this.consumeKey(ACTIONS.HOLD)
+		const softDrop = this.keyboard.isPressed(this.actions[ACTIONS.SOFT_DROP]) ? 1 : 0
+		const rotateRight = this.consumeKey(ACTIONS.ROTATE_RIGHT)
+		const rotateLeft = this.consumeKey(ACTIONS.ROTATE_LEFT)
 
-		const hardDrop = this.consumeKey(Actions.HARD_DROP)
-		const hold = this.consumeKey(Actions.HOLD)
-		const softDrop = this.keyboard.isPressed(this.actions[Actions.SOFT_DROP]) ? 1 : 0
-		const rotateRight = this.consumeKey(Actions.ROTATE_RIGHT)
-		const rotateLeft = this.consumeKey(Actions.ROTATE_LEFT)
-
-		const move = this.getDir([Actions.MOVE_LEFT, Actions.MOVE_RIGHT])
+		const move = this.getDir([ACTIONS.MOVE_LEFT, ACTIONS.MOVE_RIGHT])
 		const rot = this.axis(rotateLeft, rotateRight)
 
 		this.keyboard.update()

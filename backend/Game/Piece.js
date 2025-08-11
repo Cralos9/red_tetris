@@ -1,5 +1,6 @@
 import { log } from "../debug.js"
-import { COLUMNS, ROWS, Colors } from "./gameParams.js"
+import { COLUMNS, ROWS } from "./gameParams.js"
+import { COLORS } from "../../common.js"
 import { getRotations, getSkirt, compare, getKicks } from "./utils.js"
 
 export class Piece {
@@ -60,7 +61,7 @@ export class Piece {
 		while (this.checkCollision(field) === false) {
 			this.row++
 		}
-		this.drawPiece(field, Colors.GHOST)
+		this.drawPiece(field, COLORS.GHOST)
 		this.row = y
 		this.drawPiece(field, this.color)
 	}

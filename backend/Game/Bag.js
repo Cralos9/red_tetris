@@ -10,10 +10,10 @@ import {
 	JLTSZoffsets,
 	Ioffsets,
 	Ooffsets,
-	Colors	
 } from "./gameParams.js"
 import { PRNG } from "../PRNG.js"
 import { Stack } from "../Stack.js"
+import { COLORS } from "../../common.js"
 
 export class Bag {
 	constructor(seed) {
