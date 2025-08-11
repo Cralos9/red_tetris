@@ -155,18 +155,25 @@ export default function RoomPage() {
 				gameDraw.nextPieceDraw(nextPiece);
 				gameDraw.heldPieceDraw(heldPiece);
 				const lineClear = document.createElement('div');
+				const combo = document.createElement('div');
 				if (msg.linesCleared > 0) 
 				{
-					console.log(msg.linesCleared)
 					const existing = document.querySelector('.lineClear');
 					if (existing) existing.remove();
-				
+					
+					const existing2 = document.querySelector('.combo');
+					if (existing2) existing2.remove();
+
 					lineClear.className = 'lineClear';
 					lineClear.textContent = gameDraw.get_lines(msg.linesCleared)
 					const sound = gameDraw.get_audio(msg.linesCleared)
 					void lineClear.offsetWidth;
+					combo.className = 'combo';
+					combo.textContent = "Combo x" + msg.combo;
 					document.body.appendChild(lineClear);
+					document.body.appendChild(combo);
 					setTimeout(() => {
+						combo.remove();
 						lineClear.remove();
 					}, 1000);
 					sound.play();

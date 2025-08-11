@@ -144,6 +144,21 @@ input[type="range"] {
 	animation: tilt-shaking 1s;
 }
 
+.combo {
+	left: 360px;
+	bottom: 140px;
+	font-family: 'Press Start 2P';
+	font-weight: bold;
+	font-size: 45px;
+	z-index: 6;
+	position: absolute;
+	text-align: center;
+	color: #ffb006;
+	text-shadow: 5px 5px #4b4b4bc9;
+	opacity: 1;
+	animation: tilt-shaking 1s;
+}
+
 @keyframes tilt-shaking {
 	0% { transform: rotate(0deg); }
 	25% { transform: rotate(5deg); }
