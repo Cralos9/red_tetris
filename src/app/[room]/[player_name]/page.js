@@ -246,6 +246,7 @@ export default function RoomPage() {
 		console.log(gameOver);
 		setIsDisabled(true);
 	  
+		// ************ Countdown Code ******************
 		// var countdown = document.createElement('div');
 		// countdown.className = 'countdown';
 		// document.body.appendChild(countdown)
@@ -261,6 +262,7 @@ export default function RoomPage() {
 		// }
 		// }, 1000);
 		// if (time == 0)
+		// ***********************************************
 		socket.emit("startGame", {roomCode: roomCode});
 
 	}
