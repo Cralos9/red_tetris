@@ -168,8 +168,11 @@ export default function RoomPage() {
 					lineClear.textContent = gameDraw.get_lines(msg.linesCleared)
 					const sound = gameDraw.get_audio(msg.linesCleared)
 					void lineClear.offsetWidth;
-					combo.className = 'combo';
-					combo.textContent = "Combo x" + msg.combo;
+					if(msg.combo != 1)
+					{
+						combo.className = 'combo';
+						combo.textContent = "Combo x" + msg.combo;
+					}
 					document.body.appendChild(lineClear);
 					document.body.appendChild(combo);
 					setTimeout(() => {
