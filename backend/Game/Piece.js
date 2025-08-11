@@ -1,5 +1,5 @@
 import { log } from "../debug.js"
-import { COLUMNS, ROWS } from "./gameParams.js"
+import { COLUMNS, ROWS, MAX_SHIFTS } from "./gameParams.js"
 import { COLORS } from "../../common.js"
 import { getRotations, getSkirt, compare, getKicks } from "./utils.js"
 
@@ -17,6 +17,35 @@ export class Piece {
 		this.row = 1
 		this.column = 5
 		this.color = color
+		this.collision = false
+		this.lockDelay = 0
+		this.lock = false
+		this.shifts = 0
+	}
+
+	getRow() { return (this.row) }
+	getCollision() { return (this.collision) }
+	getLock() { return (this.lock) }
+
+	hardDrop(field) {
+		while (this.checkCollision(field) === false) {
+			this.row++
+		}
+		this.lock = true
+	}
+
+	softDrop(field) {
+		this.collision = this.checkCollision(field)
+		
+		if (this.collision === false) {
+			this.row++
+			this.lockDelay = 0
+		} else {
+			if (this.lockDelay >= 30) {
+				this.lock = true
+			}
+			this.lockDelay += 1
+		}
 	}
 
 	checkCollision(field) {
@@ -42,7 +71,6 @@ export class Piece {
 			const arr = pattern[y]
 			field[this.row + arr[1]][this.column + arr[0]] = color
 		}
-	
 	}
 
 	undraw(field) {
@@ -72,10 +100,21 @@ export class Piece {
 			const x = this.column + pattern[i][0] + move
 			const y = this.row + pattern[i][1]
 			if (x >= COLUMNS || x < 0 || field[y][x] > 0) {
-				return false
+				return (false)
 			}
 		}
 		return (true)
+	}
+
+	shiftReset() {
+		if (this.collision === false) {
+			return
+		}
+		if (this.shifts >= MAX_SHIFTS) {
+			this.lock = true
+		}
+		this.lockDelay = 0
+		this.shifts++
 	}
 
 	move(field, x) {
@@ -83,6 +122,7 @@ export class Piece {
 			return
 		}
 		this.column += x
+		this.shiftReset()
 		log("Moved Piece to column:", this.column)
 	}
 
@@ -98,22 +138,20 @@ export class Piece {
 		}
 		return (true)
 	}
-
 	rotate(field, r) {
 		let rot = this.index + r + 4
 		rot = rot % 4
 		const kicks = getKicks(this.offsets[this.index], this.offsets[rot])
 		const pattern = this.patterns[rot]
-		if (r === 1 || r === -1) {
-			for (let i = 0; i < kicks.length; i++) {
-				log("Kick:", kicks[i])
-				if (this.checkRotation(field, kicks[i], pattern)) {
-					this.row += kicks[i][1]
-					this.column += kicks[i][0]
-					this.index = rot
-					log("Rotated Piece:", this.index)
-					break
-				}
+		for (let i = 0; i < kicks.length; i++) {
+			log("Kick:", kicks[i])
+			if (this.checkRotation(field, kicks[i], pattern)) {
+				this.row += kicks[i][1]
+				this.column += kicks[i][0]
+				this.index = rot
+				this.shiftReset()
+				log("Rotated Piece:", this.index)
+				break
 			}
 		}
 	}
@@ -130,6 +168,10 @@ export class Piece {
 		this.row = 1
 		this.column = 5
 		this.index = 0
+		this.lockDelay = 0
+		this.lock = false
+		this.collision = false
+		this.shifts = 0
 	}
 
 	toString() {

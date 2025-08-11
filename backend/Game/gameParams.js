@@ -9,6 +9,8 @@ export const GARBAGE_DELAY = 5000
 export const ROWS = 20
 export const COLUMNS = 10
 
+export const MAX_SHIFTS = 15
+
 export const GAME_EVENTS = {
 	LINE_CLEAR: "LINE_CLEAR",
 	HARD_DROP: "HARD_DROP",
