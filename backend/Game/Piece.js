@@ -13,7 +13,6 @@ export class Piece {
 			this.skirts.push(getSkirt(tmp))
 			this.patterns.push(tmp)
 		}
-		console.log(this.patterns)
 		this.index = 0
 		this.row = 1
 		this.column = 5
