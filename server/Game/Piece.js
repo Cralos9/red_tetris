@@ -4,14 +4,15 @@ import { getRotations, getSkirt, compare, getKicks } from "./utils.js"
 
 export class Piece {
 	constructor(pieceCoor, pieceOffsets, color) {
-		this.patterns = pieceCoor
+		this.patterns = [pieceCoor]
 		this.offsets = pieceOffsets
-		this.skirts = [getSkirt(pieceCoor[0])]
+		this.skirts = [getSkirt(pieceCoor)]
 		for (let i = 0; i < 3; i++) {
 			const tmp = getRotations(this.patterns[i]).sort(compare)
 			this.skirts.push(getSkirt(tmp))
 			this.patterns.push(tmp)
 		}
+		console.log(this.patterns)
 		this.index = 0
 		this.row = 1
 		this.column = 5
