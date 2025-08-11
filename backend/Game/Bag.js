@@ -19,13 +19,13 @@ export class Bag {
 	constructor(seed) {
 		this.PRNG = new PRNG(seed)
 		this.pieces = {
-			"I": new Piece(Icoor, Ioffsets, Colors.BLUE),
-			"T": new Piece(Tcoor, JLTSZoffsets, Colors.PURPLE),
-			"J": new Piece(Jcoor, JLTSZoffsets, Colors.DARK_BLUE),
-			"L": new Piece(Lcoor, JLTSZoffsets, Colors.ORANGE),
-			"O": new Piece(Ocoor, Ooffsets, Colors.YELLOW),
-			"S": new Piece(Scoor, JLTSZoffsets, Colors.GREEN),
-			"Z": new Piece(Zcoor, JLTSZoffsets, Colors.RED),
+			"I": new Piece(Icoor, Ioffsets, COLORS.BLUE),
+			"T": new Piece(Tcoor, JLTSZoffsets, COLORS.PURPLE),
+			"J": new Piece(Jcoor, JLTSZoffsets, COLORS.DARK_BLUE),
+			"L": new Piece(Lcoor, JLTSZoffsets, COLORS.ORANGE),
+			"O": new Piece(Ocoor, Ooffsets, COLORS.YELLOW),
+			"S": new Piece(Scoor, JLTSZoffsets, COLORS.GREEN),
+			"Z": new Piece(Zcoor, JLTSZoffsets, COLORS.RED),
 		}
 		this.stack = new Stack()
 		this.order = ["I", "T", "J", "L", "O", "S", "Z"]
