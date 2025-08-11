@@ -41,6 +41,12 @@ export const ScoreTable = {
 	"HARD_DROP": 2
 }
 
+export const GAME_EVENTS = {
+	LINE_CLEAR: "LINE_CLEAR",
+	HARD_DROP: "HARD_DROP",
+	SOFT_DROP: "SOFT_DROP",
+}
+
 export const LevelTable = {
 	1: 60,
 	2: 50,

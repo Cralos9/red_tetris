@@ -5,6 +5,7 @@ import { ScoreManager } from "./Game/Score.js"
 import { GameController } from "./Game/GameController.js"
 import { DELTA_TIME } from "./Game/gameParams.js"
 import { playerDebug } from "./debug.js"
+import { EventDispatcher } from "./EventDispatcher.js"
 
 export class Player {
 	constructor(name, keybinds, io, id) {
@@ -12,6 +13,7 @@ export class Player {
 		this.game = null
 		this.targetManager = null
 		this.score = null
+		this.eventManager = null
 		this.name = name
 		this.id = id
 		this.io = io
@@ -36,12 +38,12 @@ export class Player {
 
 	startGame(seed, gameManager, roomCode) {
 		this.keyboard.reset()
-		this.game = new Game(new GameController(this.keyboard, this.keybinds), seed)
+		this.eventManager = new EventDispatcher()
+		this.game = new Game(new GameController(this.keyboard, this.keybinds),
+			this.eventManager, seed)
 		this.targetManager = new TargetManager(this.game.createGarbage.bind(this.game),
-			gameManager.getOtherPlayers(this))
-		this.score = new ScoreManager()
-		this.game.addObserver(this.targetManager)
-		this.game.addObserver(this.score)
+			this.eventManager, gameManager.getOtherPlayers(this))
+		this.score = new ScoreManager(this.eventManager)
 		this.inGame = true
 		playerDebug.printTargets(this)
 		this.gameInterval = setInterval(() => {

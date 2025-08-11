@@ -1,17 +1,22 @@
-import { GARBAGE_DELAY } from "./gameParams.js"
+import { GARBAGE_DELAY, GAME_EVENTS } from "./gameParams.js"
 import { Stack } from "../Stack.js"
 
 export class TargetManager {
-	constructor(garbageCallback, targets) {
+	constructor(garbageCallback, eventManager, targets) {
 		this.targets = targets
 		this.createGarbage = garbageCallback
 		this.garbageStack = new Stack()
+		eventManager.subscribe(GAME_EVENTS.LINE_CLEAR, this.receiveGarbage.bind(this))
+		eventManager.subscribe(GAME_EVENTS.LINE_CLEAR, this.sendGarbage.bind(this))
 	}
 
 	getGarbageStack() { return (this.garbageStack) }
 	getTargets() { return (this.targets) }
 
-	sendGarbage(linesCleared, combo) {
+	sendGarbage(state) {
+		var linesCleared = state.linesCleared
+		const combo = state.combo
+
 		linesCleared = this.cancelGarbage(linesCleared)
 		const garbageLines = (linesCleared - 1) + (combo - 1)
 		if (garbageLines > 0) {
@@ -22,7 +27,13 @@ export class TargetManager {
 		}
 	}
 
-	receiveGarbage() {
+	receiveGarbage(state) {
+		const linesCleared = state.linesCleared
+
+		if (linesCleared > 0) {
+			return
+		}
+
 		const garbageArr = this.garbageStack.getArr()
 		var i = 0
 		while (i < garbageArr.length) {
@@ -45,16 +56,6 @@ export class TargetManager {
 			this.garbageStack.top().lines -= linesCleared
 		}
 		return (linesCleared)
-	}
-
-	update(state, event) {
-		const linesCleared = state.linesCleared
-		const combo = state.combo
-
-		this.sendGarbage(linesCleared, combo)
-		if (linesCleared === 0) {
-			this.receiveGarbage()
-		}
 	}
 
 	toObject() {

@@ -1,13 +1,11 @@
 import { log } from "../debug.js"
 import { Bag } from "./Bag.js"
-import { ROWS, COLUMNS } from "./gameParams.js"
+import { ROWS, COLUMNS, GAME_EVENTS } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
-import { Subject } from "../Observer/Subject.js"
 import { LevelTable } from "./gameParams.js"
 
-export class Game extends Subject {
-	constructor(ctrl, seed) {
-		super()
+export class Game {
+	constructor(ctrl, eventManager, seed) {
 		this.Bag = new Bag(seed)
 		this.field = Array(ROWS)
 		this.ctrl = ctrl
@@ -32,6 +30,7 @@ export class Game extends Subject {
 		this.level = 1
 		this.gravity = 0
 		this.combo = 0
+		this.eventManager = eventManager
 	}
 
 	changeLevel() {
@@ -119,10 +118,11 @@ export class Game extends Subject {
 		while (this.Piece.checkCollision(this.field) === false) {
 			this.Piece.row++
 		}
-		this.notify({
+		this.eventManager.notify({
+			dropType: "HARD_DROP",
 			dropRow: dropRow,
 			pieceRow: this.Piece.row
-		}, "HARD_DROP")
+		}, GAME_EVENTS.HARD_DROP)
 	}
 
 	softDrop() {
@@ -198,10 +198,11 @@ export class Game extends Subject {
 		}
 		if (actions.softDrop) {
 			if (this.softDrop() === false) {
-				this.notify({
+				this.eventManager.notify({
+					dropType: "SOFT_DROP",
 					pieceRow: this.Piece.row,
 					dropRow: this.Piece.row - 1
-				}, "SOFT_DROP")
+				}, GAME_EVENTS.SOFT_DROP)
 			}
 		} else if (this.lockDown === true || this.gravity >= LevelTable[this.level]) {
 			this.softDrop()
@@ -218,11 +219,11 @@ export class Game extends Subject {
 			this.Piece.draw(this.field)
 			this.patternMatch()
 			this.lineClear()
-			this.notify({
+			this.eventManager.notify({
 				linesCleared: this.linesCleared,
 				combo: this.combo,
 				level: this.level,
-			}, "LINE_CLEAR")
+			}, GAME_EVENTS.LINE_CLEAR)
 			this.resetPiece()
 			this.Piece = this.Bag.getNextPiece()
 		}
