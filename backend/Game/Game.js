@@ -119,7 +119,7 @@ export class Game {
 			this.Piece.row++
 		}
 		this.eventManager.notify({
-			dropType: "HARD_DROP",
+			dropType: GAME_EVENTS.HARD_DROP,
 			dropRow: dropRow,
 			pieceRow: this.Piece.row
 		}, GAME_EVENTS.HARD_DROP)
@@ -199,7 +199,7 @@ export class Game {
 		if (actions.softDrop) {
 			if (this.softDrop() === false) {
 				this.eventManager.notify({
-					dropType: "SOFT_DROP",
+					dropType: GAME_EVENTS.SOFT_DROP,
 					pieceRow: this.Piece.row,
 					dropRow: this.Piece.row - 1
 				}, GAME_EVENTS.SOFT_DROP)
