@@ -21,9 +21,6 @@ export class Game {
 		this.stackHeight = ROWS
 		this.hold = null
 		this.holdLock = false
-		this.lockDown = false
-		this.lockDelay = 0
-		this.lockPiece = false
 		this.linesCleared = 0
 		this.frames = 0
 
@@ -113,32 +110,6 @@ export class Game {
 		log("Current Piece:", this.Piece.toString())
 	}
 
-	hardDrop() {
-		const dropRow = this.Piece.row
-		while (this.Piece.checkCollision(this.field) === false) {
-			this.Piece.row++
-		}
-		this.eventManager.notify({
-			dropType: GAME_EVENTS.HARD_DROP,
-			dropRow: dropRow,
-			pieceRow: this.Piece.row
-		}, GAME_EVENTS.HARD_DROP)
-	}
-
-	softDrop() {
-		const collision = this.Piece.checkCollision(this.field)
-		
-		if (collision === false) {
-			this.Piece.row += 1
-			this.lockDown = false
-			this.lockDelay = 0
-		} else {
-			this.lockDown = true
-		}
-		this.gravity = 0
-		return (collision)
-	}
-
 	createGarbage(garbageLines) {
 		var lineNbr = garbageLines
 		const gap = randomNbr(COLUMNS - 1)
@@ -162,9 +133,6 @@ export class Game {
 
 	resetPiece() {
 		this.holdLock = false
-		this.lockPiece = false
-		this.lockDown = false
-		this.lockDelay = 0
 		this.gravity = 0
 		this.Piece.reset()
 	}
@@ -190,32 +158,31 @@ export class Game {
 		}
 		if (actions.rot) {
 			this.Piece.rotate(this.field, actions.rot)
-			this.lockDelay = 0
 		}
 		if (actions.hardDrop === true) {
-			this.hardDrop()
-			this.lockPiece = true
+			const dropRow = this.Piece.getRow()
+			this.Piece.hardDrop(this.field)
+			this.eventManager.notify({
+				dropType: GAME_EVENTS.HARD_DROP,
+				dropRow: dropRow,
+				pieceRow: this.Piece.getRow()
+			}, GAME_EVENTS.HARD_DROP)
 		}
 		if (actions.softDrop) {
-			if (this.softDrop() === false) {
-				this.eventManager.notify({
-					dropType: GAME_EVENTS.SOFT_DROP,
-					pieceRow: this.Piece.row,
-					dropRow: this.Piece.row - 1
-				}, GAME_EVENTS.SOFT_DROP)
-			}
-		} else if (this.lockDown === true || this.gravity >= LevelTable[this.level]) {
-			this.softDrop()
+			const dropRow = this.Piece.getRow()
+			this.Piece.softDrop(this.field)
+			this.eventManager.notify({
+				dropType: GAME_EVENTS.SOFT_DROP,
+				pieceRow: this.Piece.getRow(),
+				dropRow: dropRow
+			}, GAME_EVENTS.SOFT_DROP)
+			this.gravity = 0
+		} else if (this.Piece.getCollision() === true || this.gravity >= LevelTable[this.level]) {
+			this.Piece.softDrop(this.field)
+			this.gravity = 0
 		}
 
-		if (this.lockDown === true) {
-			if (this.lockDelay === 30) {
-				this.lockPiece = true
-			}
-			this.lockDelay += 1
-		}
-
-		if (this.lockPiece === true) {
+		if (this.Piece.getLock() === true) {
 			this.Piece.draw(this.field)
 			this.patternMatch()
 			this.lineClear()
