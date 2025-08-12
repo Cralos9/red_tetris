@@ -1,5 +1,5 @@
 import { log } from "../debug.js"
-import { COLUMNS, ROWS, MAX_SHIFTS } from "./gameParams.js"
+import { COLUMNS, ROWS, MAX_SHIFTS, GAME_EVENTS } from "./gameParams.js"
 import { COLORS } from "../../common.js"
 import { getRotations, getSkirt, compare, getKicks } from "./utils.js"
 
@@ -20,12 +20,17 @@ export class Piece {
 		this.collision = false
 		this.lockDelay = 0
 		this.lock = false
+		this.lastShift = ""
+		this.spin = false
 		this.shifts = 0
 	}
 
+	getSpin() { return (this.spin) }
+	getColumn() { return (this.column) }
 	getRow() { return (this.row) }
 	getCollision() { return (this.collision) }
 	getLock() { return (this.lock) }
+	getLastShift() { return (this.lastShift) }
 
 	hardDrop(field) {
 		while (this.checkCollision(field) === false) {
@@ -122,11 +127,12 @@ export class Piece {
 			return
 		}
 		this.column += x
+		this.lastShift = GAME_EVENTS.MOVE
 		this.shiftReset()
 		log("Moved Piece to column:", this.column)
 	}
 
-	checkRotation(field, kick, pattern) {
+	checkKicks(field, kick, pattern) {
 		for (let k = 0; k < pattern.length; k++) {
 			const x = this.column + pattern[k][0] + kick[0]
 			const y = this.row + pattern[k][1] + kick[1]
@@ -138,6 +144,7 @@ export class Piece {
 		}
 		return (true)
 	}
+
 	rotate(field, r) {
 		let rot = this.index + r + 4
 		rot = rot % 4
@@ -145,10 +152,11 @@ export class Piece {
 		const pattern = this.patterns[rot]
 		for (let i = 0; i < kicks.length; i++) {
 			log("Kick:", kicks[i])
-			if (this.checkRotation(field, kicks[i], pattern)) {
+			if (this.checkKicks(field, kicks[i], pattern)) {
 				this.row += kicks[i][1]
 				this.column += kicks[i][0]
 				this.index = rot
+				this.lastShift = GAME_EVENTS.ROTATION
 				this.shiftReset()
 				log("Rotated Piece:", this.index)
 				break
@@ -172,6 +180,7 @@ export class Piece {
 		this.lock = false
 		this.collision = false
 		this.shifts = 0
+		this.spin = false
 	}
 
 	toString() {
@@ -180,6 +189,7 @@ export class Piece {
 
 	toObject() {
 		return {
+			spin: this.spin,
 			pattern: this.patterns[0],
 			color: this.color
 		}

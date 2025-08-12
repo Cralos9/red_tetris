@@ -15,14 +15,18 @@ export const GAME_EVENTS = {
 	LINE_CLEAR: "LINE_CLEAR",
 	HARD_DROP: "HARD_DROP",
 	SOFT_DROP: "SOFT_DROP",
+	MOVE: "MOVE",
+	ROTATION: "ROTATION"
 }
 
 export const ScoreTable = {
+	0: 0,
 	1: 100,
 	2: 300,
 	3: 500,
 	4: 800,
 	"COMBO": 50,
+	"SPIN": 2,
 	[GAME_EVENTS.SOFT_DROP]: 1,
 	[GAME_EVENTS.HARD_DROP]: 2
 }
