@@ -14,8 +14,12 @@ export class ScoreManager {
 		const level = state.level
 		const pieceSpin = state.spin
 
+		if (linesCleared === 0) {
+			return
+		}
+
 		var lineClearScore = ScoreTable[linesCleared] * level
-		const comboScore = combo * ScoreTable["COMBO"] * level
+		const comboScore = (combo - 1) * ScoreTable["COMBO"] * level
 		var score = lineClearScore + comboScore
 
 		if (pieceSpin === true) {
