@@ -1,3 +1,4 @@
+import {COLORS} from "../../../../common.js";
 
 const gifs = [
 	"/images/blue_virus2.gif",
@@ -110,16 +111,17 @@ function add_secondary_cells(div,  amount)
 function getColor(value)
 {
 	const colors = {
-	"-1": '#ffffffCC',
-	0: 'transparent',
-	1: '#00faff', 
-	2: '#c030ff',
-	3: '#3399ff',
-	4: '#ff9933',
-	5: '#ffff33',
-	6: '#33ff33',
-	7: '#ff3333'  
+		[COLORS.GHOST]: 'rgb(255, 255, 255, 0.8)',
+		[COLORS.EMPTY]: 'transparent',
+		[COLORS.BLUE]: 'rgb(0, 250, 255)',
+		[COLORS.PURPLE]: 'rgb(192, 48, 255)',
+		[COLORS.DARK_BLUE]: 'rgb(51, 153, 255)',
+		[COLORS.ORANGE]: 'rgb(255, 153, 51)',
+		[COLORS.YELLOW]: 'rgb(255, 255, 51)',
+		[COLORS.GREEN]: 'rgb(51, 255, 51)',
+		[COLORS.RED]: 'rgb(255, 51, 51)'
 	};
+	
 	
 	return colors[value];
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "srv-devDB": "DEBUG=true nodemon --inspect backend",
     "srv-dev": "DEBUG=false nodemon backend",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+   "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",

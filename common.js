@@ -10,6 +10,7 @@ export const ACTIONS = {
 
 export const COLORS = {
 	GHOST: -1,
+	EMPTY: 0,
 	BLUE: 1,
 	PURPLE: 2,
 	DARK_BLUE: 3,
