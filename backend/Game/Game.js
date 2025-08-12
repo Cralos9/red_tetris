@@ -37,6 +37,21 @@ export class Game {
 		}
 	}
 
+	patternSpin() {
+		if (this.Piece.getLastShift() !== GAME_EVENTS.ROTATION) {
+			return
+		}
+		const kicks = [[1,0],[-1,0],[0,-1]]
+		const pattern = this.Piece.getCurrPattern()
+		for (let i = 0; i < kicks.length; i++) {
+			if (this.Piece.checkKicks(this.field, kicks[i], pattern) === true) {
+				return (false)
+			}
+		}
+		console.log("Piece Spin")
+		return (true)
+	}
+
 	patternMatch() {
 		this.hitList = []
 		for (let y = ROWS - 1; y >= 0; y--) {
@@ -183,11 +198,13 @@ export class Game {
 		}
 
 		if (this.Piece.getLock() === true) {
+			const spin = this.patternSpin()
 			this.Piece.draw(this.field)
 			this.patternMatch()
 			this.lineClear()
 			this.eventManager.notify({
 				linesCleared: this.linesCleared,
+				pieceSpin: spin,
 				combo: this.combo,
 				level: this.level,
 			}, GAME_EVENTS.LINE_CLEAR)

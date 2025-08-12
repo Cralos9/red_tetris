@@ -12,12 +12,16 @@ export class ScoreManager {
 		const linesCleared = state.linesCleared
 		const combo = state.combo
 		const level = state.level
+		const pieceSpin = state.spin
 
-		if (linesCleared <= 0) {
-			return
+		var lineClearScore = ScoreTable[linesCleared] * level
+		const comboScore = combo * ScoreTable["COMBO"] * level
+		var score = lineClearScore + comboScore
+
+		if (pieceSpin === true) {
+			score *= ScoreTable["SPIN"]
 		}
-		this.score += ScoreTable[linesCleared] * level
-		this.score += combo * ScoreTable["COMBO"] * level
+		this.score += score
 	}
 
 	dropPiece(state) {
