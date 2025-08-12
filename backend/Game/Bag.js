@@ -1,5 +1,5 @@
 import { Piece } from "./Piece.js"
-import {
+import { 
 	Icoor,
 	Tcoor,
 	Jcoor,
@@ -7,13 +7,15 @@ import {
 	Ocoor,
 	Scoor,
 	Zcoor,
+	COLORS
+} from "../../common.js"
+import {
 	JLTSZoffsets,
 	Ioffsets,
 	Ooffsets,
 } from "./gameParams.js"
 import { PRNG } from "../PRNG.js"
 import { Stack } from "../Stack.js"
-import { COLORS } from "../../common.js"
 
 export class Bag {
 	constructor(seed) {
