@@ -136,6 +136,40 @@ describe('add_cells', () => {
 	
 });
 
+
+describe("NextPieceDraw", () =>
+{
+	beforeEach(() => {
+		document.body.innerHTML = `
+		<div class="next-piece">
+		  ${'<div class="cell"></div>'.repeat(60)}
+		</div>
+	  `;	  
+	});
+
+	test("draw Next Piece",()=>
+	{
+		const nextPiece = [
+			{color: COLORS.RED, pattern: [[0, 0],[1, 0],[0, 1],[1, 1],]},
+			{color: COLORS.RED, pattern: [[0, 0],[1, 0],[0, 1],[1, 1],]},
+			{color: COLORS.RED, pattern: [[0, 0],[1, 0],[0, 1],[1, 1],]},
+		];
+		gameDraw.nextPieceDraw(nextPiece);
+
+		const cells = document.querySelectorAll(".cell");
+		expect(cells[14].style.backgroundColor).toBe(gameDraw.getColor(COLORS.RED));
+		expect(cells[15].style.backgroundColor).toBe(gameDraw.getColor(COLORS.RED));
+		expect(cells[20].style.backgroundColor).toBe(gameDraw.getColor(COLORS.RED));
+		expect(cells[21].style.backgroundColor).toBe(gameDraw.getColor(COLORS.RED));
+
+		expect(cells[32].style.backgroundColor).toBe(gameDraw.getColor(COLORS.RED));
+		expect(cells[33].style.backgroundColor).toBe(gameDraw.getColor(COLORS.RED));
+		expect(cells[38].style.backgroundColor).toBe(gameDraw.getColor(COLORS.RED));
+		expect(cells[39].style.backgroundColor).toBe(gameDraw.getColor(COLORS.RED));
+
+	});
+})
+
 describe("heldPieceDraw", () => {
 	beforeEach(() => {
 		document.body.innerHTML = `
@@ -147,7 +181,7 @@ describe("heldPieceDraw", () => {
 
 	test("draws the held piece correctly", () => {
 		const heldPiece = {
-			color: 7,
+			color: COLORS.RED,
 			pattern: [
 				[0, 0],
 				[1, 0],
