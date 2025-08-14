@@ -4,15 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "srv-devDB": "DEBUG=true nodemon --inspect backend",
-    "srv-dev": "DEBUG=false nodemon backend",
-   "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "srv-dev": "DEBUG='Room:* Player:*' nodemon backend",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "colors": "^1.4.0",
+    "debug": "^4.4.1",
     "express": "^5.1.0",
     "glob": "^11.0.2",
     "i": "^0.3.7",
@@ -24,7 +25,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "socket.io": "^4.8.1",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "supports-color": "^10.1.0"
   },
   "jest": {
     "testEnvironment": "jsdom",

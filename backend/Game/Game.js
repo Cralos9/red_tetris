@@ -1,8 +1,8 @@
-import { log } from "../debug.js"
 import { Bag } from "./Bag.js"
 import { ROWS, COLUMNS, GAME_EVENTS } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
 import { LevelTable } from "./gameParams.js"
+import Debug from "debug"
 
 export class Game {
 	constructor(ctrl, eventManager, seed) {
@@ -28,6 +28,8 @@ export class Game {
 		this.gravity = 0
 		this.combo = 0
 		this.eventManager = eventManager
+
+		this.log = Debug("Game")
 	}
 
 	changeLevel() {
@@ -48,7 +50,6 @@ export class Game {
 				return (false)
 			}
 		}
-		console.log("Piece Spin")
 		return (true)
 	}
 
@@ -66,8 +67,8 @@ export class Game {
 				this.hitList.push(y)
 			}
 		}
-		log("Stack:", this.stackHeight)
-		log("Marked Lines:", this.hitList)
+		this.log("Stack:", this.stackHeight)
+		this.log("Marked Lines:", this.hitList)
 	}
 
 	replaceLine(row, replaceLineRow) {
@@ -75,7 +76,7 @@ export class Game {
 			this.field[row].fill(0)
 			return
 		}
-		log("Replacing", row, "with", replaceLineRow)
+		this.log("Replacing", row, "with", replaceLineRow)
 		for (let column = 0; column < COLUMNS; column++) {
 			this.field[row][column] = this.field[replaceLineRow][column]
 		}
@@ -109,20 +110,20 @@ export class Game {
 	}
 
 	holdPiece() {
-		log("Holding Piece:", this.Piece.toString())
+		this.log("Holding Piece:", this.Piece.toString())
 		this.resetPiece()
 		if (this.hold === null) {
-			log("Empty Hold")
+			this.log("Empty Hold")
 			this.hold = this.Piece
 			this.Piece = this.Bag.getNextPiece()
 		} else {
-			log("Hold with:", this.Piece.toString())
+			this.log("Hold with:", this.Piece.toString())
 			const tmp = this.Piece
 			this.Piece = this.hold
 			this.hold = tmp
 		}
-		log("Holded Piece:", this.hold.toString())
-		log("Current Piece:", this.Piece.toString())
+		this.log("Holded Piece:", this.hold.toString())
+		this.log("Current Piece:", this.Piece.toString())
 	}
 
 	createGarbage(garbageLines) {
@@ -132,7 +133,6 @@ export class Game {
 		if (this.stackHeight - lineNbr < 0) {
 			lineNbr = this.stackHeight // Small fix to the top-out freeze bug
 		}
-		console.log("Creating Garbage:", lineNbr)
 		for (let y = this.stackHeight; y < ROWS; y++) {
 			const nextY = y - lineNbr
 			this.replaceLine(nextY, y)
@@ -158,7 +158,7 @@ export class Game {
 		this.linesCleared = 0
 		
 		if (this.stackHeight <= 0) {
-			console.log("GameOver")
+			this.log("Game Over")
 			this.running = false
 		}
 
