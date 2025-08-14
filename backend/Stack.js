@@ -1,5 +1,6 @@
 export class Stack {
 	constructor() {
+		// This is a FIFO stack
 		this.arr = []
 	}
 
@@ -22,7 +23,5 @@ export class Stack {
 
 	getArr() { return (this.arr) }
 
-	printStack() {
-		console.log("Stack:", this.arr)
-	}
+	printStack() { console.log("Stack:", this.arr) }
 }
