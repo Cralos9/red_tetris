@@ -4,9 +4,9 @@ import { TargetManager } from "./Game/Target.js"
 import { ScoreManager } from "./Game/Score.js"
 import { GameController } from "./Game/GameController.js"
 import { DELTA_TIME } from "./Game/gameParams.js"
-import { playerDebug } from "./debug.js"
 import { EventDispatcher } from "./EventDispatcher.js"
-import Colors from 'colors'
+import Debug from "debug"
+import { printArr } from "./debug.js"
 
 export class Player {
 	constructor(name, keybinds, io, id) {
@@ -22,6 +22,7 @@ export class Player {
 		this.keybinds = keybinds
 		this.keyboard = new Keyboard()
 		this.inGame = false
+		this.log = Debug(`Player:${this.name}`)
 	}
 
 	getId() { return (this.id) }
@@ -45,8 +46,8 @@ export class Player {
 		this.targetManager = new TargetManager(this.game.createGarbage.bind(this.game),
 			this.eventManager, gameManager.getOtherPlayers(this))
 		this.score = new ScoreManager(this.eventManager)
+		this.log("Targets:", printArr(this.targetManager.getTargets()))
 		this.inGame = true
-		playerDebug.printTargets(this)
 		this.gameInterval = setInterval(() => {
 			this.game.update()
 			//console.table(this.game.field)
@@ -63,7 +64,7 @@ export class Player {
 				running: this.game.running,
 			})
 			if (this.game.running === false) {
-				playerDebug.playerlog(this, "Lost the Game")
+				this.log("Lost Game")
 				gameManager.handleLoss(this)
 				this.inGame = false
 				clearInterval(this.gameInterval)

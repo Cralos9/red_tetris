@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "srv-dev": "DEBUG='Room:*' nodemon backend",
+    "srv-dev": "DEBUG='Room:* Player:*' nodemon backend",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "dev": "next dev --turbopack",
     "build": "next build",

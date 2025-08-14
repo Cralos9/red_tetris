@@ -1,7 +1,6 @@
 import { LEVEL_INTERVAL } from "./Game/gameParams.js";
 import { randomNbr } from "./Game/utils.js";
 import Debug from "debug"
-import Colors from "colors"
 import { printArr } from "./debug.js";
 
 export class Room {
