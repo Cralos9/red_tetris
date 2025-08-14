@@ -80,6 +80,9 @@ export class Keyboard {
 	}
 
 	set(key, press) {
+		if (this.keys[key] === undefined) {
+			return
+		}
 		this.keys[key].setPress(press)
 	}
 

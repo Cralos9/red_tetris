@@ -156,10 +156,12 @@ export class Game {
 		const actions = this.ctrl.keyStates()
 
 		this.linesCleared = 0
-		
-		if (this.stackHeight <= 0) {
+
+		// 1 to stop the game in the row below the pieces spawn
+		if (this.stackHeight <= 1) {
 			this.log("Game Over")
 			this.running = false
+			return
 		}
 
 		this.Piece.undraw(this.field)
