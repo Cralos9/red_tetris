@@ -8,12 +8,13 @@ export class EventDispatcher {
 
 		if (arr === undefined) {
 			this.observers.set(event, [callback])
-			return
+			return (1)
 		} else if (arr.find(cb => cb === callback)) {
 			console.log("Error: Duplicate callback")
-			return
+			return (0)
 		}
 		arr.push(callback)
+		return (1)
 	}
 
 	notify(state, event) {
@@ -21,8 +22,9 @@ export class EventDispatcher {
 
 		if (arr === undefined) {
 			console.log("No Callbacks for", event)
-			return
+			return (0)
 		}
 		arr.forEach(callback => { callback(state) })
+		return (1)
 	}
 }
