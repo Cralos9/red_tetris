@@ -6,7 +6,7 @@ export const LEVEL_INTERVAL = 30000
 // Need to make this delay dynamic during the match
 export const GARBAGE_DELAY = 5000
 
-export const ROWS = 20
+export const ROWS = 21
 export const COLUMNS = 10
 
 export const MAX_SHIFTS = 15
