@@ -23,32 +23,14 @@ function append(args) {
 	return (string)
 }
 
-class RoomDebug {
-	constructor() {}
+export function printArr(arr) {
+	var str = "[ "
 
-	roomlog(room, ...args) {
-		const roomString = RED + "Room " + room.getCode() + ": " + RESET
-		const out = append(args)
-		console.log(roomString + out)
-	}
-
-	printPlMap(room) {
-		const plMap = room.getPlMap()
-		this.roomlog(room, "Printing PlayerMap:")
-		plMap.forEach(player => {
-			console.log("- Player", player.toString())
-		})
-		this.roomlog(room, "Finish PlayerMap")
-	}
-
-	printLeaderboard(room) {
-		const leaderboard = room.getGameManager().getLeaderboard().toReversed()
-		this.roomlog(room, "Printing Leaderboard:")
-		for (let place = 0; place < leaderboard.length; place++) {
-			console.log(place + 1, "-", leaderboard[place].playerName)
-		}
-		this.roomlog(room, "Finish Leaderboard")
-	}
+	arr.forEach((ele) =>{
+		str += ele.toString() + " "
+	})
+	str += "]"
+	return (str)
 }
 
 class PlayerDebug {
@@ -73,4 +55,3 @@ class PlayerDebug {
 }
 
 export const playerDebug = new PlayerDebug()
-export const roomDebug = new RoomDebug()

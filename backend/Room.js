@@ -1,6 +1,8 @@
 import { LEVEL_INTERVAL } from "./Game/gameParams.js";
-import { roomDebug } from "./debug.js";
 import { randomNbr } from "./Game/utils.js";
+import Debug from "debug"
+import Colors from "colors"
+import { printArr } from "./debug.js";
 
 export class Room {
 	constructor(roomCode, io) { 
@@ -9,7 +11,8 @@ export class Room {
 		this.plMap = new Map()
 		this.owner = null;
 		this.gameRunning = false
-		roomDebug.roomlog(this, "Created")
+		this.log = Debug(`Room:${this.code}`)
+		this.log("Created")
 	}
 
 	setOwner(newOwner) { this.owner = newOwner }
@@ -19,11 +22,11 @@ export class Room {
 	getPlayer(playerId) { return (this.plMap.get(playerId)) }
 	getPlMap() { return (this.plMap) }
 	getGameManager() { return (this.gameManager) }
+	getLog() { return (this.log) }
 
 	addPlayer(newPlayer) {
-		roomDebug.roomlog(this, "Player", newPlayer.name, "joined")
+		this.log("Player %s joined", newPlayer.toString())
 		this.plMap.set(newPlayer.id, newPlayer)
-		roomDebug.printPlMap(this)
 	}
 
 	startGame() {
@@ -31,6 +34,7 @@ export class Room {
 		this.gameManager = new GameManager(this, Array.from(this.plMap.values()))
 		this.gameRunning = true
 		this.gameManager.startGame()
+		this.log("Started Game")
 	}
 
 	endGame() {
@@ -39,10 +43,11 @@ export class Room {
 		})
 		this.gameRunning = false
 		this.gameManager = null
+		this.log("Game End")
 	}
 
 	leavePlayer(leaverPlayer) {
-		roomDebug.roomlog(this, leaverPlayer.name, "left")
+		this.log("Player %s leaved", leaverPlayer.toString())
 		if (leaverPlayer.getInGame() === true) {
 			this.gameManager.removePlayer(leaverPlayer)
 		}
@@ -50,8 +55,8 @@ export class Room {
 		this.io.to(this.code).emit("boardRemove", {id: leaverPlayer.id})
 		if (leaverPlayer.getId() == this.owner) {
 			this.owner = this.plMap.keys().next().value
+			this.log("%s is the new Owner", this.owner.green)
 		}
-		roomDebug.printPlMap(this)
 	}
 
 	toObject() {
@@ -70,6 +75,7 @@ class GameManager {
 		this.leaderboard = []
 		this.levelInterval = null
 		this.seed = randomNbr(73458347)
+		this.log = this.room.getLog().extend("GameManager")
 	}
 
 	getPlayers() { return (this.players) }
@@ -80,7 +86,8 @@ class GameManager {
 	}
 
 	startGame() {
-		roomDebug.roomlog(this.room, "Starting Game, seed:", this.seed)
+		this.log("Players:", printArr(this.players))
+		this.log("Seed: %d", this.seed)
 		this.players.forEach(player => {
 			player.stopGame()
 			player.startGame(this.seed, this, this.room.getCode())
@@ -88,7 +95,7 @@ class GameManager {
 
 		this.levelInterval = setInterval(() => {
 			const now = new Date().toLocaleTimeString();
-			roomDebug.roomlog(this.room, `[${now}] Changing Level`)
+			this.log(`[${now}] Changing Level`)
 			this.players.forEach(player => {
 				player.changeLevel()
 			})
@@ -110,7 +117,6 @@ class GameManager {
 			//this.plMap.forEach(player => {
 			//	player.setIngame(false)
 			//})
-			roomDebug.printLeaderboard(this.room)
 			clearInterval(this.levelInterval)
 			this.room.endGame()
 		}

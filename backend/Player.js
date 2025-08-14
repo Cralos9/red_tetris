@@ -6,6 +6,7 @@ import { GameController } from "./Game/GameController.js"
 import { DELTA_TIME } from "./Game/gameParams.js"
 import { playerDebug } from "./debug.js"
 import { EventDispatcher } from "./EventDispatcher.js"
+import Colors from 'colors'
 
 export class Player {
 	constructor(name, keybinds, io, id) {
@@ -77,7 +78,7 @@ export class Player {
 	}
 
 	toString() {
-		return `${this.name}`
+		return `${this.name}`.green
 	}
 
 	toObject() {
