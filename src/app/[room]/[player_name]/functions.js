@@ -6,35 +6,50 @@ const gifs = [
 	"/images/red_virus2.gif"
 ];
 
-function game(cells, field)
+function game(cells, field, topRow)
 {
-	for (let y = 0; y < 20; y++) 
+	for (let y = 0; y < 21; y++) 
+	{
+		for (let x = 0; x < 10; x++) 
 		{
-			for (let x = 0; x < 10; x++) 
+			const index = y * 10 + x;
+			const value = field[y][x];
+			const cell = cells[index];
+			console.log(y);
+			if(y === 0 && value !== 8)
 			{
-			  const index = y * 10 + x;
-			  const value = field[y][x];
-			  const cell = cells[index];
-		  
-				if (value !== 8)
+				const top_cell = topRow[index];
+				top_cell.style.backgroundColor = gameDraw.getColor(value);
+				top_cell.style.backgroundImage = 'none';
+				top_cell.removeAttribute('data-virus');
+				if(value == 0)
 				{
-					cell.style.backgroundImage = 'none';
-					cell.style.backgroundColor = gameDraw.getColor(value);
-					cell.removeAttribute('data-virus');
-				} 
-				else 
-				{
-					if (!cell.hasAttribute('data-virus')) 
-					{
-						const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
-						cell.setAttribute('data-virus', randomGif);
-					}
-					const virusGif = cell.getAttribute('data-virus');
-					cell.style.backgroundImage = `url('${virusGif}')`;
-					cell.style.backgroundSize = "cover";
+					top_cell.style.boxShadow = "none";
+					top_cell.style.border = "none";
+					continue;
 				}
+				top_cell.style.boxShadow = "inset 4px 4px 0 rgba(19, 15, 15, 0.34), inset -4px -4px 0 #44444459";
+				top_cell.style.border = "2px solid #000000"
+			}
+			else if (value !== 8)
+			{
+				cell.style.backgroundImage = 'none';
+				cell.style.backgroundColor = gameDraw.getColor(value);
+				cell.removeAttribute('data-virus');
+			} 
+			else 
+			{
+				if (!cell.hasAttribute('data-virus')) 
+				{
+					const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
+					cell.setAttribute('data-virus', randomGif);
+				}
+				const virusGif = cell.getAttribute('data-virus');
+				cell.style.backgroundImage = `url('${virusGif}')`;
+				cell.style.backgroundSize = "cover";
 			}
 		}
+	}
 }
 
 function get_lines(linesCleared)
@@ -96,14 +111,19 @@ function add_secondary_cells(div,  amount)
 		const div = document.querySelector(string);
 		
 		Array.from(div.childNodes).forEach(child => {
-			if (!(child.tagName === 'SPAN')) {
+			if (!(child.tagName === 'SPAN') && !(child.className === 'top-row')) {
 			div.removeChild(child);
 			}
 		});
 		for (let i = 0; i < amount; i++) 
 		{
 			const cell = document.createElement('div');
-				cell.className = 'cell';
+			cell.className = 'cell';
+			if(amount == 10)
+			{
+				cell.style.border = "none";
+				cell.style.boxShadow = "none";
+			}
 			div.appendChild(cell);
 		}
 	}

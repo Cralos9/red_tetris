@@ -189,7 +189,9 @@ export default function RoomPage() {
 					return
 				cells = otherBoard.querySelectorAll('.cell');
 			}
-			gameDraw.game(cells, field)
+			const topRow = document.querySelectorAll('.top-row .cell'); 
+
+			gameDraw.game(cells, field, topRow)
 		});
 
 		async function handleBeforeUnload() {
@@ -218,6 +220,7 @@ export default function RoomPage() {
 		
 		// const game22 = document.querySelector('.secondary-games');
 		// game22.innerHTML = '';
+		gameDraw.add_cells('.top-row', 10)
 		gameDraw.add_cells('.game-bottle', 200)
 		gameDraw.add_cells('.next-piece', 60)
 		gameDraw.add_cells('.held-piece', 30)
@@ -342,7 +345,9 @@ export default function RoomPage() {
 							<span className="held-label">Held Piece</span>
 							</div>
 							<div className='garbage-bar'></div>
-							<div className="game-bottle"></div>
+							<div className="game-bottle">
+								<div className='top-row'></div>
+							</div>
 							<div className="next-piece">
 							<span className="held-label">Next Pieces</span>
 							</div>
