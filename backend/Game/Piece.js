@@ -1,7 +1,7 @@
-import { log } from "../debug.js"
 import { COLUMNS, ROWS, MAX_SHIFTS, GAME_EVENTS } from "./gameParams.js"
 import { COLORS } from "../../common.js"
 import { getRotations, getSkirt, compare, getKicks } from "./utils.js"
+import Debug from "debug"
 
 export class Piece {
 	constructor(pieceCoor, pieceOffsets, color) {
@@ -23,6 +23,7 @@ export class Piece {
 		this.lastShift = ""
 		this.spin = false
 		this.shifts = 0
+		this.log = Debug("Piece")
 	}
 
 	getSpin() { return (this.spin) }
@@ -56,12 +57,12 @@ export class Piece {
 	checkCollision(field) {
 		const skirt = this.getCurrSkirt()
 
-		log("Skirt:", skirt)
+		this.log("Skirt:", skirt)
 		for (let i = 0; i < skirt.length; i++) {
 			const arr = skirt[i]
 			const y = this.row + (arr[1] + 1)
 			const x = this.column + arr[0]
-			log("Checking:", y, x)
+			this.log("Checking:", y, x)
 			if (y === ROWS || y > -1 && field[y][x] > 0) {
 				return (true)
 			}
@@ -129,16 +130,16 @@ export class Piece {
 		this.column += x
 		this.lastShift = GAME_EVENTS.MOVE
 		this.shiftReset()
-		log("Moved Piece to column:", this.column)
+		this.log("Moved Piece to column:", this.column)
 	}
 
 	checkKicks(field, kick, pattern) {
 		for (let k = 0; k < pattern.length; k++) {
 			const x = this.column + pattern[k][0] + kick[0]
 			const y = this.row + pattern[k][1] + kick[1]
-			log("WallKicks: (", y, ", ", x, ")")
+			this.log("WallKicks: (", y, ", ", x, ")")
 			if (x >= COLUMNS || x < 0 || y >= ROWS || y < 0 || field[y][x] > 0) {
-				log("Cant do this rotation")
+				this.log("Cant do this rotation")
 				return (false)
 			}
 		}
@@ -151,14 +152,14 @@ export class Piece {
 		const kicks = getKicks(this.offsets[this.index], this.offsets[rot])
 		const pattern = this.patterns[rot]
 		for (let i = 0; i < kicks.length; i++) {
-			log("Kick:", kicks[i])
+			this.log("Kick:", kicks[i])
 			if (this.checkKicks(field, kicks[i], pattern)) {
 				this.row += kicks[i][1]
 				this.column += kicks[i][0]
 				this.index = rot
 				this.lastShift = GAME_EVENTS.ROTATION
 				this.shiftReset()
-				log("Rotated Piece:", this.index)
+				this.log("Rotated Piece:", this.index)
 				break
 			}
 		}
