@@ -54,6 +54,7 @@ export class TargetManager {
 		}
 		if (this.garbageStack.size() > 0 && linesCleared > 0) {
 			this.garbageStack.top().lines -= linesCleared
+			linesCleared = 0
 		}
 		return (linesCleared)
 	}
