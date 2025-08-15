@@ -1,6 +1,8 @@
 import { Room } from "./Room.js"
 import { Player } from "./Player.js"
-import { log } from "./debug.js"
+import Debug from "debug"
+
+const log = Debug("Handlers")
 
 // Map socket.id to Players
 export const playerHandlers = (io, socket, RoomsMap) => {
@@ -16,8 +18,6 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		const roomCode = payload.roomCode
 		const options = payload.options
 
-		log("Player:", playerName)
-		log("Joined Room:", roomCode)
 		if (!RoomsMap.has(roomCode)) {
 			RoomsMap.set(roomCode, new Room(roomCode, io))
 		}
@@ -46,7 +46,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 			RoomsMap.delete(room.getCode())
 		}
 		socket.emit("Owner", {owner: room.getOwner()})
-		console.log("Disconnected:", reason)
+		log("Disconnected:", reason)
 	}
 
 	const heartbeatInterval = setInterval(() => {
@@ -56,7 +56,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		const toRemove = []
 		for (const [sockId, player] of room.plMap.entries()) {
 			if (!player.isAlive) {
-				console.log("Player Remover")
+				log("Player Remover")
 				toRemove.push(sockId)
 			} else {
 				player.isAlive = false
@@ -121,7 +121,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const room = RoomsMap.get(roomCode)
 		if (room.owner != socket.id)
 		{
-			console.log("Not owner");
+			log("Not owner");
 			return;
 		}
 		room.startGame()
