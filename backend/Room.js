@@ -54,7 +54,7 @@ export class Room {
 		this.io.to(this.code).emit("boardRemove", {id: leaverPlayer.id})
 		if (leaverPlayer.getId() == this.owner) {
 			this.owner = this.plMap.keys().next().value
-			this.log("%s is the new Owner", this.owner.green)
+			this.log("%s is the new Owner", this.owner)
 		}
 	}
 
