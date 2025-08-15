@@ -8,6 +8,8 @@ export class ScoreManager {
 		eventManager.subscribe(GAME_EVENTS.SOFT_DROP, this.dropPiece.bind(this))
 	}
 
+	getScore() { return (this.score) }
+
 	lineClear(state) {
 		const linesCleared = state.linesCleared
 		const combo = state.combo
