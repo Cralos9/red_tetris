@@ -1,4 +1,4 @@
-import { Stack } from "./Stack.js"
+import Stack from "./Stack.js"
 import { expect, jest } from "@jest/globals"
 
 describe('Stack Tests', () => {

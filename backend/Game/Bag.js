@@ -14,8 +14,8 @@ import {
 	Ioffsets,
 	Ooffsets,
 } from "./gameParams.js"
-import { PRNG } from "../PRNG.js"
-import { Stack } from "../Stack.js"
+import PRNG from "../Utils/PRNG.js"
+import Stack from "../Utils/Stack.js"
 
 export class Bag {
 	constructor(seed) {

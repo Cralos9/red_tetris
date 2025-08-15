@@ -1,4 +1,4 @@
-export class Stack {
+export default class Stack {
 	constructor() {
 		// This is a FIFO stack
 		this.arr = []

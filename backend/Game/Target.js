@@ -1,5 +1,5 @@
 import { GARBAGE_DELAY, GAME_EVENTS } from "./gameParams.js"
-import { Stack } from "../Stack.js"
+import Stack from "../Utils/Stack.js"
 
 export class TargetManager {
 	constructor(garbageCallback, eventManager, targets) {

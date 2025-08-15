@@ -1,4 +1,4 @@
-import { EventDispatcher } from "./EventDispatcher.js";
+import EventDispatcher from "./EventDispatcher.js";
 import { expect, jest } from "@jest/globals"
 
 const event = "TEST"

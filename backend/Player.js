@@ -4,9 +4,9 @@ import { TargetManager } from "./Game/Target.js"
 import { ScoreManager } from "./Game/Score.js"
 import { GameController } from "./Game/GameController.js"
 import { DELTA_TIME } from "./Game/gameParams.js"
-import { EventDispatcher } from "./EventDispatcher.js"
-import Debug from "debug"
 import { printArr } from "./debug.js"
+import Debug from "debug"
+import EventDispatcher from "./Utils/EventDispatcher.js"
 
 export class Player {
 	constructor(name, keybinds, io, id) {

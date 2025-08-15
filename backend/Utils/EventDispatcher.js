@@ -1,4 +1,4 @@
-export class EventDispatcher {
+export default class EventDispatcher {
 	constructor() {
 		this.observers = new Map()
 	}
