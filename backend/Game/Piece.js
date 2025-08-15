@@ -23,6 +23,7 @@ export class Piece {
 		this.lastShift = ""
 		this.spin = false
 		this.shifts = 0
+		this.shiftFlag = false
 		this.log = Debug("Piece")
 	}
 
@@ -47,9 +48,10 @@ export class Piece {
 			this.row++
 			this.lockDelay = 0
 		} else {
-			if (this.lockDelay >= 30) {
+			if (this.lockDelay >= 30 || this.shifts >= MAX_SHIFTS) {
 				this.lock = true
 			}
+			this.shiftFlag = true
 			this.lockDelay += 1
 		}
 	}
@@ -57,7 +59,6 @@ export class Piece {
 	checkCollision(field) {
 		const skirt = this.getCurrSkirt()
 
-		this.log("Skirt:", skirt)
 		for (let i = 0; i < skirt.length; i++) {
 			const arr = skirt[i]
 			const y = this.row + (arr[1] + 1)
@@ -112,12 +113,10 @@ export class Piece {
 		return (true)
 	}
 
-	shiftReset() {
-		if (this.collision === false) {
+	updateShift(shiftType) {
+		this.lastShift = shiftType
+		if (this.shiftFlag === false) {
 			return
-		}
-		if (this.shifts >= MAX_SHIFTS) {
-			this.lock = true
 		}
 		this.lockDelay = 0
 		this.shifts++
@@ -128,8 +127,7 @@ export class Piece {
 			return
 		}
 		this.column += x
-		this.lastShift = GAME_EVENTS.MOVE
-		this.shiftReset()
+		this.updateShift(GAME_EVENTS.MOVE)
 		this.log("Moved Piece to column:", this.column)
 	}
 
@@ -139,7 +137,6 @@ export class Piece {
 			const y = this.row + pattern[k][1] + kick[1]
 			this.log("WallKicks: (", y, ", ", x, ")")
 			if (x >= COLUMNS || x < 0 || y >= ROWS || y < 0 || field[y][x] > 0) {
-				this.log("Cant do this rotation")
 				return (false)
 			}
 		}
@@ -152,13 +149,11 @@ export class Piece {
 		const kicks = getKicks(this.offsets[this.index], this.offsets[rot])
 		const pattern = this.patterns[rot]
 		for (let i = 0; i < kicks.length; i++) {
-			this.log("Kick:", kicks[i])
 			if (this.checkKicks(field, kicks[i], pattern)) {
 				this.row += kicks[i][1]
 				this.column += kicks[i][0]
 				this.index = rot
-				this.lastShift = GAME_EVENTS.ROTATION
-				this.shiftReset()
+				this.updateShift(GAME_EVENTS.ROTATION)
 				this.log("Rotated Piece:", this.index)
 				break
 			}
@@ -181,6 +176,7 @@ export class Piece {
 		this.lock = false
 		this.collision = false
 		this.shifts = 0
+		this.shiftFlag = false
 		this.spin = false
 	}
 
