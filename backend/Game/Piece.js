@@ -26,12 +26,14 @@ export default class Piece {
 		this.log = Debug("Piece")
 	}
 
+	getIndex() { return (this.index) }
 	getSpin() { return (this.spin) }
 	getColumn() { return (this.column) }
 	getRow() { return (this.row) }
 	getCollision() { return (this.collision) }
 	getLock() { return (this.lock) }
 	getLastShift() { return (this.lastShift) }
+	getLockDelay() { return (this.lockDelay) }
 
 	hardDrop(field) {
 		while (this.checkCollision(field) === false) {
@@ -125,12 +127,13 @@ export default class Piece {
 
 	move(field, x) {
 		if (this.checkMove(field, x) === false) {
-			return
+			return (0)
 		}
 		this.column += x
 		this.lastShift = GAME_EVENTS.MOVE
 		this.shiftReset()
 		this.log("Moved Piece to column:", this.column)
+		return (1)
 	}
 
 	checkKicks(field, kick, pattern) {
@@ -160,9 +163,10 @@ export default class Piece {
 				this.lastShift = GAME_EVENTS.ROTATION
 				this.shiftReset()
 				this.log("Rotated Piece:", this.index)
-				break
+				return (1)
 			}
 		}
+		return (0)
 	}
 
 	getCurrSkirt() {

@@ -32,6 +32,8 @@ export default class Game {
 		this.log = Debug("Game")
 	}
 
+	getField() { return (this.field) }
+
 	changeLevel() {
 		this.level += 1
 		if (this.level > 10) {
