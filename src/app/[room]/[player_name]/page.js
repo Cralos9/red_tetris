@@ -138,9 +138,11 @@ export default function RoomPage() {
 				return;
 			}
 			const field = msg.field;
-			var cells 
+			var cells
+			var own = 0;
 			if (msg.playerId === socket.id) 
 			{
+				own = 1;
 				var j = 0;
 				var gLines = 0;
 				var score = document.getElementById('Score')
@@ -190,8 +192,7 @@ export default function RoomPage() {
 				cells = otherBoard.querySelectorAll('.cell');
 			}
 			const topRow = document.querySelectorAll('.top-row .cell'); 
-
-			gameDraw.game(cells, field, topRow)
+			gameDraw.game(cells, field, topRow, own)
 		});
 
 		async function handleBeforeUnload() {

@@ -6,16 +6,16 @@ const gifs = [
 	"/images/red_virus2.gif"
 ];
 
-function game(cells, field, topRow)
+function game(cells, field, topRow, own)
 {
-	for (let y = 0; y < 21; y++) 
+	for (let y = 0; y < field.length; y++) 
 	{
-		for (let x = 0; x < 10; x++) 
+		if (!own && y === 0) y++;
+		for (let x = 0; x < field[y].length; x++) 
 		{
-			const index = y * 10 + x;
+			let index = own ? y * 10 + x : (y - 1) * 10 + x;
 			const value = field[y][x];
 			const cell = cells[index];
-			console.log(y);
 			if(y === 0 && value !== 8)
 			{
 				const top_cell = topRow[index];
@@ -33,9 +33,9 @@ function game(cells, field, topRow)
 			}
 			else if (value !== 8)
 			{
-				cell.style.backgroundImage = 'none';
-				cell.style.backgroundColor = gameDraw.getColor(value);
 				cell.removeAttribute('data-virus');
+				cell.style.backgroundColor = gameDraw.getColor(value);
+				cell.style.backgroundImage = 'none';
 			} 
 			else 
 			{
