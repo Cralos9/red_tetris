@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import { socket } from "../../../socket";
 import  gameDraw  from "./functions";
 import {ACTIONS} from "../../../../common.js";
+import { useRouter } from 'next/navigation';
 
 export default function RoomPage() {
+	const router = useRouter()
 	const params = useParams();
 	const roomCode = params.room;
 	const [gameOver, setGameOver] = useState(false);
@@ -195,20 +197,20 @@ export default function RoomPage() {
 			gameDraw.game(cells, field, topRow, own)
 		});
 
-		async function handleBeforeUnload() {
-			if (socket && socket.connected) {
-				await new Promise((resolve) => {
-					socket.emit('disconnection', { roomCode: roomCode }, resolve);
-				});
-				if (otherBoards && otherBoards.length) {
-					for (let i = 0; i < otherBoards.length; i++) {
-						const otherBoard = document.getElementById(otherBoards[i]);
-						if (otherBoard) otherBoard.remove();
-					}
-				}
-				socket.disconnect();
-			}
-		}
+		// async function handleBeforeUnload() {
+		// 	if (socket && socket.connected) {
+		// 		await new Promise((resolve) => {
+		// 			socket.emit('disconnection', { roomCode: roomCode }, resolve);
+		// 		});
+		// 		if (otherBoards && otherBoards.length) {
+		// 			for (let i = 0; i < otherBoards.length; i++) {
+		// 				const otherBoard = document.getElementById(otherBoards[i]);
+		// 				if (otherBoard) otherBoard.remove();
+		// 			}
+		// 		}
+		// 		socket.disconnect();
+		// 	}
+		// }
 		
 		// window.addEventListener('beforeunload', handleBeforeUnload);
 
@@ -307,9 +309,18 @@ export default function RoomPage() {
 		}
 	}
 	
+	function homeButton()
+	{
+		router.push("/game");
+		socket.emit('disconnection', { roomCode: roomCode });
+		socket.disconnect()
+	}
 
 	return (
 		<div>
+			<div className="logButton-cont">
+						<button onClick={homeButton} className="logButton">Home</button>
+				</div>
 				{gameOver && <div className='game-Over'>
 					Game Over
 
