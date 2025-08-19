@@ -1,32 +1,20 @@
 class Input {
 	constructor() {
 		this.pressed = false
-		this.tap = false
-		this.heldTimer = 0
+		this.heldTime = 0
 	}
 
-	setPress(value) {
+	setPress(value, timer) {
 		this.pressed = value
-	}
-
-	update() {
-		if (this.pressed) {
-			this.heldTimer += 1
-			this.tap = this.heldTimer <= 1
-		} else {
-			this.heldTimer = 0
-			this.tap = false
-		}
+		this.heldTime = timer
 	}
 
 	reset() {
 		this.pressed = false
-		this.tap = false
-		this.heldTimer = 0
+		this.heldTime = 0
 	}
 
-	getHeldTime() { return (this.heldTimer) }
-	getTap() { return (this.tap) }
+	getHeldTime() { return (this.heldTime) }
 	getPress() { return (this.pressed) }
 }
 
@@ -73,17 +61,25 @@ export default class Keyboard {
 		}
 	}
 
-	update() {
-		for (const key in this.keys) { 
-			this.keys[key].update()
-		}
-	}
+	setPress(keyName, timer) {
+		const key = this.keys[keyName]
 
-	set(key, press) {
-		if (this.keys[key] === undefined) {
+		if (key === undefined) {
+			return (0)
+		} else if (key.getPress() === true) {
 			return (0)
 		}
-		this.keys[key].setPress(press)
+		key.setPress(true, timer)
+		return (1)
+	}
+
+	setRelease(keyName, timer) {
+		const key = this.keys[keyName]
+
+		if (key === undefined) {
+			return (0)
+		}
+		key.setPress(false, timer)
 		return (1)
 	}
 
@@ -97,10 +93,10 @@ export default class Keyboard {
 		return (false)
 	}
 
-	isTap(keys) {
+	isTap(keys, timer) {
 		for (let i = 0; i < keys.length; i++) {
-			const key = keys[i]
-			if (this.keys[key].getTap()) {
+			const keyName = keys[i]
+			if ((timer - this.keys[keyName].getHeldTime()) < 1) {
 				return (true)
 			}
 		}
@@ -108,12 +104,14 @@ export default class Keyboard {
 	}
 
 	getHeldTime(keys) {
+		var time = 0
 		for (let i = 0; i < keys.length; i++) {
-			const key = keys[i]
-			if (this.keys[key].getPress()) {
-				return (this.keys[key].getHeldTime())
+			const keyName = keys[i]
+			const heldTime = this.keys[keyName].getHeldTime()
+			if (heldTime > time) {
+				time = heldTime
 			}
 		}
-		return (0)
+		return (time)
 	}
 }

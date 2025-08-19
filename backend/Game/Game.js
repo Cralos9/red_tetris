@@ -22,16 +22,17 @@ export default class Game {
 		this.hold = null
 		this.holdLock = false
 		this.linesCleared = 0
-		this.frames = 0
 
 		this.level = 1
 		this.gravity = 0
 		this.combo = 0
 		this.eventManager = eventManager
 
+		this.frames = 0
 		this.log = Debug("Game")
 	}
 
+	getFrames() { return (this.frames) }
 	getField() { return (this.field) }
 	getLevel() { return (this.level) }
 
@@ -156,7 +157,7 @@ export default class Game {
 	}
 
 	update() {
-		const actions = this.ctrl.keyStates()
+		const actions = this.ctrl.keyStates(this.frames)
 
 		this.linesCleared = 0
 
@@ -220,6 +221,7 @@ export default class Game {
 
 		this.Piece.draw(this.field)
 
+		this.frames += 1
 		this.gravity += 1
 	}
 }
