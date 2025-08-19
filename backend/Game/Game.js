@@ -33,6 +33,7 @@ export default class Game {
 	}
 
 	getField() { return (this.field) }
+	getLevel() { return (this.level) }
 
 	changeLevel() {
 		this.level += 1

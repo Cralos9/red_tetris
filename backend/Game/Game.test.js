@@ -2,6 +2,30 @@ import Game from "./Game.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
 import { jest } from "@jest/globals"
 
+describe('Game Tests', () => {
+	let game
+
+	beforeEach(() => {
+		game = new Game()
+	})
+
+	describe('ChangeLevel', () => {
+		it('+1 level', () => {
+			game.changeLevel()
+			expect(game.getLevel()).toEqual(2)
+		})
+
+		it('Max level', () => {
+			for (let i = 1; i <= 10; i++) {
+				expect(game.getLevel()).toEqual(i)
+				game.changeLevel()
+			}
+			game.changeLevel()
+			expect(game.getLevel()).toEqual(10)
+		})
+	})
+})
+
 describe("Field Tests", () => {
 	const game = new Game()
 
@@ -174,3 +198,4 @@ describe("Line Clear Tests", () => {
 		})
 	})
 })
+
