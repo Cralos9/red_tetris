@@ -11,38 +11,35 @@ describe('Keyboard Tests', () => {
 	})
 
 	it('Simulate key press', () => {
-		const outRet = keyboard.set(key, true)
+		const outRet = keyboard.setPress(key, 100)
 		expect(outRet).toEqual(1)
 		const outInput = keyboard.isPressed([key])
 		expect(outInput).toEqual(true)
 	})
 
 	it('Simulate key release', () => {
-		const outRet = keyboard.set(key, false)
+		const outRet = keyboard.setRelease(key, 100)
 		expect(outRet).toEqual(1)
 		const outInput = keyboard.isPressed([key])
 		expect(outInput).toEqual(false)
 	})
 
 	it('IsTap function', () => {
-		keyboard.set(key, true)
-		keyboard.update()
-		const out1 = keyboard.isTap([key])
+		keyboard.setPress(key, 100)
+		const out1 = keyboard.isTap([key], 100)
 		expect(out1).toEqual(true)
 
-		keyboard.update()
-		const out2 = keyboard.isTap([key])
+		const out2 = keyboard.isTap([key], 101)
 		expect(out2).toEqual(false)
 	})
 
 	it('Reset function', () => {
 		const input = keyboard.keys[key]
 		const spy = jest.spyOn(input, 'reset')
-		keyboard.set(key, true)
+		keyboard.setPress(key, 100)
 		keyboard.reset()
 		expect(spy).toHaveBeenCalled()
 		expect(input.pressed).toEqual(false)
-		expect(input.tap).toEqual(false)
-		expect(input.heldTimer).toEqual(0)
+		expect(input.heldTime).toEqual(0)
 	})
 })
