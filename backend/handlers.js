@@ -49,37 +49,44 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		log("Disconnected:", reason)
 	}
 
-	const heartbeatInterval = setInterval(() => {
-		const room = findRoomBySocketId(socket.id)
-		if (!room) return
-
-		const toRemove = []
-		for (const [sockId, player] of room.plMap.entries()) {
-			if (!player.isAlive) {
-				log("Player Remover")
-				toRemove.push(sockId)
-			} else {
-				player.isAlive = false
-				io.to(sockId).emit('ping-check')
-			}
-		}
-
-		for (const sockId of toRemove)  {
-			room.leavePlayer(room.getPlayer(sockId))
-		}
-		
-		if (room.getNbrOfPlayers() === 0) {
-			RoomsMap.delete(room.code)
-		}
-		socket.emit("Owner", {owner: room.getOwner()})
-	}, 7000)
-
+	// const heartbeatInterval = setInterval(() => {
+	// 	const room = findRoomBySocketId(socket.id)
+	// 	if (!room) return
+	
+	// 	const now = Date.now()
+	// 	const timeout = 10000
+	// 	const toRemove = []
+	
+	// 	for (const [sockId, player] of room.plMap.entries()) {
+	// 		if (!player.lastPong) {
+	// 			player.lastPong = now 
+	// 		}
+	
+	// 		if (now - player.lastPong > timeout) {
+	// 			console.log("Player Remover")
+	// 			toRemove.push(sockId)
+	// 		} else {
+	// 			io.to(sockId).emit('ping-check')
+	// 		}
+	// 	}
+	
+	// 	for (const sockId of toRemove) {
+	// 		room.leavePlayer(room.getPlayer(sockId))
+	// 	}
+	
+	// 	if (room.getNbrOfPlayers() === 0) {
+	// 		RoomsMap.delete(room.code)
+	// 	}
+	
+	// 	socket.emit("Owner", { owner: room.getOwner() })
+	// }, 10000)
+	
 	socket.on('pong-check', () => {
 		const room = findRoomBySocketId(socket.id)
 		if (room) {
 			const player = room.getPlayer(socket.id)
 			if (player) {
-				player.isAlive = true
+				player.lastPong = Date.now()
 			}
 		}
 	})
@@ -88,7 +95,6 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 	socket.on('joinRoom', joinRoom)
 
 	socket.on('disconnect', () => {
-		clearInterval(heartbeatInterval)
 		disconnection("manual disconnect")
 	})
 }

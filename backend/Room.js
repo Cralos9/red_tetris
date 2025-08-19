@@ -3,6 +3,7 @@ import { randomNbr } from "./Game/utils.js";
 import Debug from "debug"
 import { printArr } from "./debug.js";
 
+
 export class Room {
 	constructor(roomCode, io) { 
 		this.code = roomCode
@@ -11,9 +12,11 @@ export class Room {
 		this.owner = null;
 		this.gameRunning = false
 		this.log = Debug(`Room:${this.code}`)
+		this.startHeartbeat()
 		this.log("Created")
 	}
 
+	
 	setOwner(newOwner) { this.owner = newOwner }
 	getOwner() { return (this.owner) }
 	getNbrOfPlayers() { return (this.plMap.size) }
@@ -45,8 +48,38 @@ export class Room {
 		this.log("Game End")
 	}
 
+	startHeartbeat() {
+        const timeout = 7000;
+		this.heartbeatInterval = setInterval(() => {
+			const now = Date.now();
+			const toRemove = [];
+		
+			for (const [sockId, player] of this.plMap.entries()) {
+				if (!player.lastPong) player.lastPong = now;
+		
+				if (now - player.lastPong > timeout) {
+					console.log("Player Remover", player.name);
+					toRemove.push(sockId);
+				} else {
+					console.log("heartBeat Sent")
+					this.io.to(sockId).emit('ping-check');
+				}
+			}
+		
+			for (const sockId of toRemove) {
+				this.leavePlayer(this.getPlayer(sockId));
+			}
+		
+			if (this.getNbrOfPlayers() === 0) {
+				clearInterval(this.heartbeatInterval);
+			} else {
+				const ownerId = this.getOwner();
+				if (ownerId) this.io.to(ownerId).emit("Owner", { owner: ownerId });
+			}
+		}, timeout);
+	}
 	leavePlayer(leaverPlayer) {
-		this.log("Player %s leaved", leaverPlayer.toString())
+		this.log("Player %s left", leaverPlayer.toString())
 		if (leaverPlayer.getInGame() === true) {
 			this.gameManager.removePlayer(leaverPlayer)
 		}
