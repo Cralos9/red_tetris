@@ -1,6 +1,9 @@
+import Debug from "debug"
+
 export default class EventDispatcher {
 	constructor() {
 		this.observers = new Map()
+		this.log = Debug('EventDispatcher')
 	}
 
 	subscribe(event, callback) {
@@ -10,7 +13,7 @@ export default class EventDispatcher {
 			this.observers.set(event, [callback])
 			return (1)
 		} else if (arr.find(cb => cb === callback)) {
-			console.log("Error: Duplicate callback")
+			this.log("Error: Duplicate callback")
 			return (0)
 		}
 		arr.push(callback)
@@ -21,7 +24,7 @@ export default class EventDispatcher {
 		const arr = this.observers.get(event)
 
 		if (arr === undefined) {
-			console.log("No Callbacks for", event)
+			this.log("No Callbacks for", event)
 			return (0)
 		}
 		arr.forEach(callback => { callback(state) })
