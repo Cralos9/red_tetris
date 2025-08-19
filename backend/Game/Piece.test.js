@@ -1,9 +1,9 @@
-import { Piece } from "./Piece.js"
-import { Game } from "./Game.js"
+import Piece from "./Piece.js"
+import Game from "./Game.js"
 import { COLORS, Tcoor } from "../../common.js"
 import { JLTSZoffsets } from "./gameParams.js"
 import { ROWS, COLUMNS, GAME_EVENTS } from "./gameParams.js"
-import { jest } from "@jest/globals"
+import { expect, jest } from "@jest/globals"
 
 describe('Piece Tests', () => {
 	var piece, game
@@ -45,12 +45,23 @@ describe('Piece Tests', () => {
 		expect(piece.getLock()).toEqual(true)
 	})
 
-	describe('Move and Rotations', () => {
-		it('Move', () => {
-			const right = 1
-			const left = -1
-			const spy = jest.spyOn(piece, 'shiftReset')
+	it('Piece toObject', () => {
+		const pieceObject = piece.toObject()
+		expect(pieceObject).toBeInstanceOf(Object)
+		expect(pieceObject.color).toBeDefined()
+		expect(pieceObject.pattern).toBeDefined()
+	})
 
+	describe('Move and Rotations', () => {
+		const right = 1
+		const left = -1
+		let spy
+
+		beforeEach(() => {
+			spy = jest.spyOn(piece, 'shiftReset')
+		})
+
+		it('Move', () => {
 			const checkMove = (expColumn, move, spyCalls) => {
 				spy.mockClear()
 				piece.move(game.getField(), move)
@@ -73,31 +84,27 @@ describe('Piece Tests', () => {
 			// Left Collision check
 			checkMove(piece.getColumn(), left, 0)
 		})
+
+		it('Rotate', () => {
+			const incIndex = (index, rot) => {
+				return ((index + rot + 4) % 4)
+			}
+			const checkRot = (expRot, rot, spyCalls) => {
+				spy.mockClear()
+				piece.rotate(game.getField(), rot)
+				expect(piece.getIndex()).toEqual(expRot)
+				expect(spy.mock.calls).toHaveLength(spyCalls)
+				expect(piece.getLastShift()).toEqual(GAME_EVENTS.ROTATION)
+			}
+
+			for (let i = 0; i < 4; i++) {
+				checkRot(incIndex(piece.getIndex(), right), right, 1)
+			}
+
+			for (let i = 0; i < 4; i++) {
+				checkRot(incIndex(piece.getIndex(), left), left, 1)
+			}
+		})
 	})
 
-
-	it('Rotate', () => {
-		const right = 1
-		const left = -1
-		const spy = jest.spyOn(piece, 'shiftReset')
-
-		const incIndex = (index, rot) => {
-			return ((index + rot + 4) % 4)
-		}
-		const checkRot = (expRot, rot, spyCalls) => {
-			spy.mockClear()
-			piece.rotate(game.getField(), rot)
-			expect(piece.getIndex()).toEqual(expRot)
-			expect(spy.mock.calls).toHaveLength(spyCalls)
-			expect(piece.getLastShift()).toEqual(GAME_EVENTS.ROTATION)
-		}
-
-		for (let i = 0; i < 4; i++) {
-			checkRot(incIndex(piece.getIndex(), right), right, 1)
-		}
-
-		for (let i = 0; i < 4; i++) {
-			checkRot(incIndex(piece.getIndex(), left), left, 1)
-		}
-	})
 })

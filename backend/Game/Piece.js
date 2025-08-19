@@ -127,13 +127,12 @@ export default class Piece {
 
 	move(field, x) {
 		if (this.checkMove(field, x) === false) {
-			return (0)
+			return 
 		}
 		this.column += x
 		this.lastShift = GAME_EVENTS.MOVE
 		this.shiftReset()
 		this.log("Moved Piece to column:", this.column)
-		return (1)
 	}
 
 	checkKicks(field, kick, pattern) {
