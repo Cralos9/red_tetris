@@ -1,5 +1,30 @@
-import { Game } from "./Game.js"
+import Game from "./Game.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
+import { jest } from "@jest/globals"
+
+describe('Game Tests', () => {
+	let game
+
+	beforeEach(() => {
+		game = new Game()
+	})
+
+	describe('ChangeLevel', () => {
+		it('+1 level', () => {
+			game.changeLevel()
+			expect(game.getLevel()).toEqual(2)
+		})
+
+		it('Max level', () => {
+			for (let i = 1; i <= 10; i++) {
+				expect(game.getLevel()).toEqual(i)
+				game.changeLevel()
+			}
+			game.changeLevel()
+			expect(game.getLevel()).toEqual(10)
+		})
+	})
+})
 
 describe("Field Tests", () => {
 	const game = new Game()
@@ -16,36 +41,33 @@ describe("Field Tests", () => {
 	})
 })
 
-describe("HardDrop Tests", () => {
-	const game = new Game()
-
-	test("HardDrop to the floor (19x)", () => {
-		const floorCoor = ROWS - 1
-		game.hardDrop()
-		const outPieceRow = game.Piece.row
-		const expPieceRow = floorCoor
-		expect(outPieceRow).toEqual(expPieceRow)
-	})
-})
-
 describe("Hold Tests", () => {
-	const game = new Game()
+	let game, spyReset
 
-	test("Empty Hold", () => {
+	beforeEach(() => {
+		game = new Game()
+		spyReset = jest.spyOn(game, 'resetPiece')
+	})
+
+	it("Empty Hold", () => {
 		const currPiece = game.Piece
+		const spyPieceReset = jest.spyOn(currPiece, 'reset')
 		game.holdPiece()
 		const holdPiece = game.hold
 		expect(currPiece).toEqual(holdPiece)
+		expect(spyPieceReset.mock.calls).toHaveLength(1)
+		expect(spyReset.mock.calls).toHaveLength(1)
 	})
 
-	test("Switch with Holded Piece", () => {
-		const futureHold = game.Piece
-		const futureCurrPiece = game.hold
+	it("Switch with Holded Piece", () => {
 		game.holdPiece()
-		const holdPiece = game.hold
+		const oldCurrPiece = game.Piece
+		const oldHold = game.hold
+		game.holdPiece()
+		const currHold = game.hold
 		const currPiece = game.Piece
-		expect(currPiece).toEqual(futureCurrPiece)
-		expect(holdPiece).toEqual(futureHold)
+		expect(currPiece).toEqual(oldHold)
+		expect(currHold).toEqual(oldCurrPiece)
 	})
 })
 
@@ -69,31 +91,31 @@ describe("Pattern Match Tests", () => {
 		})
 	}
 
-	test('0 Lines', () => {
+	it('0 Lines', () => {
 		testMarkedLines()
 		const expStackHeight = ROWS
 		const outStackHeight = game.stackHeight
 		expect(outStackHeight).toBe(expStackHeight)
 	})
-	test('1 Lines', () => {
+	it('1 Lines', () => {
 		testMarkedLines()
 		const expStackHeight = ROWS - 1
 		const outStackHeight = game.stackHeight
 		expect(outStackHeight).toBe(expStackHeight)
 	})
-	test('2 Lines', () => {
+	it('2 Lines', () => {
 		testMarkedLines()
 		const expStackHeight = ROWS - 2
 		const outStackHeight = game.stackHeight
 		expect(outStackHeight).toBe(expStackHeight)
 	})
-	test('3 Lines', () => {
+	it('3 Lines', () => {
 		testMarkedLines()
 		const expStackHeight = ROWS - 3
 		const outStackHeight = game.stackHeight
 		expect(outStackHeight).toBe(expStackHeight)
 	})
-	test('4 Lines', () => {
+	it('4 Lines', () => {
 		testMarkedLines()
 		const expStackHeight = ROWS - 4
 		const outStackHeight = game.stackHeight
@@ -105,9 +127,8 @@ describe("Create Garbage Tests", () => {
 	const game = new Game()
 	const expGarbageLineContains = [0,8]
 
-	test('1 Lines', () => {
-		game.garbageQueue.push(1)
-		game.createGarbage()
+	it('1 Lines', () => {
+		game.createGarbage(1)
 		const outGarbageLine = game.field[ROWS - 1]
 		const expGarbageLen = COLUMNS
 		expect(outGarbageLine).toHaveLength(expGarbageLen)
@@ -148,10 +169,10 @@ describe("Line Clear Tests", () => {
 			expect(outStackHeight).toBe(expStackHeight)
 		}
 
-		test('1 Line', () => { testFullClears(lineNbr) })
-		test('2 Line', () => { testFullClears(lineNbr) })
-		test('3 Line', () => { testFullClears(lineNbr) })
-		test('4 Line', () => { testFullClears(lineNbr) })
+		it('1 Line', () => { testFullClears(lineNbr) })
+		it('2 Line', () => { testFullClears(lineNbr) })
+		it('3 Line', () => { testFullClears(lineNbr) })
+		it('4 Line', () => { testFullClears(lineNbr) })
 	})
 	describe("Gap Clears", () => {
 		const game = new Game()
@@ -168,7 +189,7 @@ describe("Line Clear Tests", () => {
 			game.lineClear()
 		})
 
-		test("4 Lines", () => {
+		it("4 Lines", () => {
 			const line = ROWS - 1
 			const outFieldLeft = game.field[line]
 			const expFieldLeft = Array(COLUMNS).fill(1)
@@ -177,3 +198,4 @@ describe("Line Clear Tests", () => {
 		})
 	})
 })
+

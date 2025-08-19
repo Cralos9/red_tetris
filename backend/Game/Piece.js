@@ -3,7 +3,7 @@ import { COLORS } from "../../common.js"
 import { getRotations, getSkirt, compare, getKicks } from "./utils.js"
 import Debug from "debug"
 
-export class Piece {
+export default class Piece {
 	constructor(pieceCoor, pieceOffsets, color) {
 		this.patterns = [pieceCoor]
 		this.offsets = pieceOffsets
@@ -27,12 +27,14 @@ export class Piece {
 		this.log = Debug("Piece")
 	}
 
+	getIndex() { return (this.index) }
 	getSpin() { return (this.spin) }
 	getColumn() { return (this.column) }
 	getRow() { return (this.row) }
 	getCollision() { return (this.collision) }
 	getLock() { return (this.lock) }
 	getLastShift() { return (this.lastShift) }
+	getLockDelay() { return (this.lockDelay) }
 
 	hardDrop(field) {
 		while (this.checkCollision(field) === false) {
@@ -124,7 +126,7 @@ export class Piece {
 
 	move(field, x) {
 		if (this.checkMove(field, x) === false) {
-			return
+			return 
 		}
 		this.column += x
 		this.updateShift(GAME_EVENTS.MOVE)
@@ -155,9 +157,10 @@ export class Piece {
 				this.index = rot
 				this.updateShift(GAME_EVENTS.ROTATION)
 				this.log("Rotated Piece:", this.index)
-				break
+				return (1)
 			}
 		}
+		return (0)
 	}
 
 	getCurrSkirt() {

@@ -4,7 +4,8 @@ import Debug from "debug"
 import { printArr } from "./debug.js";
 
 
-export class Room {
+
+export default class Room {
 	constructor(roomCode, io) { 
 		this.code = roomCode
 		this.io = io
