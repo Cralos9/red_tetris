@@ -1,6 +1,6 @@
 import { ACTIONS } from "../../common.js"
 
-export class GameController {
+export default class GameController {
 	constructor(keyboard, keybinds) {
 		this.keyboard = keyboard
 		this.actions = keybinds.actions

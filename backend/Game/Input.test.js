@@ -1,4 +1,4 @@
-import { Keyboard } from "./Input.js"
+import Keyboard from "./Input.js"
 import { jest } from "@jest/globals"
 
 const key = 'x'

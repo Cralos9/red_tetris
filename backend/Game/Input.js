@@ -1,4 +1,4 @@
-export class Input {
+class Input {
 	constructor() {
 		this.pressed = false
 		this.tap = false
@@ -30,7 +30,7 @@ export class Input {
 	getPress() { return (this.pressed) }
 }
 
-export class Keyboard {
+export default class Keyboard {
 	constructor() {
 		this.keys = {
 			'q': new Input(),

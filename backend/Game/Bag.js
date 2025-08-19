@@ -1,4 +1,4 @@
-import { Piece } from "./Piece.js"
+import Piece from "./Piece.js"
 import { 
 	Icoor,
 	Tcoor,
@@ -17,7 +17,7 @@ import {
 import PRNG from "../Utils/PRNG.js"
 import Stack from "../Utils/Stack.js"
 
-export class Bag {
+export default class Bag {
 	constructor(seed) {
 		this.PRNG = new PRNG(seed)
 		this.pieces = {

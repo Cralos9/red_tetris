@@ -1,4 +1,4 @@
-import { ScoreManager } from "./Score.js"
+import ScoreManager from "./Score.js"
 import EventDispatcher from "../Utils/EventDispatcher.js"
 import { jest } from "@jest/globals"
 import { GAME_EVENTS } from "./gameParams.js"

@@ -1,10 +1,10 @@
-import { Bag } from "./Bag.js"
+import Bag from "./Bag.js"
 import { ROWS, COLUMNS, GAME_EVENTS } from "./gameParams.js"
 import { randomNbr } from "./utils.js"
 import { LevelTable } from "./gameParams.js"
 import Debug from "debug"
 
-export class Game {
+export default class Game {
 	constructor(ctrl, eventManager, seed) {
 		this.Bag = new Bag(seed)
 		this.field = Array(ROWS)

@@ -1,7 +1,7 @@
 import EventDispatcher from "../Utils/EventDispatcher.js"
 import { GARBAGE_DELAY } from "./gameParams.js"
-import { Player } from "../Player.js"
-import { TargetManager } from "./Target.js"
+import Player from "../Player.js"
+import TargetManager from "./Target.js"
 import { expect, jest } from "@jest/globals"
 
 const targets = [

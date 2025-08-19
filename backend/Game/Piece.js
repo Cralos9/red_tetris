@@ -3,7 +3,7 @@ import { COLORS } from "../../common.js"
 import { getRotations, getSkirt, compare, getKicks } from "./utils.js"
 import Debug from "debug"
 
-export class Piece {
+export default class Piece {
 	constructor(pieceCoor, pieceOffsets, color) {
 		this.patterns = [pieceCoor]
 		this.offsets = pieceOffsets

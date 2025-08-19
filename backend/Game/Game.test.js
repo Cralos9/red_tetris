@@ -1,4 +1,4 @@
-import { Game } from "./Game.js"
+import Game from "./Game.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
 import { jest } from "@jest/globals"
 

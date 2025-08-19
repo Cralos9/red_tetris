@@ -1,5 +1,5 @@
-import { Room } from "./Room.js"
-import { Player } from "./Player.js"
+import Room from "./Room.js"
+import Player from "./Player.js"
 
 describe('Room Tests', () => {
 	const room = new Room(1)
