@@ -1,4 +1,4 @@
-import { Piece } from "./Piece.js"
+import Piece from "./Piece.js"
 import { 
 	Icoor,
 	Tcoor,
@@ -14,11 +14,11 @@ import {
 	Ioffsets,
 	Ooffsets,
 } from "./gameParams.js"
-import { PRNG } from "../PRNG.js"
-import { Stack } from "../Stack.js"
+import PRNG from "../Utils/PRNG.js"
+import Stack from "../Utils/Stack.js"
 import Debug from "debug"
 
-export class Bag {
+export default class Bag {
 	constructor(seed) {
 		this.PRNG = new PRNG(seed)
 		this.pieces = {
@@ -42,6 +42,8 @@ export class Bag {
 		this.getRandomOrder()
 		this.log(this.order)
 	}
+	
+	getStack() { return (this.stack) }
 
 	getRandomOrder() {
 		for (let i = this.order.length - 1; i >= 0; i--) {
@@ -69,9 +71,5 @@ export class Bag {
 			arr.push(piece.toObject())
 		})
 		return (arr)
-	}
-	
-	getStack() {
-		return (this.stack)
 	}
 }

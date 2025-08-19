@@ -1,12 +1,14 @@
 import { ScoreTable, GAME_EVENTS } from "./gameParams.js"
 
-export class ScoreManager {
+export default class ScoreManager {
 	constructor(eventManager) {
 		this.score = 0
 		eventManager.subscribe(GAME_EVENTS.LINE_CLEAR, this.lineClear.bind(this))
 		eventManager.subscribe(GAME_EVENTS.HARD_DROP, this.dropPiece.bind(this))
 		eventManager.subscribe(GAME_EVENTS.SOFT_DROP, this.dropPiece.bind(this))
 	}
+
+	getScore() { return (this.score) }
 
 	lineClear(state) {
 		const linesCleared = state.linesCleared

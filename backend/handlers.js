@@ -1,5 +1,5 @@
-import { Room } from "./Room.js"
-import { Player } from "./Player.js"
+import Room from "./Room.js"
+import Player from "./Player.js"
 import Debug from "debug"
 
 const log = Debug("Handlers")
