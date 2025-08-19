@@ -16,6 +16,7 @@ import {
 } from "./gameParams.js"
 import PRNG from "../Utils/PRNG.js"
 import Stack from "../Utils/Stack.js"
+import Debug from "debug"
 
 export default class Bag {
 	constructor(seed) {
@@ -31,11 +32,15 @@ export default class Bag {
 		}
 		this.stack = new Stack()
 		this.order = ["I", "T", "J", "L", "O", "S", "Z"]
+		this.rotation = 0
+		this.log = Debug("Bag")
 		this.getRandomOrder()
+		this.log(this.order)
 		for (let i = 0; i < this.order.length; i++) {
 			this.stack.push(this.pieces[this.order[i]])
 		}
-		this.rotation = 7
+		this.getRandomOrder()
+		this.log(this.order)
 	}
 
 	getRandomOrder() {
@@ -45,6 +50,7 @@ export default class Bag {
 			this.order[i] = this.order[rNbr]
 			this.order[rNbr] = tmp
 		}
+		this.log(this.order)
 	}
 
 	getNextPiece() {
