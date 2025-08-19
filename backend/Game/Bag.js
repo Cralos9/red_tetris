@@ -42,6 +42,8 @@ export default class Bag {
 		this.getRandomOrder()
 		this.log(this.order)
 	}
+	
+	getStack() { return (this.stack) }
 
 	getRandomOrder() {
 		for (let i = this.order.length - 1; i >= 0; i--) {
@@ -69,9 +71,5 @@ export default class Bag {
 			arr.push(piece.toObject())
 		})
 		return (arr)
-	}
-	
-	getStack() {
-		return (this.stack)
 	}
 }
