@@ -1,10 +1,16 @@
-import Room from "./Room.js"
-import Player from "./Player.js"
+import { jest } from "@jest/globals"
+
+jest.unstable_mockModule('./Game/GameController.js', () => ({
+	default: jest.fn(),
+}))
+
+const Room = (await import('./Room.js')).default
+const Player = (await import('./Player.js')).default
 
 describe('Room Tests', () => {
 	const room = new Room(1)
-	const player1 = new Player("Lol", null, 123)
-	const player2 = new Player("Pol", null, 124)
+	const player1 = new Player("Lol", null, null, 123)
+	const player2 = new Player("Pol", null, null, 124)
 	const expRoomPlayers = new Map()
 	
 	test('Add Player1', () => {
