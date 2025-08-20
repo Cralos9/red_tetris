@@ -1,6 +1,6 @@
 import open from 'open';
 
-const count = 10;
+const count = 20;
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 for (let i = 1; i <= count; i++) {

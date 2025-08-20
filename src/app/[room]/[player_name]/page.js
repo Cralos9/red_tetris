@@ -133,6 +133,10 @@ export default function RoomPage() {
 			}
 		})
 		socket.on('game', (msg) => {
+
+			if (document.hidden)
+				return;
+
 			if (!msg.running && msg.playerId === socket.id) 
 			{
 				scoreSave(msg.playerScore.score);
