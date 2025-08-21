@@ -3,8 +3,6 @@ import { randomNbr } from "./Game/utils.js";
 import Debug from "debug"
 import { printArr } from "./debug.js";
 
-
-
 export default class Room {
 	constructor(roomCode, io) { 
 		this.code = roomCode
@@ -52,6 +50,7 @@ export default class Room {
 	startHeartbeat() {
         const timeout = 7000;
 		this.heartbeatInterval = setInterval(() => {
+			const logger = Debug(`Heartbeat:${this.code}`)
 			const now = Date.now();
 			const toRemove = [];
 		
@@ -59,10 +58,10 @@ export default class Room {
 				if (!player.lastPong) player.lastPong = now;
 		
 				if (now - player.lastPong > timeout) {
-					console.log("Player Remover", player.name);
+					logger("Player Remover", player.name);
 					toRemove.push(sockId);
 				} else {
-					console.log("heartBeat Sent")
+					logger("heartBeat Sent")
 					this.io.to(sockId).emit('ping-check');
 				}
 			}
@@ -79,6 +78,7 @@ export default class Room {
 			}
 		}, timeout);
 	}
+
 	leavePlayer(leaverPlayer) {
 		this.log("Player %s left", leaverPlayer.toString())
 		if (leaverPlayer.getInGame() === true) {

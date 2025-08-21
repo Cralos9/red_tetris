@@ -170,19 +170,6 @@ export default class Game {
 
 		this.Piece.undraw(this.field)
 
-		if (actions.softDrop) {
-			const dropRow = this.Piece.getRow()
-			this.Piece.softDrop(this.field)
-			this.eventManager.notify({
-				dropType: GAME_EVENTS.SOFT_DROP,
-				pieceRow: this.Piece.getRow(),
-				dropRow: dropRow
-			}, GAME_EVENTS.SOFT_DROP)
-			this.gravity = 0
-		} else if (this.Piece.getCollision() === true || this.gravity >= LevelTable[this.level]) {
-			this.Piece.softDrop(this.field)
-			this.gravity = 0
-		}
 
 		if (actions.hold === true && this.holdLock === false) {
 			this.holdPiece()
@@ -202,6 +189,20 @@ export default class Game {
 				dropRow: dropRow,
 				pieceRow: this.Piece.getRow()
 			}, GAME_EVENTS.HARD_DROP)
+		}
+
+		if (actions.softDrop) {
+			const dropRow = this.Piece.getRow()
+			this.Piece.softDrop(this.field)
+			this.eventManager.notify({
+				dropType: GAME_EVENTS.SOFT_DROP,
+				pieceRow: this.Piece.getRow(),
+				dropRow: dropRow
+			}, GAME_EVENTS.SOFT_DROP)
+			this.gravity = 0
+		} else if (this.Piece.getCollision() === true || this.gravity >= LevelTable[this.level]) {
+			this.Piece.softDrop(this.field)
+			this.gravity = 0
 		}
 
 		if (this.Piece.getLock() === true) {
