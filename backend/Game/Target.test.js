@@ -1,19 +1,23 @@
 import EventDispatcher from "../Utils/EventDispatcher.js"
 import { GARBAGE_DELAY } from "./gameParams.js"
-import Player from "../Player.js"
 import TargetManager from "./Target.js"
 import { expect, jest } from "@jest/globals"
 
-const targets = [
-	new Player("J", null, null, "1"),
-	new Player("L", null, null, "2"),
-	new Player("I", null, null, "3"),
-]
+jest.unstable_mockModule('./GameController.js', () => ({
+	default: jest.fn(),
+}))
+
+const Player = (await import('../Player.js')).default
 
 describe('TargetManager Tests', () => {
-	let targetManager, garbageCb
+	let targetManager, garbageCb, targets
 
 	beforeEach(() => {
+		targets = [
+			new Player("J", null, null, "1"),
+			new Player("L", null, null, "2"),
+			new Player("I", null, null, "3"),
+		]
 		garbageCb = jest.fn()
 		const eventManager = new EventDispatcher()
 

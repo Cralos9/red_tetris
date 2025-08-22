@@ -22,16 +22,17 @@ export default class Game {
 		this.hold = null
 		this.holdLock = false
 		this.linesCleared = 0
-		this.frames = 0
 
 		this.level = 1
 		this.gravity = 0
 		this.combo = 0
 		this.eventManager = eventManager
 
+		this.frames = 0
 		this.log = Debug("Game")
 	}
 
+	getFrames() { return (this.frames) }
 	getField() { return (this.field) }
 	getLevel() { return (this.level) }
 
@@ -156,7 +157,7 @@ export default class Game {
 	}
 
 	update() {
-		const actions = this.ctrl.keyStates()
+		const actions = this.ctrl.keyStates(this.frames)
 
 		this.linesCleared = 0
 
@@ -169,19 +170,6 @@ export default class Game {
 
 		this.Piece.undraw(this.field)
 
-		if (actions.softDrop) {
-			const dropRow = this.Piece.getRow()
-			this.Piece.softDrop(this.field)
-			this.eventManager.notify({
-				dropType: GAME_EVENTS.SOFT_DROP,
-				pieceRow: this.Piece.getRow(),
-				dropRow: dropRow
-			}, GAME_EVENTS.SOFT_DROP)
-			this.gravity = 0
-		} else if (this.Piece.getCollision() === true || this.gravity >= LevelTable[this.level]) {
-			this.Piece.softDrop(this.field)
-			this.gravity = 0
-		}
 
 		if (actions.hold === true && this.holdLock === false) {
 			this.holdPiece()
@@ -203,6 +191,20 @@ export default class Game {
 			}, GAME_EVENTS.HARD_DROP)
 		}
 
+		if (actions.softDrop) {
+			const dropRow = this.Piece.getRow()
+			this.Piece.softDrop(this.field)
+			this.eventManager.notify({
+				dropType: GAME_EVENTS.SOFT_DROP,
+				pieceRow: this.Piece.getRow(),
+				dropRow: dropRow
+			}, GAME_EVENTS.SOFT_DROP)
+			this.gravity = 0
+		} else if (this.Piece.getCollision() === true || this.gravity >= LevelTable[this.level]) {
+			this.Piece.softDrop(this.field)
+			this.gravity = 0
+		}
+
 		if (this.Piece.getLock() === true) {
 			const spin = this.patternSpin()
 			this.Piece.draw(this.field)
@@ -220,6 +222,7 @@ export default class Game {
 
 		this.Piece.draw(this.field)
 
+		this.frames += 1
 		this.gravity += 1
 	}
 }

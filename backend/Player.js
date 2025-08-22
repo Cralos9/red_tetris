@@ -1,5 +1,4 @@
 import Game from "./Game/Game.js"
-import Keyboard from "./Game/Input.js"
 import TargetManager from "./Game/Target.js"
 import ScoreManager from "./Game/Score.js"
 import GameController from "./Game/GameController.js"
@@ -19,8 +18,7 @@ export default class Player {
 		this.id = id
 		this.io = io
 		this.isAlive = true
-		this.keybinds = keybinds
-		this.keyboard = new Keyboard()
+		this.ctrl = new GameController(keybinds)
 		this.inGame = false
 		this.log = Debug(`Player:${this.name}`)
 	}
@@ -39,10 +37,9 @@ export default class Player {
 	}
 
 	startGame(seed, gameManager, roomCode) {
-		this.keyboard.reset()
+		this.ctrl.reset()
 		this.eventManager = new EventDispatcher()
-		this.game = new Game(new GameController(this.keyboard, this.keybinds),
-			this.eventManager, seed)
+		this.game = new Game(this.ctrl, this.eventManager, seed)
 		this.targetManager = new TargetManager(this.game.createGarbage.bind(this.game),
 			this.eventManager, gameManager.getOtherPlayers(this))
 		this.score = new ScoreManager(this.eventManager)
