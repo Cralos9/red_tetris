@@ -22,7 +22,7 @@ export default function Keys() {
       left: localStorage.getItem("left") || 'ArrowLeft',
       right: localStorage.getItem("right") || 'ArrowRight',
       rotateLeft: localStorage.getItem("rotateLeft") || 'z',
-      rotateRight: localStorage.getItem("rotateRight") || 'x',
+      rotateRight: localStorage.getItem("rotateRight") || 'x ',
       hardDrop: localStorage.getItem("hardDrop") || ' ',
       softDrop: localStorage.getItem("softDrop") || 'ArrowDown',
       holdPiece: localStorage.getItem("holdPiece") || 'c',

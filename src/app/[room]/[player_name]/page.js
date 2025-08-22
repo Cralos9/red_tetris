@@ -41,6 +41,10 @@ export default function RoomPage() {
 		}
 
 		socket.on("connect", handleConnect);
+		socket.on("disconnect",() =>
+		{
+			window.location.reload();	
+		});
 		
 		socket.on('Owner', (msg) =>
 		{
@@ -73,7 +77,7 @@ export default function RoomPage() {
 			  [ACTIONS.MOVE_LEFT]: localStorage.getItem("left") ? [localStorage.getItem("left")] : ['ArrowLeft'],
 			  [ACTIONS.MOVE_RIGHT]: localStorage.getItem("right") ? [localStorage.getItem("right")] : ['ArrowRight'],
 			  [ACTIONS.ROTATE_LEFT]: localStorage.getItem("rotateLeft") ? [localStorage.getItem("rotateLeft")] : ['z'],
-			  [ACTIONS.ROTATE_RIGHT]: localStorage.getItem("rotateRight") ? [localStorage.getItem("rotateRight")] : ['x'],
+			  [ACTIONS.ROTATE_RIGHT]: localStorage.getItem("rotateRight") ? [localStorage.getItem("rotateRight")] : ['ArrowUp', 'x'],
 			  [ACTIONS.HARD_DROP]: localStorage.getItem("hardDrop") ? [localStorage.getItem("hardDrop")] : [' '],
 			  [ACTIONS.SOFT_DROP]: localStorage.getItem("softDrop") ? [localStorage.getItem("softDrop")] : ['ArrowDown'],
 			  [ACTIONS.HOLD]: localStorage.getItem("holdPiece") ? [localStorage.getItem("holdPiece")] : ['c'],
@@ -82,7 +86,7 @@ export default function RoomPage() {
 			DAS: parseInt(localStorage.getItem("DAS")) || 10,
 		  };
 		console.log("options: ", options);
-		socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options})
+		socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
 
 
 		socket.on('endGame', (msg) =>
@@ -146,7 +150,7 @@ export default function RoomPage() {
 			const field = msg.field;
 			var cells
 			var own = 0;
-			if (msg.playerId === socket.id) 
+			if (msg.playerId === socket.id)
 			{
 				own = 1;
 				var j = 0;
@@ -298,7 +302,7 @@ export default function RoomPage() {
 
 			scores.sort((a, b) => b.score - a.score);
 	
-			const top5 = scores.slice(0, 5);
+			const top5 = scores.slice(0, 3);
 	
 			for (let i = 0; i < localStorage.length; i++) {
 				const key = localStorage.key(i);

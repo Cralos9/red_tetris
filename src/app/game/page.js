@@ -4,36 +4,41 @@ import {useState, useEffect} from 'react'
 import { useRouter } from 'next/navigation';
 
 export default function Game() {
-  const router = useRouter();
-  const [scores, setScores] = useState([]);
+  	const router = useRouter();
+  	const [scores, setScores] = useState([]);
+  	var gameInt = 0;
+  	const gameModes =
+	[
+		"42",
+		"Tetris"
+	]
 
+  	function getOrdinal(n) {
+		const s = ["th", "st", "nd", "rd"],
+		  	v = n % 100;
+		return (n + (s[(v - 20) % 10] || s[v] || s[0]));
+  	}
 
-  function getOrdinal(n) {
-	const s = ["th", "st", "nd", "rd"],
-		  v = n % 100;
-	return (n + (s[(v - 20) % 10] || s[v] || s[0]));
-  }
-
-  useEffect(() => {
-	const foundScores = [];
+  	useEffect(() => {
+		const foundScores = [];
   
-	for (let i = 0; i < localStorage.length; i++) 
-	{
-	  const key = localStorage.key(i);
-	  if (key && key.startsWith("Score")) {
-		const value = localStorage.getItem(key);
-		if (value) {
-		  const [name, scoreStr] = value.split(" ");
-		  const score = parseInt(scoreStr, 10);
-		  if (!isNaN(score)) {
-			foundScores.push({ name, score });
-		  }
+		for (let i = 0; i < localStorage.length; i++) 
+		{
+	  		const key = localStorage.key(i);
+	  		if (key && key.startsWith("Score")) {
+			const value = localStorage.getItem(key);
+			if (value) {
+		  		const [name, scoreStr] = value.split(" ");
+		  		const score = parseInt(scoreStr, 10);
+		  	if (!isNaN(score)) {
+				foundScores.push({ name, score });
+		  	}
+			}
+	  	}
 		}
-	  }
-	}
   
 	foundScores.sort((a, b) => b.score - a.score);
-	const topFormatted = foundScores.slice(0, 5).map(entry => `${entry.name} ${entry.score}`);
+	const topFormatted = foundScores.slice(0, 3).map(entry => `${entry.name} ${entry.score}`);
   
 	setScores(topFormatted);
 	}, []);
@@ -60,14 +65,27 @@ export default function Game() {
 	const user = localStorage.getItem("username");
 	router.push(`/${room}/${user}`);
   }
+
   function options()
   {
 	router.push("/options");
   }
 
+  function gameMode()
+  {
+	gameMode = document.getElementById("gameMode")
+	gameInt++;
+	if (gameInt == 2)
+		gameInt = 0;
+	gameMode.textContent = gameModes[gameInt]
+	localStorage.setItem("gameMode",gameMode.textContent)
+  }
+
   return (
 	<div className="main-container">
 	  <form className="usercard" onSubmit={enterRooms}>
+		<h2 className='userTitle'>Game Mode</h2>
+		<button  type='button' onClick={gameMode} className="button" id="gameMode">42</button>
 		<h2 className="userTitle">Game Code</h2>
 		<div>
 			<input className='input' placeholder='Enter room code' maxLength={16} id='input'></input>
