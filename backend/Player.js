@@ -27,6 +27,7 @@ export default class Player {
 	getName() { return (this.name) }
 	getInGame() { return (this.inGame) }
 	getTargetManager() { return (this.targetManager) }
+	getGameController() { return (this.ctrl) }
 
 	changeLevel() { this.game.changeLevel() }
 

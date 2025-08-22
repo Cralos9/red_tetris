@@ -110,7 +110,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 			if (key === "Escape") {
 				player.stopGame()
 			} else {
-				player.ctrl.setPress(key, player.game.getFrames(), true)
+				player.getGameController().setPress(key, player.game.getFrames(), true)
 			}
 		}
 	}
@@ -120,7 +120,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const room = RoomsMap.get(roomCode)
 		const player = room.getPlayer(socket.id)
 		if (player && player.getInGame() === true) {
-			player.ctrl.setRelease(key, 0, false)
+			player.getGameController().setRelease(key, 0, false)
 		}
 	}
 	const startGame = (payload) => {
