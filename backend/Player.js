@@ -28,13 +28,7 @@ export default class Player {
 	getInGame() { return (this.inGame) }
 	getTargetManager() { return (this.targetManager) }
 
-	setIngame(flag) {
-		this.inGame = flag
-	}
-
-	changeLevel() {
-		this.game.changeLevel()
-	}
+	changeLevel() { this.game.changeLevel() }
 
 	startGame(seed, gameManager, roomCode) {
 		this.ctrl.reset()
@@ -71,7 +65,7 @@ export default class Player {
 
 	stopGame() {
 		if (this.inGame === true) {
-			this.game.running = false // Temporary Flag (Helps to Test the Game)
+			this.game.running = false
 		}
 	}
 

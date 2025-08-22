@@ -8,7 +8,7 @@ const log = Debug("Handlers")
 export const playerHandlers = (io, socket, RoomsMap) => {
 	const findRoomBySocketId = (socketId) => {
 		for (const room of RoomsMap.values()) {
-			if (room.plMap.has(socketId)) return room
+			if (room.getPlMap().has(socketId)) return room
 		}
 		return null
 	}
@@ -105,7 +105,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
 		const player = room.getPlayer(socket.id)
-		if (player && player.inGame === true) {
+		if (player && player.getInGame() === true) {
 			if (key === "Escape") {
 				player.stopGame()
 			} else {
@@ -118,7 +118,7 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
 		const player = room.getPlayer(socket.id)
-		if (player && player.inGame === true) {
+		if (player && player.getInGame() === true) {
 			player.ctrl.setRelease(key, 0, false)
 		}
 	}
