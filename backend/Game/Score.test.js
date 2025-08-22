@@ -1,9 +1,6 @@
 import ScoreManager from "./Score.js"
 import EventDispatcher from "../Utils/EventDispatcher.js"
-import { jest } from "@jest/globals"
 import { GAME_EVENTS } from "./gameParams.js"
-
-jest.mock("../Utils/EventDispatcher.js")
 
 describe('Score Tests', () => {
 	let score

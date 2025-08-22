@@ -1,5 +1,4 @@
 import { LEVEL_INTERVAL } from "./Game/gameParams.js";
-import { randomNbr } from "./Game/utils.js";
 import { printArr } from "./debug.js";
 
 export default class GameManager {
@@ -8,7 +7,7 @@ export default class GameManager {
 		this.players = gamePlayers
 		this.leaderboard = []
 		this.levelInterval = null
-		this.seed = randomNbr(73458347)
+		this.seed = Date.now()
 		this.log = this.room.getLog().extend("GameManager")
 	}
 
