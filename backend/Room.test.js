@@ -19,7 +19,6 @@ describe('Room Tests', () => {
 	const player1 = new Player("Lol", null, null, 123)
 	const player2 = new Player("Pol", null, null, 124)
 	const expRoomPlayers = new Map()
-	//const spyIo = jest.spyOn(room, 'emit')
 
 	describe('Adding/Remove Players', () => {
 		it('Add Player1', () => {
@@ -35,13 +34,6 @@ describe('Room Tests', () => {
 			const outRoomPlayers = room.plMap
 			expect(outRoomPlayers).toStrictEqual(expRoomPlayers)
 		})
-
-		//it('Remove Player 2', () => {
-		//	room.leavePlayer(player2)
-		//	expRoomPlayers.delete(player2.getId())
-		//	expect(room.getPlMap()).toStrictEqual(expRoomPlayers)
-		//	expect(spyIo.mock.calls).toHaveLength(1)
-		//})
 	})
 
 	it('Starting a Game', () => {
