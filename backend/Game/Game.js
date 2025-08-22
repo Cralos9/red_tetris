@@ -1,11 +1,10 @@
 import Bag from "./Bag.js"
 import { ROWS, COLUMNS, GAME_EVENTS } from "./gameParams.js"
-import { randomNbr } from "./utils.js"
 import { LevelTable } from "./gameParams.js"
 import Debug from "debug"
 
 export default class Game {
-	constructor(ctrl, eventManager, seed) {
+	constructor(ctrl, cgh, eventManager, seed) {
 		this.Bag = new Bag(seed)
 		this.field = Array(ROWS)
 		this.ctrl = ctrl
@@ -27,6 +26,9 @@ export default class Game {
 		this.gravity = 0
 		this.combo = 0
 		this.eventManager = eventManager
+
+		// Strategy algos
+		this.cgh = cgh
 
 		this.frames = 0
 		this.log = Debug("Game")
@@ -132,7 +134,6 @@ export default class Game {
 
 	createGarbage(garbageLines) {
 		var lineNbr = garbageLines
-		const gap = randomNbr(COLUMNS - 1)
 
 		if (this.stackHeight - lineNbr < 0) {
 			lineNbr = this.stackHeight // Small fix to the top-out freeze bug
@@ -141,12 +142,7 @@ export default class Game {
 			const nextY = y - lineNbr
 			this.replaceLine(nextY, y)
 		}
-		for (let i = 0; i < lineNbr; i++) {
-			const y = (ROWS - 1) - i
-			const garbage = Array(COLUMNS).fill(8)
-			garbage[gap] = 0
-			this.field[y] = garbage
-		}
+		this.cgh.placeGarbage(this, lineNbr)
 		this.stackHeight -= lineNbr
 	}
 

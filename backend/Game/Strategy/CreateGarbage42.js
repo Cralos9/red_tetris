@@ -1,7 +1,8 @@
 import CreateGarbageBehaviour from "./CreateGarbageBehaviour.js"
+import { ROWS, COLUMNS } from "../gameParams.js"
 
 export default class CreateGarbage42 extends CreateGarbageBehaviour {
-	constructor() {}
+	constructor() { super() }
 
 	placeGarbage(game, garbageLines) {
 		for (let i = 0; i < garbageLines; i++) {

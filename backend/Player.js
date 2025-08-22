@@ -6,6 +6,8 @@ import { DELTA_TIME } from "./Game/gameParams.js"
 import { printArr } from "./debug.js"
 import Debug from "debug"
 import EventDispatcher from "./Utils/EventDispatcher.js"
+import CreateGarbage42 from "./Game/Strategy/CreateGarbage42.js"
+import CreateGarbageTetris from "./Game/Strategy/CreateGarbageTetris.js"
 
 export default class Player {
 	constructor(name, keybinds, io, id) {
@@ -34,7 +36,8 @@ export default class Player {
 	startGame(seed, gameManager, roomCode) {
 		this.ctrl.reset()
 		this.eventManager = new EventDispatcher()
-		this.game = new Game(this.ctrl, this.eventManager, seed)
+		const cgh = new CreateGarbage42()
+		this.game = new Game(this.ctrl, cgh, this.eventManager, seed)
 		this.targetManager = new TargetManager(this.game.createGarbage.bind(this.game),
 			this.eventManager, gameManager.getOtherPlayers(this))
 		this.score = new ScoreManager(this.eventManager)
