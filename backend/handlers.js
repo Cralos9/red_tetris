@@ -18,6 +18,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		const roomCode = payload.roomCode
 		const options = payload.options
 
+		console.log(payload.gameMode)
 		if (!RoomsMap.has(roomCode)) {
 			RoomsMap.set(roomCode, new Room(roomCode, io))
 		}

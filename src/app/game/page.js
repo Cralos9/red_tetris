@@ -63,6 +63,8 @@ export default function Game() {
 		return;
 	}
 	const user = localStorage.getItem("username");
+	gameMode = document.getElementById("gameMode")
+	localStorage.setItem("gameMode",gameMode.textContent)
 	router.push(`/${room}/${user}`);
   }
 
@@ -78,7 +80,6 @@ export default function Game() {
 	if (gameInt == 2)
 		gameInt = 0;
 	gameMode.textContent = gameModes[gameInt]
-	localStorage.setItem("gameMode",gameMode.textContent)
   }
 
   return (
