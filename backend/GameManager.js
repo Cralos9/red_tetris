@@ -3,6 +3,7 @@ import { printArr } from "./debug.js";
 import { GAMEMODES } from "../common.js"
 import { CreateGarbage42, CreateGarbageTetris } from "./Game/Strategy/CreateGarbage.js";
 import { PatternMatch42, PatternMatchTetris } from "./Game/Strategy/PatternMatch.js";
+import { CancelGarbage42, CancelGarbageTetris } from "./Game/Strategy/CancelGarbage.js";
 
 export default class GameManager {
 	constructor(room, gamePlayers) {
@@ -15,11 +16,13 @@ export default class GameManager {
 		this.strats = {
 			[GAMEMODES.Tetris]: {
 				createGarbage: new CreateGarbageTetris(),
-				patternMatch: new PatternMatchTetris()
+				patternMatch: new PatternMatchTetris(),
+				cancelGarbage: new CancelGarbageTetris()
 			},
 			[GAMEMODES.Base]: {
 				createGarbage: new CreateGarbage42(),
-				patternMatch: new PatternMatch42()
+				patternMatch: new PatternMatch42(),
+				cancelGarbage: new CancelGarbage42()
 			}
 		}
 	}

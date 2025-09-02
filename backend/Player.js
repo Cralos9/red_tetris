@@ -44,8 +44,12 @@ export default class Player {
 			gamemode.createGarbage, 
 			gamemode.patternMatch, 
 		)
-		this.targetManager = new TargetManager(this.game.createGarbage.bind(this.game),
-			this.eventManager, gameManager.getOtherPlayers(this))
+		this.targetManager = new TargetManager(
+			this.game.createGarbage.bind(this.game),
+			this.eventManager,
+			gameManager.getOtherPlayers(this),
+			gamemode.cancelGarbage
+		)
 		this.score = new ScoreManager(this.eventManager)
 		this.log("Targets:", printArr(this.targetManager.getTargets()))
 		this.inGame = true

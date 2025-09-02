@@ -2,10 +2,11 @@ import { GARBAGE_DELAY, GAME_EVENTS } from "./gameParams.js"
 import Stack from "../Utils/Stack.js"
 
 export default class TargetManager {
-	constructor(garbageCallback, eventManager, targets) {
+	constructor(garbageCallback, eventManager, targets, cgStrat) {
 		this.targets = targets
 		this.createGarbage = garbageCallback
 		this.garbageStack = new Stack()
+		this.cancelGarbage = cgStrat
 		eventManager.subscribe(GAME_EVENTS.LINE_CLEAR, this.receiveGarbage.bind(this))
 		eventManager.subscribe(GAME_EVENTS.LINE_CLEAR, this.sendGarbage.bind(this))
 	}
@@ -17,7 +18,7 @@ export default class TargetManager {
 		var linesCleared = state.linesCleared
 		const combo = state.combo
 
-		linesCleared = this.cancelGarbage(linesCleared)
+		linesCleared = this.cancelGarbage.execute(this, linesCleared)
 		const garbageLines = (linesCleared - 1) + (combo - 1)
 		if (garbageLines > 0) {
 			this.targets.forEach(target => {
@@ -45,18 +46,6 @@ export default class TargetManager {
 			}
 			i++
 		}
-	}
-
-	cancelGarbage(linesCleared) {
-		while (this.garbageStack.empty() === false && linesCleared >= this.garbageStack.top().lines) {
-			linesCleared -= this.garbageStack.top().lines
-			this.garbageStack.pop()
-		}
-		if (this.garbageStack.size() > 0 && linesCleared > 0) {
-			this.garbageStack.top().lines -= linesCleared
-			linesCleared = 0
-		}
-		return (linesCleared)
 	}
 
 	toObject() {
