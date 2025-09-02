@@ -1,10 +1,10 @@
-import { PatternMatchBehaviour } from "./Strategy.js"
+import Strategy from "./Strategy.js"
 import { ROWS, COLUMNS } from "../gameParams.js"
 
-export class PatternMatch42 extends PatternMatchBehaviour {
+export class PatternMatch42 extends Strategy {
 	constructor() { super() }
 
-	patternMatch(game) {
+	execute(game) {
 		for (let y = ROWS - 1; y >= 0; y--) {
 			let count = 0
 			for (let x = 0; x < COLUMNS; x++) {
@@ -21,10 +21,10 @@ export class PatternMatch42 extends PatternMatchBehaviour {
 	}
 }
 
-export class PatternMatchTetris extends PatternMatchBehaviour {
+export class PatternMatchTetris extends Strategy {
 	constructor() { super() }
 
-	patternMatch(game) {
+	execute(game) {
 		for (let y = ROWS - 1; y >= 0; y--) {
 			let count = 0
 			for (let x = 0; x < COLUMNS; x++) {

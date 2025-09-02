@@ -1,11 +1,11 @@
-import { CreateGarbageBehaviour } from "./Strategy.js"
+import Strategy from "./Strategy.js"
 import { ROWS, COLUMNS } from "../gameParams.js"
 import { randomNbr } from "../utils.js"
 
-export class CreateGarbage42 extends CreateGarbageBehaviour {
+export class CreateGarbage42 extends Strategy {
 	constructor() { super() }
 
-	placeGarbage(game, garbageLines) {
+	execute(game, garbageLines) {
 		for (let i = 0; i < garbageLines; i++) {
 			const y = (ROWS - 1) - i
 			const garbage = Array(COLUMNS).fill(8)
@@ -14,10 +14,10 @@ export class CreateGarbage42 extends CreateGarbageBehaviour {
 	}
 }
 
-export class CreateGarbageTetris extends CreateGarbageBehaviour {
+export class CreateGarbageTetris extends Strategy {
 	constructor() { super() }
 
-	placeGarbage(game, garbageLines) {
+	execute(game, garbageLines) {
 		const gap = randomNbr(COLUMNS - 1)
 
 		for (let i = 0; i < garbageLines; i++) {

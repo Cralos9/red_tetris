@@ -14,12 +14,12 @@ export default class GameManager {
 		this.log = this.room.getLog().extend("GameManager")
 		this.strats = {
 			[GAMEMODES.Tetris]: {
-				cb: new CreateGarbageTetris(),
-				pm: new PatternMatchTetris()
+				createGarbage: new CreateGarbageTetris(),
+				patternMatch: new PatternMatchTetris()
 			},
 			[GAMEMODES.Base]: {
-				cb: new CreateGarbage42(),
-				pm: new PatternMatch42()
+				createGarbage: new CreateGarbage42(),
+				patternMatch: new PatternMatch42()
 			}
 		}
 	}

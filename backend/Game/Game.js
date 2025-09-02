@@ -4,7 +4,7 @@ import { LevelTable } from "./gameParams.js"
 import Debug from "debug"
 
 export default class Game {
-	constructor(ctrl, cgStrat, pmStrat, eventManager, seed) {
+	constructor(ctrl, eventManager, seed, createGarbage, patternMatch) {
 		this.Bag = new Bag(seed)
 		this.field = Array(ROWS)
 		this.ctrl = ctrl
@@ -27,9 +27,8 @@ export default class Game {
 		this.combo = 0
 		this.eventManager = eventManager
 
-		// Strategy algos
-		this.cgStrat = cgStrat
-		this.pmStrat = pmStrat
+		this.cgStrat = createGarbage
+		this.pmStrat = patternMatch
 
 		this.frames = 0
 		this.log = Debug("Game")
@@ -62,7 +61,7 @@ export default class Game {
 
 	patternMatch() {
 		this.hitList = []
-		this.pmStrat.patternMatch(this)
+		this.pmStrat.execute(this)
 		this.log("Stack:", this.stackHeight)
 		this.log("Marked Lines:", this.hitList)
 	}
@@ -132,7 +131,7 @@ export default class Game {
 			const nextY = y - lineNbr
 			this.replaceLine(nextY, y)
 		}
-		this.cgStrat.placeGarbage(this, lineNbr)
+		this.cgStrat.execute(this, lineNbr)
 		this.stackHeight -= lineNbr
 	}
 

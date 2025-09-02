@@ -37,7 +37,13 @@ export default class Player {
 		this.ctrl.reset()
 		this.eventManager = new EventDispatcher()
 		const gamemode = gameManager.getGamemode()
-		this.game = new Game(this.ctrl, gamemode.cb, gamemode.pm, this.eventManager, seed)
+		this.game = new Game(
+			this.ctrl, 
+			this.eventManager,
+			seed,
+			gamemode.createGarbage, 
+			gamemode.patternMatch, 
+		)
 		this.targetManager = new TargetManager(this.game.createGarbage.bind(this.game),
 			this.eventManager, gameManager.getOtherPlayers(this))
 		this.score = new ScoreManager(this.eventManager)

@@ -1,15 +1,7 @@
-export class CreateGarbageBehaviour {
+export default class Strategy {
 	constructor() {}
 
-	placeGarbage() {
-		throw ("This is an interface. You shouldn't be seing this")
-	}
-}
-
-export class PatternMatchBehaviour {
-	constructor() {}
-
-	patternMatch() {
-		throw ("This is an interface. You shouldn't be seing this")
+	execute() {
+		throw ("Error. This is an interface for strategy classes")
 	}
 }
