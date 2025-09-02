@@ -1,5 +1,8 @@
 import { LEVEL_INTERVAL } from "./Game/gameParams.js";
 import { printArr } from "./debug.js";
+import { GAMEMODES } from "../common.js"
+import { CreateGarbage42, CreateGarbageTetris } from "./Game/Strategy/CreateGarbage.js";
+import { PatternMatch42, PatternMatchTetris } from "./Game/Strategy/PatternMatch.js";
 
 export default class GameManager {
 	constructor(room, gamePlayers) {
@@ -9,6 +12,16 @@ export default class GameManager {
 		this.levelInterval = null
 		this.seed = Date.now()
 		this.log = this.room.getLog().extend("GameManager")
+		this.strats = {
+			[GAMEMODES.Tetris]: {
+				cb: new CreateGarbageTetris(),
+				pm: new PatternMatchTetris()
+			},
+			[GAMEMODES.Base]: {
+				cb: new CreateGarbage42(),
+				pm: new PatternMatch42()
+			}
+		}
 	}
 
 	getPlayers() { return (this.players) }
@@ -17,6 +30,7 @@ export default class GameManager {
 	getOtherPlayers(filterPlayer) {
 		return (this.players.filter(player => player !== filterPlayer))
 	}
+	getGamemode() { return (this.strats[this.room.getGamemode()]) }
 
 	startGame() {
 		this.log("Players:", printArr(this.players))

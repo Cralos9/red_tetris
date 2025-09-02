@@ -17,10 +17,11 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		var playerName = payload.playerName
 		const roomCode = payload.roomCode
 		const options = payload.options
+		const gamemode = payload.gameMode
 
 		console.log(payload.gameMode)
 		if (!RoomsMap.has(roomCode)) {
-			RoomsMap.set(roomCode, new Room(roomCode, io))
+			RoomsMap.set(roomCode, new Room(roomCode, gamemode, io))
 		}
 		const room = RoomsMap.get(roomCode)
 
@@ -50,38 +51,6 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		log("Disconnected:", reason)
 	}
 
-	// const heartbeatInterval = setInterval(() => {
-	// 	const room = findRoomBySocketId(socket.id)
-	// 	if (!room) return
-	
-	// 	const now = Date.now()
-	// 	const timeout = 10000
-	// 	const toRemove = []
-	
-	// 	for (const [sockId, player] of room.plMap.entries()) {
-	// 		if (!player.lastPong) {
-	// 			player.lastPong = now 
-	// 		}
-	
-	// 		if (now - player.lastPong > timeout) {
-	// 			console.log("Player Remover")
-	// 			toRemove.push(sockId)
-	// 		} else {
-	// 			io.to(sockId).emit('ping-check')
-	// 		}
-	// 	}
-	
-	// 	for (const sockId of toRemove) {
-	// 		room.leavePlayer(room.getPlayer(sockId))
-	// 	}
-	
-	// 	if (room.getNbrOfPlayers() === 0) {
-	// 		RoomsMap.delete(room.code)
-	// 	}
-	
-	// 	socket.emit("Owner", { owner: room.getOwner() })
-	// }, 10000)
-	
 	socket.on('pong-check', () => {
 		const room = findRoomBySocketId(socket.id)
 		if (room) {

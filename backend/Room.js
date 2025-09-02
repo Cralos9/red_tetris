@@ -2,18 +2,18 @@ import Debug from "debug"
 import GameManager from "./GameManager.js"
 
 export default class Room {
-	constructor(roomCode, io) { 
+	constructor(roomCode, gamemode, io) { 
 		this.code = roomCode
 		this.io = io
 		this.plMap = new Map()
 		this.owner = null;
+		this.gamemode = gamemode
 		this.gameRunning = false
 		this.gameManager = null
 		this.log = Debug(`Room:${this.code}`)
 		this.startHeartbeat()
-		this.log("Created")
+		this.log("Created", this.gamemode, "Room")
 	}
-
 	
 	setOwner(newOwner) { this.owner = newOwner }
 	getOwner() { return (this.owner) }
@@ -23,6 +23,7 @@ export default class Room {
 	getPlMap() { return (this.plMap) }
 	getGameManager() { return (this.gameManager) }
 	getGameStatus() { return (this.gameRunning)}
+	getGamemode() { return (this.gamemode) }
 	getLog() { return (this.log) }
 
 	addPlayer(newPlayer) {

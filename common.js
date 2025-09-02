@@ -22,7 +22,7 @@ export const COLORS = {
 
 export const GAMEMODES = {
 	Tetris: "Tetris",
-	42: "42"
+	Base: "42"
 }
 
 export const Icoor = [ [-1,0], [0,0], [1,0], [2,0] ]
