@@ -1,0 +1,42 @@
+import { PatternMatchBehaviour } from "./Strategy.js"
+import { ROWS, COLUMNS } from "../gameParams.js"
+
+export class PatternMatch42 extends PatternMatchBehaviour {
+	constructor() { super() }
+
+	patternMatch(game) {
+		for (let y = ROWS - 1; y >= 0; y--) {
+			let count = 0
+			for (let x = 0; x < COLUMNS; x++) {
+				// Substitue 8 with a readable string like COLORS.GARBAGE
+				if (game.field[y][x] > 0 && game.field[y][x] !== 8) {
+					count++
+					game.stackHeight = y
+				}
+			}
+			if (count === game.field[y].length) {
+				game.hitList.push(y)
+			}
+		}
+	}
+}
+
+export class PatternMatchTetris extends PatternMatchBehaviour {
+	constructor() { super() }
+
+	patternMatch(game) {
+		for (let y = ROWS - 1; y >= 0; y--) {
+			let count = 0
+			for (let x = 0; x < COLUMNS; x++) {
+				if (game.field[y][x] > 0) {
+					count++
+					game.stackHeight = y
+				}
+			}
+			if (count === game.field[y].length) {
+				game.hitList.push(y)
+			}
+		}
+	}
+}
+
