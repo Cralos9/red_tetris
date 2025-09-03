@@ -1,4 +1,4 @@
-import { LEVEL_INTERVAL } from "./Game/gameParams.js";
+import { BEGIN_LEVEL, LEVEL_INTERVAL, MAX_LEVEL } from "./Game/gameParams.js";
 import { printArr } from "./debug.js";
 import { GAMEMODES } from "../common.js"
 import { CreateGarbage42, CreateGarbageTetris } from "./Game/Strategy/CreateGarbage.js";
@@ -10,7 +10,7 @@ export default class GameManager {
 		this.room = room
 		this.players = gamePlayers
 		this.leaderboard = []
-		this.level = 1
+		this.level = BEGIN_LEVEL
 		this.levelInterval = null
 		this.seed = Date.now()
 		this.log = this.room.getLog().extend("GameManager")
@@ -50,7 +50,7 @@ export default class GameManager {
 			this.players.forEach(player => {
 				player.game.changeLevel(this.level)
 			})
-			if (this.level === 10) {
+			if (this.level === MAX_LEVEL) {
 				clearInterval(this.levelInterval)
 			}
 			this.level++

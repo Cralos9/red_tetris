@@ -1,5 +1,5 @@
 import Bag from "./Bag.js"
-import { ROWS, COLUMNS, GAME_EVENTS } from "./gameParams.js"
+import { ROWS, COLUMNS, GAME_EVENTS, BEGIN_LEVEL } from "./gameParams.js"
 import { LevelTable } from "./gameParams.js"
 import Debug from "debug"
 
@@ -22,7 +22,7 @@ export default class Game {
 		this.holdLock = false
 		this.linesCleared = 0
 
-		this.level = 1
+		this.level = BEGIN_LEVEL
 		this.gravity = 0
 		this.combo = 0
 		this.eventManager = eventManager
@@ -39,10 +39,7 @@ export default class Game {
 	getLevel() { return (this.level) }
 
 	changeLevel(level) {
-		this.level += level
-		if (this.level > 10) {
-			this.level = 10
-		}
+		this.level = level
 	}
 
 	patternSpin() {

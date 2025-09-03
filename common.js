@@ -1,3 +1,5 @@
+import { GARBAGE_DELAY } from "./backend/Game/gameParams"
+
 export const ACTIONS = {
 	HARD_DROP: 1,
 	SOFT_DROP: 2,
@@ -24,6 +26,8 @@ export const GAMEMODES = {
 	Tetris: "Tetris",
 	Base: "42"
 }
+
+export const GarbageDelayCalc = (level) => { GARBAGE_DELAY - (level * 400) }
 
 export const Icoor = [ [-1,0], [0,0], [1,0], [2,0] ]
 export const Tcoor = [ [-1,0], [0,0], [0,-1], [1,0] ]

@@ -16,7 +16,7 @@ export const GAME_EVENTS = {
 	HARD_DROP: "HARD_DROP",
 	SOFT_DROP: "SOFT_DROP",
 	MOVE: "MOVE",
-	ROTATION: "ROTATION"
+	ROTATION: "ROTATION",
 }
 
 export const ScoreTable = {
@@ -31,6 +31,8 @@ export const ScoreTable = {
 	[GAME_EVENTS.HARD_DROP]: 2
 }
 
+export const BEGIN_LEVEL = 1
+export const MAX_LEVEL = 10
 export const LevelTable = {
 	1: 60,
 	2: 50,

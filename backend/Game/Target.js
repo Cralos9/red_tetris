@@ -1,4 +1,5 @@
-import { GARBAGE_DELAY, GAME_EVENTS } from "./gameParams.js"
+import { GAME_EVENTS } from "./gameParams.js"
+import { GarbageDelayCalc } from "../../common.js"
 import Stack from "../Utils/Stack.js"
 
 export default class TargetManager {
@@ -35,11 +36,13 @@ export default class TargetManager {
 			return
 		}
 
+		const level = state.level
 		const garbageArr = this.garbageStack.getArr()
+		const garbageDelay = GarbageDelayCalc(level)
 		var i = 0
 		while (i < garbageArr.length) {
 			const elapsedTime = Date.now() - garbageArr[i].timer
-			if (elapsedTime >= GARBAGE_DELAY) {
+			if (elapsedTime >= garbageDelay) {
 				this.createGarbage(garbageArr[i].lines)
 				this.garbageStack.pop()
 				continue
