@@ -163,7 +163,7 @@ export default function RoomPage() {
 				cells = document.querySelectorAll('.game-bottle .cell');
 				const heldPiece = msg.holdPiece
 				const nextPiece = msg.nextPiece
-				gameDraw.garbage_cell('.garbage-bar',msg.targetManager.garbage);
+				gameDraw.garbage_cell('.garbage-bar',msg.targetManager.garbage, msg.level);
 				gameDraw.nextPieceDraw(nextPiece);
 				gameDraw.heldPieceDraw(heldPiece);
 				const lineClear = document.createElement('div');

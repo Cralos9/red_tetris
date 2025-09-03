@@ -1,4 +1,4 @@
-import {COLORS} from "../../../../common.js";
+import {COLORS, GarbageDelayCalc} from "../../../../common.js";
 
 const gifs = [
 	"/images/blue_virus2.gif",
@@ -76,34 +76,35 @@ function add_secondary_cells(div,  amount)
 	}
 }
 
-	function garbage_cell(string, garbage)
+function garbage_cell(string, garbage, level)
+{
+	const div = document.querySelector(string);
+	Array.from(div.childNodes).forEach(child => {
+		if (!(child.tagName === 'SPAN')) {
+		div.removeChild(child);
+		}
+	});
+	const max_time = GarbageDelayCalc(level);
+	let glines = 0;
+	for(let i = 0; i < garbage.length; i++)
 	{
-		const div = document.querySelector(string);
-		Array.from(div.childNodes).forEach(child => {
-			if (!(child.tagName === 'SPAN')) {
-			div.removeChild(child);
-			}
-		});
-		let glines = 0;
-		for(let i = 0; i < garbage.length; i++)
+		glines += garbage[i].lines;
+		if (glines > 20)
+			return;
+		for(let j = 0; j < garbage[i].lines; j++)
 		{
-			glines += garbage[i].lines;
-			if (glines > 20)
-				return;
-			for(let j = 0; j < garbage[i].lines; j++)
-			{
-				const cell = document.createElement('div');
-				cell.className = 'cell';
-				if(Date.now() - garbage[i].timer >= 4000)
-					cell.style.backgroundColor = 'red';
-				else if(Date.now() - garbage[i].timer >= 2000)
-					cell.style.backgroundColor = 'yellow';
-				else
-					cell.style.backgroundColor = 'grey';
-				div.appendChild(cell);
-			}
+			const cell = document.createElement('div');
+			cell.className = 'cell';
+			if(Date.now() - garbage[i].timer >= max_time * 0.75)
+				cell.style.backgroundColor = 'red';
+			else if(Date.now() - garbage[i].timer >= max_time * 0.40)
+				cell.style.backgroundColor = 'yellow';
+			else
+				cell.style.backgroundColor = 'grey';
+			div.appendChild(cell);
 		}
 	}
+}
 
 
 	function add_cells(string,  amount)
