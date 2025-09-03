@@ -38,8 +38,8 @@ export default class Game {
 	getField() { return (this.field) }
 	getLevel() { return (this.level) }
 
-	changeLevel() {
-		this.level += 1
+	changeLevel(level) {
+		this.level += level
 		if (this.level > 10) {
 			this.level = 10
 		}
@@ -47,7 +47,7 @@ export default class Game {
 
 	patternSpin() {
 		if (this.Piece.getLastShift() !== GAME_EVENTS.ROTATION) {
-			return
+			return (false)
 		}
 		const kicks = [[1,0],[-1,0],[0,-1]]
 		const pattern = this.Piece.getCurrPattern()

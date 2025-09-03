@@ -1,17 +1,17 @@
 import Strategy from "./Strategy.js";
 
-export class CancelGarbage42 extends Strategy {
+export class GarbageCalculation42 extends Strategy {
 	constructor() { super() }
 
-	execute(tm, linesCleared) {
-		return linesCleared
+	execute(tm, linesCleared, combo, pieceSpin) {
+		return (linesCleared - 1)
 	}
 }
 
-export class CancelGarbageTetris extends Strategy {
+export class GarbageCalculationTetris extends Strategy {
 	constructor() { super() }
 
-	execute(tm, linesCleared) {
+	execute(tm, linesCleared, combo, pieceSpin) {
 		while (tm.garbageStack.empty() === false && linesCleared >= tm.garbageStack.top().lines) {
 			linesCleared -= tm.garbageStack.top().lines
 			tm.garbageStack.pop()
@@ -20,6 +20,8 @@ export class CancelGarbageTetris extends Strategy {
 			tm.garbageStack.top().lines -= linesCleared
 			linesCleared = 0
 		}
-		return (linesCleared)
+		const spinBonus = pieceSpin ? 3 : 1
+		const garbageLines = ((linesCleared - 1) * spinBonus) + (combo - 1)
+		return (garbageLines)
 	}
 }

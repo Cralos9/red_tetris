@@ -3,13 +3,14 @@ import { printArr } from "./debug.js";
 import { GAMEMODES } from "../common.js"
 import { CreateGarbage42, CreateGarbageTetris } from "./Game/Strategy/CreateGarbage.js";
 import { PatternMatch42, PatternMatchTetris } from "./Game/Strategy/PatternMatch.js";
-import { CancelGarbage42, CancelGarbageTetris } from "./Game/Strategy/CancelGarbage.js";
+import { GarbageCalculation42, GarbageCalculationTetris } from "./Game/Strategy/GarbageCalculation.js";
 
 export default class GameManager {
 	constructor(room, gamePlayers) {
 		this.room = room
 		this.players = gamePlayers
 		this.leaderboard = []
+		this.level = 1
 		this.levelInterval = null
 		this.seed = Date.now()
 		this.log = this.room.getLog().extend("GameManager")
@@ -17,12 +18,12 @@ export default class GameManager {
 			[GAMEMODES.Tetris]: {
 				createGarbage: new CreateGarbageTetris(),
 				patternMatch: new PatternMatchTetris(),
-				cancelGarbage: new CancelGarbageTetris()
+				gbCalc: new GarbageCalculationTetris()
 			},
 			[GAMEMODES.Base]: {
 				createGarbage: new CreateGarbage42(),
 				patternMatch: new PatternMatch42(),
-				cancelGarbage: new CancelGarbage42()
+				gbCalc: new GarbageCalculation42()
 			}
 		}
 	}
@@ -47,8 +48,12 @@ export default class GameManager {
 			const now = new Date().toLocaleTimeString();
 			this.log(`[${now}] Changing Level`)
 			this.players.forEach(player => {
-				player.changeLevel()
+				player.game.changeLevel(this.level)
 			})
+			if (this.level === 10) {
+				clearInterval(this.levelInterval)
+			}
+			this.level++
 		}, LEVEL_INTERVAL);
 	}
 	
