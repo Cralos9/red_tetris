@@ -321,7 +321,6 @@ export default function RoomPage() {
 	{
 		router.push("/game");
 		socket.emit('disconnection', { roomCode: roomCode });
-		socket.disconnect()
 	}
 
 	return (
