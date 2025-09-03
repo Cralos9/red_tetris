@@ -77,7 +77,7 @@ export default function Game() {
   {
 	gameMode = document.getElementById("gameMode")
 	gameInt++;
-	if (gameInt == 2)
+	if (gameInt == gameModes.length)
 		gameInt = 0;
 	gameMode.textContent = gameModes[gameInt]
   }

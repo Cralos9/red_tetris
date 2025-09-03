@@ -49,15 +49,17 @@ export default class Room {
 	}
 
 	startHeartbeat() {
-        const timeout = 7000;
+        const timeout = 8000;
+		const sendPings = 7000
 		this.heartbeatInterval = setInterval(() => {
 			const logger = Debug(`Heartbeat:${this.code}`)
 			const now = Date.now();
 			const toRemove = [];
-		
+			
 			for (const [sockId, player] of this.plMap.entries()) {
 				if (!player.lastPong) player.lastPong = now;
-		
+				
+				logger("Time: ", now - player.lastPong)
 				if (now - player.lastPong > timeout) {
 					logger("Player Remover", player.name);
 					toRemove.push(sockId);
@@ -77,7 +79,7 @@ export default class Room {
 				const ownerId = this.getOwner();
 				if (ownerId) this.io.to(ownerId).emit("Owner", { owner: ownerId });
 			}
-		}, timeout);
+		}, sendPings);
 	}
 
 	leavePlayer(leaverPlayer) {
