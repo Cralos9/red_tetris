@@ -27,7 +27,7 @@ export const GAMEMODES = {
 	Base: "42"
 }
 
-export const GarbageDelayCalc = (level) => { GARBAGE_DELAY - (level * 400) }
+export const GarbageDelayCalc = (level) => GARBAGE_DELAY - (level * 400)
 
 export const Icoor = [ [-1,0], [0,0], [1,0], [2,0] ]
 export const Tcoor = [ [-1,0], [0,0], [0,-1], [1,0] ]
