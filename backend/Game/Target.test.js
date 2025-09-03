@@ -1,5 +1,6 @@
 import EventDispatcher from "../Utils/EventDispatcher.js"
 import { GARBAGE_DELAY } from "./gameParams.js"
+import { GarbageCalculationTetris } from "./Strategy/GarbageCalculation.js"
 import TargetManager from "./Target.js"
 import { expect, jest } from "@jest/globals"
 
@@ -10,7 +11,9 @@ jest.unstable_mockModule('./GameController.js', () => ({
 const Player = (await import('../Player.js')).default
 
 describe('TargetManager Tests', () => {
-	let targetManager, garbageCb, targets
+	let targetManager, garbageCb, targets, gbCalc
+	const combo = 1
+	const pieceSpin = false
 
 	beforeEach(() => {
 		targets = [
@@ -25,60 +28,74 @@ describe('TargetManager Tests', () => {
 			const eventManager = new EventDispatcher()
 			target.targetManager = new TargetManager(garbageCb, eventManager, null)
 		})
-		targetManager = new TargetManager(garbageCb, eventManager, targets)
-	})
-	it('Cancel 0 Lines of Garbage', () => {
-		const linesCleared = 4
-		const out = targetManager.cancelGarbage(linesCleared)
-		expect(out).toEqual(linesCleared)
-	})
-
-	it('Cancel >0 Lines of Garbage', () => {
-		const garbageStack = targetManager.getGarbageStack()
-		const linesCleared = 4
-		const garbageLines = 4
-
-		garbageStack.push({lines: garbageLines, timer: Date.now()})
-		const out = targetManager.cancelGarbage(linesCleared)
-		expect(out).toEqual(linesCleared - garbageLines)
-		expect(garbageStack.empty()).toEqual(true)
-
+		gbCalc = new GarbageCalculationTetris()
+		targetManager = new TargetManager(
+			garbageCb,
+			eventManager,
+			targets,
+			gbCalc
+		)
 	})
 
-	it('Cancel with less lines cleared than garbage', () => {
-		const garbageStack = targetManager.getGarbageStack()
-		const linesCleared = 2
-		const garbageLines = 4
+	describe('Garbage Calculation', () => {
+		let garbageStack
 
-		garbageStack.push({lines: garbageLines, timer: Date.now()})
-		const outCancel = targetManager.cancelGarbage(linesCleared)
-		const outTopGarbage = garbageStack.top()
-		expect(outCancel).toEqual(0)
-		expect(outTopGarbage.lines).toEqual(garbageLines - linesCleared)
+		beforeEach(() => {
+			garbageStack = targetManager.getGarbageStack()
+		})
+
+		it('Without Cancel', () => {
+			const linesCleared = 4
+			const out = gbCalc.execute(targetManager, linesCleared, combo, pieceSpin)
+			const exp = linesCleared - 1
+			expect(out).toEqual(exp)
+		})
+
+		it('Cancel >0 Lines of Garbage', () => {
+			const linesCleared = 4
+			const garbageLines = 4
+
+			garbageStack.push({lines: garbageLines, timer: Date.now()})
+			const out = gbCalc.execute(targetManager, linesCleared, combo, pieceSpin)
+			const exp = linesCleared - garbageLines - 1
+			expect(out).toEqual(exp)
+			expect(garbageStack.empty()).toEqual(true)
+		})
+
+		it('Cancel with less lines cleared than garbage', () => {
+			const linesCleared = 2
+			const garbageLines = 4
+
+			garbageStack.push({lines: garbageLines, timer: Date.now()})
+			const outCancel = gbCalc.execute(targetManager, linesCleared, combo, pieceSpin)
+			const outTopGarbage = garbageStack.top()
+			expect(outCancel).toEqual(-1)
+			expect(outTopGarbage.lines).toEqual(garbageLines - linesCleared)
+		})
+
+		it('Cancel with more lines cleared than garbage', () => {
+			const linesCleared = 10
+			const garbageLines = 3
+
+			garbageStack.push({lines: garbageLines, timer: Date.now()})
+			garbageStack.push({lines: garbageLines, timer: Date.now()})
+			const out = gbCalc.execute(targetManager, linesCleared, combo, pieceSpin)
+			const exp = linesCleared - (garbageLines * 2) - 1
+			expect(out).toEqual(exp)
+			expect(garbageStack.empty()).toEqual(true)
+		})
 	})
 
-	it('Cancel with more lines cleared than garbage', () => {
-		const garbageStack = targetManager.getGarbageStack()
-		const linesCleared = 10
-		const garbageLines = 3
-
-		garbageStack.push({lines: garbageLines, timer: Date.now()})
-		garbageStack.push({lines: garbageLines, timer: Date.now()})
-		const out = targetManager.cancelGarbage(linesCleared)
-		const exp = linesCleared - (garbageLines * 2)
-		expect(out).toEqual(exp)
-		expect(garbageStack.empty()).toEqual(true)
-	})
+	const state = {
+		linesCleared: 0,
+		level: 1,
+		combo: 1
+	}
 
 	it('Send and Receive Garbage', () => {
 		const linesCleared = 4
-		const state = {
-			linesCleared: linesCleared,
-			combo: 1
-		}
-		const spy = jest.spyOn(targetManager, 'cancelGarbage').mockImplementation(() => linesCleared)
+		state.linesCleared = linesCleared
 		targetManager.sendGarbage(state)
-		expect(spy.mock.calls).toHaveLength(1)
 		const tmTargets = targetManager.getTargets()
 		expect(tmTargets).toHaveLength(targets.length)
 		tmTargets.forEach(target => {
@@ -91,9 +108,7 @@ describe('TargetManager Tests', () => {
 	})
 
 	it('Receive Garbage', () => {
-		const state = {
-			linesCleared: 0
-		}
+		state.linesCleared = 0
 		const gbStack = targetManager.getGarbageStack()
 		gbStack.push({lines: 4, timer: GARBAGE_DELAY})
 		gbStack.push({lines: 4, timer: GARBAGE_DELAY})
@@ -101,10 +116,8 @@ describe('TargetManager Tests', () => {
 		expect(garbageCb.mock.calls).toHaveLength(2)
 	})
 
-	it('Receive Garbage in a Line Clear', () => {
-		const state = {
-			linesCleared: 1
-		}
+	it('Stall incoming Garbage with a Line Clear', () => {
+		state.linesCleared = 1
 		const gbStack = targetManager.getGarbageStack()
 		gbStack.push({lines: 4, timer: GARBAGE_DELAY})
 		gbStack.push({lines: 4, timer: GARBAGE_DELAY})
