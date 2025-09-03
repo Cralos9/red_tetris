@@ -20,6 +20,11 @@ export const COLORS = {
 	RED: 7,
 }
 
+export const GAMEMODES = {
+	Tetris: "Tetris",
+	42: "42"
+}
+
 export const Icoor = [ [-1,0], [0,0], [1,0], [2,0] ]
 export const Tcoor = [ [-1,0], [0,0], [0,-1], [1,0] ]
 export const Jcoor = [ [-1,0], [-1,-1], [0,0], [1,0] ]
