@@ -1,6 +1,8 @@
 import Game from "./Game.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
 import { expect, jest } from "@jest/globals"
+import { CreateGarbageTetris } from "./Strategy/CreateGarbage.js"
+import { PatternMatchTetris } from "./Strategy/PatternMatch.js"
 
 jest.unstable_mockModule('../Utils/EventDispatcher.js', () => ({
 	default: jest.fn()
@@ -38,22 +40,26 @@ describe('Game Tests', () => {
 		GameController.mockClear()
 		const eventManager = new EventDispatcher()
 		const gameCtrl = new GameController()
-		game = new Game(gameCtrl, eventManager, seed)
+		game = new Game(
+			gameCtrl,
+			eventManager,
+			seed,
+			new CreateGarbageTetris(),
+			new PatternMatchTetris()
+		)
 	})
 
 	describe('ChangeLevel', () => {
-		it('+1 level', () => {
-			game.changeLevel()
-			expect(game.getLevel()).toEqual(2)
+		it('1 level', () => {
+			game.changeLevel(1)
+			expect(game.getLevel()).toEqual(1)
 		})
 
-		it('Max level', () => {
+		it('1 to 10 Level', () => {
 			for (let i = 1; i <= 10; i++) {
+				game.changeLevel(i)
 				expect(game.getLevel()).toEqual(i)
-				game.changeLevel()
 			}
-			game.changeLevel()
-			expect(game.getLevel()).toEqual(10)
 		})
 	})
 
