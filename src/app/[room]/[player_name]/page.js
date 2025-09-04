@@ -75,8 +75,8 @@ export default function RoomPage() {
 			  [ACTIONS.SOFT_DROP]: localStorage.getItem("softDrop") ? [localStorage.getItem("softDrop")] : ['ArrowDown'],
 			  [ACTIONS.HOLD]: localStorage.getItem("holdPiece") ? [localStorage.getItem("holdPiece")] : ['c'],
 			},
-			ARR: localStorage.getItem("ARR") || 5,
-			DAS: localStorage.getItem("DAS") || 10,
+			ARR: parseInt(localStorage.getItem("ARR")) || 5,
+			DAS: parseInt(localStorage.getItem("DAS")) || 10,
 		  };
 		console.log("options: ", options);
 		socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})

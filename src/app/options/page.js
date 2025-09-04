@@ -2,11 +2,14 @@
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
 import { useEffect} from 'react';
-export default function Options() {
+
+export default function Options() 
+{
 	const [value, setValue] = useState(10);
 	const [arrValue, setArrValue] = useState(5);
 	
-	useEffect(() => {
+	useEffect(() => 
+	{
 		const savedDAS = localStorage.getItem("DAS");
 		if (savedDAS !== null) 
 			setValue(Number(savedDAS));
@@ -15,10 +18,10 @@ export default function Options() {
 		if (savedARR !== null) 
 			setArrValue(Number(savedARR));
 	}, []);
-  const router = useRouter();
+  	const router = useRouter();
 
-  const maxDAS = 20;
-  const maxARR = 10;
+  	const maxDAS = 20;
+	const maxARR = 10;
 
   	function apply_options()
   	{
@@ -58,7 +61,7 @@ export default function Options() {
 		  <input
 			type="range"
 			min="0"
-			max={maxARR}
+			max={maxARR - 1}
 			value={maxARR - arrValue}
 			onChange={(e) => setArrValue(maxARR - Number(e.target.value))}
 		  />
