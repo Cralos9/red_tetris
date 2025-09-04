@@ -4,7 +4,7 @@ class Input {
 		this.heldTime = 0
 	}
 
-	setPress(value, timer) {
+	update(value, timer) {
 		this.pressed = value
 		this.heldTime = timer
 	}
@@ -69,7 +69,7 @@ export default class Keyboard {
 		} else if (key.getPress() === true) {
 			return (0)
 		}
-		key.setPress(true, timer)
+		key.update(true, timer)
 		return (1)
 	}
 
@@ -79,7 +79,7 @@ export default class Keyboard {
 		if (key === undefined) {
 			return (0)
 		}
-		key.setPress(false, timer)
+		key.update(false, timer)
 		return (1)
 	}
 
