@@ -7,7 +7,6 @@ export default class GameController extends Keyboard {
 		this.actions = keybinds.actions
 		this.DAS = Number(keybinds.DAS)
 		this.ARR = Number(keybinds.ARR)
-		console.log(this.ARR)
 		this.dasCounter = 0
 		this.pieceDir = []
 		this.consum = []
