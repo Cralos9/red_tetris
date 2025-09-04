@@ -38,8 +38,11 @@ export default class GameController extends Keyboard {
 	getMove(action, frame) {
 		const isTap = this.isTap(this.actions[action], frame)
 
+		if (isTap === true) {
+			this.dasCounter = 0
+			return (true)
+		}
 		this.dasCounter++
-		if (isTap === true) { return (true) }
 		if (this.dasCounter < this.DAS) { return (false) }
 		this.dasCounter -= this.ARR
 		return (true)
@@ -59,7 +62,6 @@ export default class GameController extends Keyboard {
 
 		})
 		if (this.pieceDir.length <= 0) {
-			this.dasCounter = 0
 			return (0)
 		}
 		const moveAction = this.pieceDir[this.pieceDir.length - 1]
