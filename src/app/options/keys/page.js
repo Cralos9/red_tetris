@@ -50,9 +50,7 @@ export default function Keys() {
         if(!keyUsable)
           alert(`Key "${e.key}" is not usable`);
         else if (keyInUse) 
-        {
           alert(`Key "${e.key}" is already used for "${keyInUse[0]}"`);
-        } 
         else 
         {
           setKeys((prev) => ({

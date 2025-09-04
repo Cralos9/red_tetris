@@ -3,7 +3,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { socket } from "../../../socket";
 import  gameDraw  from "./functions";
-import {ACTIONS} from "../../../../common.js";
+import {ACTIONS, SupportedKeys} from "../../../../common.js";
 import { useRouter } from 'next/navigation';
 
 export default function RoomPage() {
@@ -75,8 +75,8 @@ export default function RoomPage() {
 			  [ACTIONS.SOFT_DROP]: localStorage.getItem("softDrop") ? [localStorage.getItem("softDrop")] : ['ArrowDown'],
 			  [ACTIONS.HOLD]: localStorage.getItem("holdPiece") ? [localStorage.getItem("holdPiece")] : ['c'],
 			},
-			ARR: parseInt(localStorage.getItem("ARR")) || 5,
-			DAS: parseInt(localStorage.getItem("DAS")) || 10,
+			ARR: localStorage.getItem("ARR") || 5,
+			DAS: localStorage.getItem("DAS") || 10,
 		  };
 		console.log("options: ", options);
 		socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
@@ -221,10 +221,12 @@ export default function RoomPage() {
 		
 		// window.addEventListener('beforeunload', handleBeforeUnload);
 
-		document.addEventListener("keydown", e => {
-			socket.emit("keyDown", {key: e.key, roomCode: roomCode})
+		document.addEventListener("keydown", e => 
+		{
+				socket.emit("keyDown", {key: e.key, roomCode: roomCode})
 		})
-		document.addEventListener("keyup", e => {
+		document.addEventListener("keyup", e => 
+		{
 			socket.emit("keyUp", {key: e.key, roomCode: roomCode})
 		})
 		
