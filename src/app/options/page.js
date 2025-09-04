@@ -58,7 +58,7 @@ export default function Options() {
 		  <input
 			type="range"
 			min="0"
-			max={maxARR - 1}
+			max={maxARR}
 			value={maxARR - arrValue}
 			onChange={(e) => setArrValue(maxARR - Number(e.target.value))}
 		  />
