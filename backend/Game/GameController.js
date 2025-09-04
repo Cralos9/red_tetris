@@ -7,6 +7,7 @@ export default class GameController extends Keyboard {
 		this.actions = keybinds.actions
 		this.DAS = Number(keybinds.DAS)
 		this.ARR = Number(keybinds.ARR)
+		this.dasCounter = 0
 		this.pieceDir = []
 		this.consum = []
 	}
@@ -36,21 +37,11 @@ export default class GameController extends Keyboard {
 
 	getMove(action, frame) {
 		const isTap = this.isTap(this.actions[action], frame)
-		const heldtimer = this.getHeldTime(this.actions[action])
 
-		const elapsedFrames = frame - heldtimer
-		if (isTap === true) {
-			return (true)
-		}
-
-		if (elapsedFrames < this.DAS) {
-			return (false)
-		}
-
-		if (((elapsedFrames - this.DAS) + this.ARR) % this.ARR) {
-			return (false)
-		}
-
+		this.dasCounter++
+		if (isTap === true) { return (true) }
+		if (this.dasCounter < this.DAS) { return (false) }
+		this.dasCounter -= this.ARR
 		return (true)
 	}
 
@@ -68,6 +59,7 @@ export default class GameController extends Keyboard {
 
 		})
 		if (this.pieceDir.length <= 0) {
+			this.dasCounter = 0
 			return (0)
 		}
 		const moveAction = this.pieceDir[this.pieceDir.length - 1]
