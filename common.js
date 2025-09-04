@@ -36,3 +36,37 @@ export const Lcoor = [ [-1,0], [0,0], [1,0], [1,-1] ]
 export const Ocoor = [ [0,0], [0,-1], [1,0], [1,-1] ]
 export const Scoor = [ [-1,0], [0,0], [0,-1], [1,-1] ]
 export const Zcoor = [ [-1,-1], [0,-1], [0,0], [1,0] ]
+
+export const SupportedKeys = [
+	'q',
+	'w',
+	'e',
+	'r',
+	't',
+	'y',
+	'u',
+	'i',
+	'o',
+	'p',
+	'a',
+	's',
+	'd',
+	'f',
+	'g',
+	'h',
+	'j',
+	'k',
+	'l',
+	'z',
+	'x',
+	'c',
+	'v',
+	'b',
+	'n',
+	' ',
+	'm',
+	'ArrowLeft',
+	'ArrowRight',
+	'ArrowUp',
+	'ArrowDown',
+]
