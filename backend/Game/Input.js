@@ -1,3 +1,5 @@
+import { SupportedKeys } from "../../common.js"
+
 class Input {
 	constructor() {
 		this.pressed = false
@@ -20,49 +22,20 @@ class Input {
 
 export default class Keyboard {
 	constructor() {
-		this.keys = {
-			'q': new Input(),
-			'w': new Input(),
-			'e': new Input(),
-			'r': new Input(),
-			't': new Input(),
-			'y': new Input(),
-			'u': new Input(),
-			'i': new Input(),
-			'o': new Input(),
-			'p': new Input(),
-			'a': new Input(),
-			's': new Input(),
-			'd': new Input(),
-			'f': new Input(),
-			'g': new Input(),
-			'h': new Input(),
-			'j': new Input(),
-			'k': new Input(),
-			'l': new Input(),
-			'z': new Input(),
-			'x': new Input(),
-			'c': new Input(),
-			'v': new Input(),
-			'b': new Input(),
-			'n': new Input(),
-			'm': new Input(),
-			' ': new Input(),
-			'ArrowLeft': new Input(),
-			'ArrowRight': new Input(),
-			'ArrowUp':new Input(),
-			'ArrowDown': new Input(),
-		}
+		this.keys = new Map()
+		SupportedKeys.forEach(key => {
+			this.keys.set(key, new Input())
+		})
 	}
 
 	reset() {
-		for (const key in this.keys) {
-			this.keys[key].reset()
+		for (const key of this.keys.values()) {
+			key.reset()
 		}
 	}
 
 	setPress(keyName, timer) {
-		const key = this.keys[keyName]
+		const key = this.keys.get(keyName)
 
 		if (key === undefined) {
 			return (0)
@@ -74,7 +47,7 @@ export default class Keyboard {
 	}
 
 	setRelease(keyName, timer) {
-		const key = this.keys[keyName]
+		const key = this.keys.get(keyName)
 
 		if (key === undefined) {
 			return (0)
@@ -85,8 +58,7 @@ export default class Keyboard {
 
 	isPressed(keys) {
 		for (let i = 0; i < keys.length; i++) {
-			const key = keys[i]
-			if (this.keys[key].getPress()) {
+			if (this.keys.get(keys[i]).getPress()) {
 				return (true)
 			}
 		}
@@ -95,8 +67,7 @@ export default class Keyboard {
 
 	isTap(keys, timer) {
 		for (let i = 0; i < keys.length; i++) {
-			const keyName = keys[i]
-			if ((timer - this.keys[keyName].getHeldTime()) < 1) {
+			if ((timer - this.keys.get(keys[i]).getHeldTime()) < 1) {
 				return (true)
 			}
 		}
@@ -106,8 +77,7 @@ export default class Keyboard {
 	getHeldTime(keys) {
 		var time = 0
 		for (let i = 0; i < keys.length; i++) {
-			const keyName = keys[i]
-			const heldTime = this.keys[keyName].getHeldTime()
+			const heldTime = this.keys.get(keys[i]).getHeldTime()
 			if (heldTime > time) {
 				time = heldTime
 			}

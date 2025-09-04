@@ -34,7 +34,7 @@ describe('Keyboard Tests', () => {
 	})
 
 	it('Reset function', () => {
-		const input = keyboard.keys[key]
+		const input = keyboard.keys.get(key)
 		const spy = jest.spyOn(input, 'reset')
 		keyboard.setPress(key, 100)
 		keyboard.reset()
