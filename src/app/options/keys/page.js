@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
 import { useEffect} from 'react';
+import {SupportedKeys} from "../../../../common.js";
 
 export default function Keys() {
   const router = useRouter();
@@ -36,15 +37,24 @@ export default function Keys() {
   
     const handler = (e) => {
       e.preventDefault();
+      var keyUsable = 0;
       if (e.key) {
         console.log(e)
+        SupportedKeys.forEach(key => {
+          if(key == e.key)
+            keyUsable = 1;
+        });
         const keyInUse = Object.entries(keys).find(
           ([otherAction, value]) => value === e.key && otherAction !== action
         );
-  
-        if (keyInUse) {
+        if(!keyUsable)
+          alert(`Key "${e.key}" is not usable`);
+        else if (keyInUse) 
+        {
           alert(`Key "${e.key}" is already used for "${keyInUse[0]}"`);
-        } else {
+        } 
+        else 
+        {
           setKeys((prev) => ({
             ...prev,
             [action]: e.key,

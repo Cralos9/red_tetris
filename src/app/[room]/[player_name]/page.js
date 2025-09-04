@@ -129,6 +129,12 @@ export default function RoomPage() {
 				}
 			}
 		})
+
+		socket.on('Error', (msg) =>
+		{
+			router.push("/game")
+		});
+
 		socket.on('game', (msg) => {
 
 			if (document.hidden)
