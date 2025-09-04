@@ -11,7 +11,6 @@ export default class Room {
 		this.gameRunning = false
 		this.gameManager = null
 		this.log = Debug(`Room:${this.code}`)
-		this.startHeartbeat()
 		this.log("Created", this.gamemode, "Room")
 	}
 	
@@ -46,40 +45,6 @@ export default class Room {
 		this.gameRunning = false
 		this.gameManager = null
 		this.log("Game End")
-	}
-
-	startHeartbeat() {
-        const timeout = 8000;
-		const sendPings = 7000
-		this.heartbeatInterval = setInterval(() => {
-			const logger = Debug(`Heartbeat:${this.code}`)
-			const now = Date.now();
-			const toRemove = [];
-			
-			for (const [sockId, player] of this.plMap.entries()) {
-				if (!player.lastPong) player.lastPong = now;
-				
-				logger("Time: ", now - player.lastPong)
-				if (now - player.lastPong > timeout) {
-					logger("Player Remover", player.name);
-					toRemove.push(sockId);
-				} else {
-					logger("heartBeat Sent")
-					this.io.to(sockId).emit('ping-check');
-				}
-			}
-		
-			for (const sockId of toRemove) {
-				this.leavePlayer(this.getPlayer(sockId));
-			}
-		
-			if (this.getNbrOfPlayers() === 0) {
-				clearInterval(this.heartbeatInterval);
-			} else {
-				const ownerId = this.getOwner();
-				if (ownerId) this.io.to(ownerId).emit("Owner", { owner: ownerId });
-			}
-		}, sendPings);
 	}
 
 	leavePlayer(leaverPlayer) {

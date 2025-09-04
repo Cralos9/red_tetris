@@ -32,9 +32,6 @@ export default function RoomPage() {
 	useEffect(() => {
 		socket.connect();
 	  
-		socket.on('ping-check', () => {
-			socket.emit('pong-check')
-		})
 		function handleConnect() {
 			console.log("Connection Accepted")
 			// socket.emit('disconnection', {roomCode: roomCode})
@@ -316,7 +313,7 @@ export default function RoomPage() {
 	function homeButton()
 	{
 		router.push("/game");
-		socket.emit('disconnection', { roomCode: roomCode });
+		socket.disconnect()
 	}
 
 	return (

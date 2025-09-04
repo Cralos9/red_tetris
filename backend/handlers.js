@@ -12,18 +12,21 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		}
 		return null
 	}
-
 	const joinRoom = (payload) => {
 		var playerName = payload.playerName
 		const roomCode = payload.roomCode
 		const options = payload.options
 		const gamemode = payload.gameMode
 
-		console.log(payload.gameMode)
 		if (!RoomsMap.has(roomCode)) {
 			RoomsMap.set(roomCode, new Room(roomCode, gamemode, io))
 		}
 		const room = RoomsMap.get(roomCode)
+
+		if (room.getGamemode() !== gamemode) {
+			socket.emit('Error', {reason: "Wrong Gamemode"})
+			return
+		}
 
 		if (room.getNbrOfPlayers() == 0)
 			room.setOwner(socket.id)
@@ -33,7 +36,6 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		socket.join(roomCode.toString())
 		io.to(roomCode).emit('join', room.toObject())
 	}
-
 	const disconnection = (reason) => {
 		const room = findRoomBySocketId(socket.id)
 		if (!room) {
@@ -44,30 +46,16 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 			return
 		}
 		room.leavePlayer(player)
+
 		if (room.getNbrOfPlayers() === 0) {
 			RoomsMap.delete(room.getCode())
 		}
+		log("Id:", socket.id)
 		socket.emit("Owner", {owner: room.getOwner()})
 		log("Disconnected:", reason)
-		socket.disconnect();
 	}
-
-	socket.on('pong-check', () => {
-		const room = findRoomBySocketId(socket.id)
-		if (room) {
-			const player = room.getPlayer(socket.id)
-			if (player) {
-				player.lastPong = Date.now()
-			}
-		}
-	})
-
-	socket.on('disconnection', disconnection)
 	socket.on('joinRoom', joinRoom)
-
-	socket.on('disconnect', () => {
-		disconnection("manual disconnect")
-	})
+	socket.on('disconnect', disconnection)
 }
 
 export const gameHandlers = (io, socket, RoomsMap) => {

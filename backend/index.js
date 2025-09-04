@@ -13,7 +13,7 @@ const RoomsMap = new Map()
 
 app.prepare().then(() => {
 	const server = createServer(handler)
-	const io = new Server(server)
+	const io = new Server(server, { 'pingInterval': 7000, 'pingTimeout': 8000 })
 	
 	io.on('connection', (socket) => {
 		console.log("User Id:", socket.id)
