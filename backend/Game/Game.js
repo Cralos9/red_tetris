@@ -18,7 +18,7 @@ export default class Game {
 		this.Piece = this.Bag.getNextPiece()
 		this.hitList = []
 		this.stackHeight = ROWS
-		this.hold = null
+		this.hold = 0
 		this.holdLock = false
 		this.linesCleared = 0
 
@@ -104,7 +104,7 @@ export default class Game {
 	holdPiece() {
 		this.log("Holding Piece:", this.Piece.toString())
 		this.resetPiece()
-		if (this.hold === null) {
+		if (this.hold === 0) {
 			this.log("Empty Hold")
 			this.hold = this.Piece
 			this.Piece = this.Bag.getNextPiece()
@@ -206,5 +206,17 @@ export default class Game {
 
 		this.frames += 1
 		this.gravity += 1
+	}
+
+	toObject() {
+		return {
+			field: this.field,
+			linesCleared: this.linesCleared,
+			holdPiece: this.hold ? this.hold.toObject() : 0,
+			nextPiece: this.Bag.nextPiecesArr(),
+			level: this.level,
+			combo: this.combo,
+			running: this.running
+		}
 	}
 }
