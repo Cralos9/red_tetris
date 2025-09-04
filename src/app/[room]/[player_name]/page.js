@@ -41,10 +41,6 @@ export default function RoomPage() {
 		}
 
 		socket.on("connect", handleConnect);
-		socket.on("disconnect",() =>
-		{
-			window.location.reload();	
-		});
 		
 		socket.on('Owner', (msg) =>
 		{

@@ -49,6 +49,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		}
 		socket.emit("Owner", {owner: room.getOwner()})
 		log("Disconnected:", reason)
+		socket.disconnect();
 	}
 
 	socket.on('pong-check', () => {
