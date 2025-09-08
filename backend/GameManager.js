@@ -40,7 +40,6 @@ export default class GameManager {
 		this.log("Players:", printArr(this.players))
 		this.log("Seed: %d", this.seed)
 		this.players.forEach(player => {
-			player.stopGame()
 			player.startGame(this.seed, this, this.room.getCode())
 		})
 

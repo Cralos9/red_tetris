@@ -144,7 +144,7 @@ export default class Game {
 		this.linesCleared = 0
 
 		// 1 to stop the game in the row below the pieces spawn
-		if (this.stackHeight <= 1) {
+		if (this.stackHeight <= 0) {
 			this.log("Game Over")
 			this.running = false
 			return
@@ -200,6 +200,10 @@ export default class Game {
 			}, GAME_EVENTS.LINE_CLEAR)
 			this.resetPiece()
 			this.Piece = this.Bag.getNextPiece()
+			if (this.Piece.checkKicks(this.field, [0,0], this.Piece.getCurrPattern()) === false) {
+				this.log("Game Over")
+				this.running = false
+			}
 		}
 
 		this.Piece.draw(this.field)

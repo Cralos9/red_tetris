@@ -13,16 +13,9 @@ export default class Piece {
 			this.skirts.push(getSkirt(tmp))
 			this.patterns.push(tmp)
 		}
-		this.index = 0
-		this.row = 1
-		this.column = 5
+		this.reset()
 		this.color = color
-		this.collision = false
-		this.lockDelay = 0
-		this.lock = false
 		this.lastShift = ""
-		this.shifts = 0
-		this.shiftFlag = false
 		this.log = Debug("Piece")
 	}
 
@@ -171,7 +164,7 @@ export default class Piece {
 
 	reset() {
 		this.row = 1
-		this.column = 5
+		this.column = 4
 		this.index = 0
 		this.lockDelay = 0
 		this.lock = false

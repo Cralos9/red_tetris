@@ -68,9 +68,7 @@ export default class Player {
 	}
 
 	stopGame() {
-		if (this.inGame === true) {
-			this.game.running = false
-		}
+		this.game.running = false
 	}
 
 	toString() {
