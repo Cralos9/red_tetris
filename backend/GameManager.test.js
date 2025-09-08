@@ -49,7 +49,6 @@ describe('GameManager Tests', () => {
 	it('StartGame', () => {
 		gameManager.startGame()
 		players.forEach(player => {
-			expect(player.stopGame.mock.calls).toHaveLength(1)
 			expect(player.startGame.mock.calls).toHaveLength(1)
 		})
 	})

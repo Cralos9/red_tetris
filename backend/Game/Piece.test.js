@@ -62,6 +62,7 @@ describe('Piece Tests', () => {
 		})
 
 		it('Move', () => {
+			let columnOffset, startColumn
 			const checkMove = (expColumn, move, spyCalls) => {
 				spy.mockClear()
 				piece.move(game.getField(), move)
@@ -70,14 +71,18 @@ describe('Piece Tests', () => {
 				expect(piece.getLastShift()).toEqual(GAME_EVENTS.MOVE)
 			}
 
-			for (let i = 0; i < (COLUMNS / 2) - 2; i++) {
+			startColumn = piece.getColumn()
+			columnOffset = Tcoor[Tcoor.length - 1][0] 
+			for (let i = 0; i < (COLUMNS - 1) - (startColumn + columnOffset); i++) {
 				checkMove(piece.getColumn() + right, right, 1)
 			}
 
 			// Right Collision check
 			checkMove(piece.getColumn(), right, 0)
 
-			for (let i = 0; i < COLUMNS - 3; i++) {
+			startColumn = piece.getColumn()
+			columnOffset = Tcoor[0][0]
+			for (let i = 0; i < (startColumn + columnOffset); i++) {
 				checkMove(piece.getColumn() + left, left, 1)
 			}
 
