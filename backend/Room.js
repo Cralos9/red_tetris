@@ -14,7 +14,10 @@ export default class Room {
 		this.log("Created", this.gamemode, "Room")
 	}
 	
-	setOwner(newOwner) { this.owner = newOwner }
+	setOwner(newOwner) {
+		this.owner = newOwner
+		this.log("New Owner", newOwner ? newOwner.getId() : undefined)
+	}
 	getOwner() { return (this.owner) }
 	getNbrOfPlayers() { return (this.plMap.size) }
 	getCode() { return (this.code) }
@@ -28,7 +31,7 @@ export default class Room {
 	addPlayer(newPlayer) {
 		this.log("Player %s joined", newPlayer.toString())
 		if (this.getNbrOfPlayers() == 0) {
-			this.owner = newPlayer.getId()
+			this.setOwner(newPlayer)
 		}
 		this.plMap.set(newPlayer.getId(), newPlayer)
 	}
@@ -56,17 +59,19 @@ export default class Room {
 			this.gameManager.removePlayer(leaverPlayer)
 		}
 		this.plMap.delete(leaverPlayer.getId())
-		this.io.to(this.code).emit("boardRemove", {id: leaverPlayer.getId()})
-		if (leaverPlayer.getId() == this.owner) {
-			this.owner = this.plMap.keys().next().value
-			this.log("%s is the new Owner", this.owner)
+		if (leaverPlayer === this.owner) {
+			this.setOwner(this.plMap.values().next().value)
+			if (this.owner !== undefined) {
+				this.owner.io.emit("Owner", {owner: this.owner.getId()})
+			}
 		}
+		this.io.to(this.code).emit("boardRemove", {id: leaverPlayer.getId()})
 	}
 
 	toObject() {
 		return {
 			playerIds: Array.from(this.plMap.keys()),
-			roomOwner: this.owner,
+			roomOwner: this.owner.getId(),
 			playerNames: Array.from(this.plMap.values()).map(player => player.name)
 		}
 	}

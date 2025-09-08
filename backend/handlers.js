@@ -48,9 +48,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		if (room.getNbrOfPlayers() === 0) {
 			RoomsMap.delete(room.getCode())
 		}
-		log("Id:", socket.id)
-		socket.emit("Owner", {owner: room.getOwner()})
-		log("Disconnected:", reason)
+		log("%s, Disconnected:", socket.id, reason)
 	}
 	socket.on('joinRoom', joinRoom)
 	socket.on('disconnect', disconnection)
