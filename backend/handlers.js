@@ -49,6 +49,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 			RoomsMap.delete(room.getCode())
 		}
 		log("%s, Disconnected:", socket.id, reason)
+		// Close the player socket here
 	}
 	socket.on('joinRoom', joinRoom)
 	socket.on('disconnect', disconnection)
@@ -80,11 +81,6 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 	const startGame = (payload) => {
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
-		if (room.getOwner() != socket.id)
-		{
-			log("Not owner");
-			return;
-		}
 		room.startGame()
 	}
 	socket.on('startGame', startGame)
