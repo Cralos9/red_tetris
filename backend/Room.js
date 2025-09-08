@@ -28,9 +28,9 @@ export default class Room {
 	addPlayer(newPlayer) {
 		this.log("Player %s joined", newPlayer.toString())
 		if (this.getNbrOfPlayers() == 0) {
-			this.owner = socket.id
+			this.owner = newPlayer.getId()
 		}
-		this.plMap.set(newPlayer.id, newPlayer)
+		this.plMap.set(newPlayer.getId(), newPlayer)
 	}
 
 	startGame() {
@@ -55,8 +55,8 @@ export default class Room {
 		if (leaverPlayer.getInGame() === true) {
 			this.gameManager.removePlayer(leaverPlayer)
 		}
-		this.plMap.delete(leaverPlayer.id)
-		this.io.to(this.code).emit("boardRemove", {id: leaverPlayer.id})
+		this.plMap.delete(leaverPlayer.getId())
+		this.io.to(this.code).emit("boardRemove", {id: leaverPlayer.getId()})
 		if (leaverPlayer.getId() == this.owner) {
 			this.owner = this.plMap.keys().next().value
 			this.log("%s is the new Owner", this.owner)

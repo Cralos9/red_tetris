@@ -6,7 +6,7 @@ import { playerHandlers, gameHandlers } from "./handlers.js"
 const hostname = "localhost"
 const port = 3000
 
-const app = next({ dev: true, hostname, port })
+const app = next({ dev: false, hostname, port })
 const handler = app.getRequestHandler()
 
 const RoomsMap = new Map()
