@@ -1,8 +1,8 @@
 import Game from "./Game.js"
 import { ROWS, COLUMNS } from "./gameParams.js"
 import { expect, jest } from "@jest/globals"
-import { CreateGarbageTetris } from "./Strategy/CreateGarbage.js"
-import { PatternMatchTetris } from "./Strategy/PatternMatch.js"
+import { createGarbageTetris } from "./Strategy/CreateGarbage.js"
+import { patternMatchTetris } from "./Strategy/PatternMatch.js"
 
 jest.unstable_mockModule('../Utils/EventDispatcher.js', () => ({
 	default: jest.fn()
@@ -44,8 +44,8 @@ describe('Game Tests', () => {
 			gameCtrl,
 			eventManager,
 			seed,
-			new CreateGarbageTetris(),
-			new PatternMatchTetris()
+			createGarbageTetris,
+			patternMatchTetris
 		)
 	})
 

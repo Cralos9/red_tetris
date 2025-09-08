@@ -21,14 +21,12 @@ export default class Piece {
 		this.lockDelay = 0
 		this.lock = false
 		this.lastShift = ""
-		this.spin = false
 		this.shifts = 0
 		this.shiftFlag = false
 		this.log = Debug("Piece")
 	}
 
 	getIndex() { return (this.index) }
-	getSpin() { return (this.spin) }
 	getColumn() { return (this.column) }
 	getRow() { return (this.row) }
 	getCollision() { return (this.collision) }
@@ -180,7 +178,6 @@ export default class Piece {
 		this.collision = false
 		this.shifts = 0
 		this.shiftFlag = false
-		this.spin = false
 	}
 
 	toString() {
@@ -189,7 +186,6 @@ export default class Piece {
 
 	toObject() {
 		return {
-			spin: this.spin,
 			pattern: this.patterns[0],
 			color: this.color
 		}

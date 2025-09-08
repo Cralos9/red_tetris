@@ -2,9 +2,9 @@ import GameManager from "./GameManager.js";
 import Debug from "debug"
 import { beforeEach, describe, expect, jest } from "@jest/globals"
 import { GAMEMODES } from "../common.js";
-import { CreateGarbage42, CreateGarbageTetris } from "./Game/Strategy/CreateGarbage.js";
-import { PatternMatch42, PatternMatchTetris } from "./Game/Strategy/PatternMatch.js";
-import { GarbageCalculation42, GarbageCalculationTetris } from "./Game/Strategy/GarbageCalculation.js";
+import { createGarbage42, createGarbageTetris } from "./Game/Strategy/CreateGarbage.js";
+import { patternMatch42, patternMatchTetris } from "./Game/Strategy/PatternMatch.js";
+import { garbageCalculation42, garbageCalculationTetris } from "./Game/Strategy/GarbageCalculation.js";
 
 jest.unstable_mockModule('./Room.js', () => ({
 	default: jest.fn().mockImplementation(() => ({
@@ -73,22 +73,22 @@ describe('GameManager Tests', () => {
 	describe('Gamemode Tests', () => {
 		let out
 
-		const check = (cgClass, pmClass, gcClass) => {
-			expect(out.createGarbage).toBeInstanceOf(cgClass)
-			expect(out.patternMatch).toBeInstanceOf(pmClass)
-			expect(out.gbCalc).toBeInstanceOf(gcClass)
+		const check = (cgStrat, pmStrat, gcStrat) => {
+			expect(out.createGarbage).toBe(cgStrat)
+			expect(out.patternMatch).toBe(pmStrat)
+			expect(out.gbCalc).toBe(gcStrat)
 		}
 
 		it('Get Tetris Gamemode', () => {
 			room.getGamemode.mockImplementation(() => GAMEMODES.Tetris)
 			out = gameManager.getGamemode()
-			check(CreateGarbageTetris, PatternMatchTetris, GarbageCalculationTetris)
+			check(createGarbageTetris, patternMatchTetris, garbageCalculationTetris)
 		})
 
 		it('Get Base Gamemode', () => {
 			room.getGamemode.mockImplementation(() => GAMEMODES.Base)
 			out = gameManager.getGamemode()
-			check(CreateGarbage42, PatternMatch42, GarbageCalculation42)
+			check(createGarbage42, patternMatch42, garbageCalculation42)
 		})
 	})
 

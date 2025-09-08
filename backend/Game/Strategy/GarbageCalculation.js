@@ -1,6 +1,6 @@
 import Strategy from "./Strategy.js";
 
-export class GarbageCalculation42 extends Strategy {
+class GarbageCalculation42 extends Strategy {
 	constructor() { super() }
 
 	execute(tm, linesCleared, combo, pieceSpin) {
@@ -8,7 +8,7 @@ export class GarbageCalculation42 extends Strategy {
 	}
 }
 
-export class GarbageCalculationTetris extends Strategy {
+class GarbageCalculationTetris extends Strategy {
 	constructor() { super() }
 
 	execute(tm, linesCleared, combo, pieceSpin) {
@@ -25,3 +25,6 @@ export class GarbageCalculationTetris extends Strategy {
 		return (garbageLines)
 	}
 }
+
+export const garbageCalculationTetris = new GarbageCalculationTetris()
+export const garbageCalculation42 = new GarbageCalculation42()

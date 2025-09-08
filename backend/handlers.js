@@ -28,8 +28,6 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 			return
 		}
 
-		if (room.getNbrOfPlayers() == 0)
-			room.setOwner(socket.id)
 		const player = new Player(playerName, options, io, socket.id)
 
 		room.addPlayer(player)

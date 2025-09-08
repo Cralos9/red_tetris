@@ -1,7 +1,7 @@
 import Strategy from "./Strategy.js"
 import { ROWS, COLUMNS } from "../gameParams.js"
 
-export class PatternMatch42 extends Strategy {
+class PatternMatch42 extends Strategy {
 	constructor() { super() }
 
 	execute(game) {
@@ -21,7 +21,7 @@ export class PatternMatch42 extends Strategy {
 	}
 }
 
-export class PatternMatchTetris extends Strategy {
+class PatternMatchTetris extends Strategy {
 	constructor() { super() }
 
 	execute(game) {
@@ -40,3 +40,5 @@ export class PatternMatchTetris extends Strategy {
 	}
 }
 
+export const patternMatch42 = new PatternMatch42()
+export const patternMatchTetris = new PatternMatchTetris()

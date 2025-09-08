@@ -2,7 +2,7 @@ import Strategy from "./Strategy.js"
 import { ROWS, COLUMNS } from "../gameParams.js"
 import { randomNbr } from "../utils.js"
 
-export class CreateGarbage42 extends Strategy {
+class CreateGarbage42 extends Strategy {
 	constructor() { super() }
 
 	execute(game, garbageLines) {
@@ -14,7 +14,7 @@ export class CreateGarbage42 extends Strategy {
 	}
 }
 
-export class CreateGarbageTetris extends Strategy {
+class CreateGarbageTetris extends Strategy {
 	constructor() { super() }
 
 	execute(game, garbageLines) {
@@ -28,3 +28,6 @@ export class CreateGarbageTetris extends Strategy {
 		}
 	}
 }
+
+export const createGarbageTetris = new CreateGarbageTetris()
+export const createGarbage42 = new CreateGarbage42()

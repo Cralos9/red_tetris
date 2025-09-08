@@ -1,6 +1,6 @@
 import EventDispatcher from "../Utils/EventDispatcher.js"
 import { GARBAGE_DELAY } from "./gameParams.js"
-import { GarbageCalculationTetris } from "./Strategy/GarbageCalculation.js"
+import { garbageCalculationTetris } from "./Strategy/GarbageCalculation.js"
 import TargetManager from "./Target.js"
 import { expect, jest } from "@jest/globals"
 
@@ -28,7 +28,7 @@ describe('TargetManager Tests', () => {
 			const eventManager = new EventDispatcher()
 			target.targetManager = new TargetManager(garbageCb, eventManager, null)
 		})
-		gbCalc = new GarbageCalculationTetris()
+		gbCalc = garbageCalculationTetris
 		targetManager = new TargetManager(
 			garbageCb,
 			eventManager,

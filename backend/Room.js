@@ -27,6 +27,9 @@ export default class Room {
 
 	addPlayer(newPlayer) {
 		this.log("Player %s joined", newPlayer.toString())
+		if (this.getNbrOfPlayers() == 0) {
+			this.owner = socket.id
+		}
 		this.plMap.set(newPlayer.id, newPlayer)
 	}
 

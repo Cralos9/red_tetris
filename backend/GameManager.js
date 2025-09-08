@@ -1,9 +1,9 @@
 import { BEGIN_LEVEL, LEVEL_INTERVAL, MAX_LEVEL } from "./Game/gameParams.js";
 import { printArr } from "./debug.js";
 import { GAMEMODES } from "../common.js"
-import { CreateGarbage42, CreateGarbageTetris } from "./Game/Strategy/CreateGarbage.js";
-import { PatternMatch42, PatternMatchTetris } from "./Game/Strategy/PatternMatch.js";
-import { GarbageCalculation42, GarbageCalculationTetris } from "./Game/Strategy/GarbageCalculation.js";
+import { createGarbage42, createGarbageTetris } from "./Game/Strategy/CreateGarbage.js";
+import { patternMatch42, patternMatchTetris } from "./Game/Strategy/PatternMatch.js";
+import { garbageCalculation42, garbageCalculationTetris } from "./Game/Strategy/GarbageCalculation.js";
 
 export default class GameManager {
 	constructor(room, gamePlayers) {
@@ -16,14 +16,14 @@ export default class GameManager {
 		this.log = this.room.getLog().extend("GameManager")
 		this.strats = {
 			[GAMEMODES.Tetris]: {
-				createGarbage: new CreateGarbageTetris(),
-				patternMatch: new PatternMatchTetris(),
-				gbCalc: new GarbageCalculationTetris()
+				createGarbage: createGarbageTetris,
+				patternMatch: patternMatchTetris,
+				gbCalc: garbageCalculationTetris
 			},
 			[GAMEMODES.Base]: {
-				createGarbage: new CreateGarbage42(),
-				patternMatch: new PatternMatch42(),
-				gbCalc: new GarbageCalculation42()
+				createGarbage: createGarbage42,
+				patternMatch: patternMatch42,
+				gbCalc: garbageCalculation42
 			}
 		}
 	}
