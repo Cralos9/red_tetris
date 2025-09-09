@@ -34,7 +34,6 @@ export default function RoomPage() {
 	  	
 		socket.on("Owner", (msg) =>
 		{
-			console.log("TESTEEEEEEEEEEEEEEEe")
 			const startBtn = document.getElementById('Start');
 			if (startBtn && socket.id === msg.owner)
 				startBtn.style.visibility = 'visible';
