@@ -114,6 +114,7 @@ export default function RoomPage() {
 		socket.on('Error', (msg) =>
 		{
 			router.push("/game")
+			socket.disconnect();
 		});
 
 		socket.on('game', (msg) => {
