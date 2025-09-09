@@ -52,7 +52,6 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 			RoomsMap.delete(room.getCode())
 		}
 		log("%s, Disconnected:", socket.id, reason)
-		// Close the player socket here
 	}
 	socket.on('joinRoom', joinRoom)
 	socket.on('disconnect', disconnection)
@@ -63,13 +62,12 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const key = payload.key
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
-		const player = room.getPlayer(socket.id)
 
 		if (room === undefined) {
 			logError("Invalid Room code", payload)
 			return
 		}
-
+		const player = room.getPlayer(socket.id)
 		if (player && player.getInGame() === true) {
 			if (key === "Escape") {
 				player.stopGame()
@@ -82,13 +80,12 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const key = payload.key
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
-		const player = room.getPlayer(socket.id)
 
 		if (room === undefined) {
 			logError("Invalid Room code", payload)
 			return
 		}
-
+		const player = room.getPlayer(socket.id)
 		if (player && player.getInGame() === true) {
 			player.getGameController().setRelease(key, 0, false)
 		}

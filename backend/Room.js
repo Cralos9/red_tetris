@@ -73,7 +73,7 @@ export default class Room {
 		return {
 			playerIds: Array.from(this.plMap.keys()),
 			roomOwner: this.owner.getId(),
-			playerNames: Array.from(this.plMap.values()).map(player => player.name)
+			playerNames: Array.from(this.plMap.values()).map(player => player.getName())
 		}
 	}
 }

@@ -77,6 +77,7 @@ export default class Player {
 
 	toObject() {
 		return {
+			playerId: this.id,
 			playerName: this.name
 		}
 	}
