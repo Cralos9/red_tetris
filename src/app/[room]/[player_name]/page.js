@@ -31,16 +31,10 @@ export default function RoomPage() {
 	  }
 	useEffect(() => {
 		socket.connect();
-	  
-		function handleConnect() {
-			console.log("Connection Accepted")
-			// socket.emit('disconnection', {roomCode: roomCode})
-		}
-
-		socket.on("connect", handleConnect);
-		
-		socket.on('Owner', (msg) =>
+	  	
+		socket.on("Owner", (msg) =>
 		{
+			console.log("TESTEEEEEEEEEEEEEEEe")
 			const startBtn = document.getElementById('Start');
 			if (startBtn && socket.id === msg.owner)
 				startBtn.style.visibility = 'visible';
@@ -48,19 +42,13 @@ export default function RoomPage() {
 
 		socket.on("boardRemove", (msg) =>
 		{
-			console.log("Board Remove Id: " ,msg.id)
 			var board = document.getElementById(msg.id)
 			if(!board)
 				return
-			console.log(board);
 			div = board.parentElement;
 			if(board)
 				board.remove();
 		});
-
-		return function cleanup() {
-			socket.off("connect", handleConnect);
-		};
 	}, []);
 
 	useEffect(() => {
@@ -78,27 +66,23 @@ export default function RoomPage() {
 			ARR: parseInt(localStorage.getItem("ARR")) || 5,
 			DAS: parseInt(localStorage.getItem("DAS")) || 10,
 		  };
-		console.log("options: ", options);
 		socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
 
 
 		socket.on('endGame', (msg) =>
 		{
-			console.log("Msg: ", msg)
 			setScores(msg.leaderboard.reverse())
-			console.log("Scores: " ,scores);
+
 			setAllGamesOver(true);
 		})
 
 		socket.on('join', (msg) => 
 		{
 			const startBtn = document.getElementById('Start');
-			console.log(msg)
 			if (startBtn && socket.id === msg.roomOwner)
 				startBtn.style.visibility = 'visible';
 			var otherBoards = msg.playerIds
 			var names = msg.playerNames
-			console.log("ID: " ,msg.playerIds)
 			for(var i = 0; i <= otherBoards.length; i++)
 			{
 				if(otherBoards[i] === socket.id || otherBoards[i] === undefined)
@@ -115,10 +99,8 @@ export default function RoomPage() {
 					otherBoard.id = otherBoards[i];
 					otherBoard.appendChild(nameLabel);
 					gameDraw.add_secondary_cells(otherBoard, 200);
-					console.log("i: %i   i%2 : %i", i, i%2);
 					if(div)
 					{
-						console.log("div: ", div)
 						div.appendChild(otherBoard)
 						div = null;
 					}
@@ -221,6 +203,11 @@ export default function RoomPage() {
 		
 		// window.addEventListener('beforeunload', handleBeforeUnload);
 
+		// window.history.pushState(null, "", window.location.href);
+		// window.onpopstate = () => {
+		// 	window.history.go(1);
+		// };
+	
 		document.addEventListener("keydown", e => 
 		{
 				socket.emit("keyDown", {key: e.key, roomCode: roomCode})
@@ -258,7 +245,6 @@ export default function RoomPage() {
 			return;
 		setAllGamesOver(false);
 		gameDraw.add_cells('.held-piece', 30)
-		console.log(gameOver);
 		setIsDisabled(true);
 	  
 		// ************ Countdown Code ******************

@@ -39,7 +39,6 @@ export default function Keys() {
       e.preventDefault();
       var keyUsable = 0;
       if (e.key) {
-        console.log(e)
         SupportedKeys.forEach(key => {
           if(key == e.key)
             keyUsable = 1;

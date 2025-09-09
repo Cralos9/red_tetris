@@ -16,7 +16,6 @@ app.prepare().then(() => {
 	const io = new Server(server, { 'pingInterval': 7000, 'pingTimeout': 8000 })
 	
 	io.on('connection', (socket) => {
-		console.log("User Id:", socket.id)
 		playerHandlers(io, socket, RoomsMap)
 		gameHandlers(io, socket, RoomsMap)
 	})

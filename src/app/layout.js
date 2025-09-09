@@ -1,6 +1,7 @@
 import './cssFiles/globals.css';
 import './cssFiles/buttons.css';
 import './cssFiles/board.css'
+import PopStateHandler from './components/popStateHandler';
 
 export const metadata = {
 	title: 'Dr Tetris',
@@ -22,6 +23,7 @@ export default function Page({ children }) {
 				
 			</head>
 			<body>
+				<PopStateHandler/>
 				<div className="header">
 					
 					<h1 className="title">Dr.Tetris</h1>
