@@ -3,10 +3,11 @@ import next from "next"
 import { Server } from "socket.io"
 import { playerHandlers, gameHandlers } from "./handlers.js"
 
-const hostname = "localhost"
-const port = 3000
+const hostname = process.env.HOST
+const port = process.env.PORT
+const dev = process.env.DEV === "DEV"
 
-const app = next({ dev: true, hostname, port })
+const app = next({ dev, hostname, port })
 const handler = app.getRequestHandler()
 
 const RoomsMap = new Map()
