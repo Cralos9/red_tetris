@@ -10,6 +10,10 @@ export default class GameController extends Keyboard {
 		this.dasCounter = 0
 		this.pieceDir = []
 		this.consum = []
+		this.ret = new Map()
+		this.ret.set(ACTIONS.HARD_DROP, 0)
+		this.ret.set(ACTIONS.MOVE_LEFT, 0)
+		this.ret.set(ACTIONS.MOVE_RIGHT, 0)
 	}
 
 	axis(left, right){
@@ -92,4 +96,14 @@ export default class GameController extends Keyboard {
 			rot: rot
 		}
 	}
+
+	setAction(action, value) {
+		const actionValue = this.ret.get(action)
+		if (actionValue === undefined) {
+			return
+		}
+		actionValue = value
+	}
+
+	getRet() { return (this.ret) }
 }

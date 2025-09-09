@@ -105,7 +105,17 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 			logError(errorMsg)
 		}
 	}
+	const KeyDown = (payload) => {
+		const action = payload.action
+		const room = RoomsMap.get(payload.roomCode)
+
+		const player = room.getPlayer(socket.id)
+		if (player.getInGame() === true) {
+			player.getGameController().setAction(action, true)
+		}
+	}
 	socket.on('startGame', startGame)
 	socket.on('keyDown', keyDown)
 	socket.on('keyUp', keyUp)
+	socket.on('KeyDown', KeyDown)
 }

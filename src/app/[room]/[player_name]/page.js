@@ -21,11 +21,11 @@ export default function RoomPage() {
 
 	const handleKeyDown = (e) => {
 		socket.emit("keyDown", { key: e.key, roomCode });
-	  };
+	};
 	
-	  const handleKeyUp = (e) => {
+	const handleKeyUp = (e) => {
 		socket.emit("keyUp", { key: e.key, roomCode });
-	  };
+	};
 
 	function end_game() {
 	  setIsDisabled(false);
@@ -194,7 +194,19 @@ export default function RoomPage() {
 			gameDraw.game(cells, field, topRow, own)
 		});
 
-		document.addEventListener("keydown", handleKeyDown)
+		const keyHandler = (key) => (element) => key === element
+		document.addEventListener("keydown", (e) => {
+			const actions = options.actions
+			const key = e.key
+
+			if (actions[ACTIONS.HARD_DROP].some(keyHandler(key)) === true) {
+				console.log("HardDrop")
+				socket.emit("KeyDown", {
+					action: ACTIONS.HARD_DROP,
+					roomCode: roomCode
+				})
+			}
+		})
 	
 		document.addEventListener("keyup", handleKeyUp)
 	
