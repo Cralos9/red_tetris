@@ -3,9 +3,11 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { socket } from "../../../socket";
 import  gameDraw  from "./functions";
-import {ACTIONS} from "../../../../common.js";
+import {ACTIONS, SupportedKeys} from "../../../../common.js";
+import { useRouter } from 'next/navigation';
 
 export default function RoomPage() {
+	const router = useRouter()
 	const params = useParams();
 	const roomCode = params.room;
 	const [gameOver, setGameOver] = useState(false);
@@ -16,6 +18,14 @@ export default function RoomPage() {
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
 	const [scores, setScores] = useState([]);
+
+	const handleKeyDown = (e) => {
+		socket.emit("keyDown", { key: e.key, roomCode });
+	  };
+	
+	  const handleKeyUp = (e) => {
+		socket.emit("keyUp", { key: e.key, roomCode });
+	  };
 
 	function end_game() {
 	  setIsDisabled(false);
@@ -29,18 +39,8 @@ export default function RoomPage() {
 	  }
 	useEffect(() => {
 		socket.connect();
-	  
-		socket.on('ping-check', () => {
-			socket.emit('pong-check')
-		})
-		function handleConnect() {
-			console.log("Connection Accepted")
-			// socket.emit('disconnection', {roomCode: roomCode})
-		}
-
-		socket.on("connect", handleConnect);
-		
-		socket.on('Owner', (msg) =>
+	  	
+		socket.on("Owner", (msg) =>
 		{
 			const startBtn = document.getElementById('Start');
 			if (startBtn && socket.id === msg.owner)
@@ -49,19 +49,13 @@ export default function RoomPage() {
 
 		socket.on("boardRemove", (msg) =>
 		{
-			console.log("Board Remove Id: " ,msg.id)
 			var board = document.getElementById(msg.id)
 			if(!board)
 				return
-			console.log(board);
 			div = board.parentElement;
 			if(board)
 				board.remove();
 		});
-
-		return function cleanup() {
-			socket.off("connect", handleConnect);
-		};
 	}, []);
 
 	useEffect(() => {
@@ -71,7 +65,7 @@ export default function RoomPage() {
 			  [ACTIONS.MOVE_LEFT]: localStorage.getItem("left") ? [localStorage.getItem("left")] : ['ArrowLeft'],
 			  [ACTIONS.MOVE_RIGHT]: localStorage.getItem("right") ? [localStorage.getItem("right")] : ['ArrowRight'],
 			  [ACTIONS.ROTATE_LEFT]: localStorage.getItem("rotateLeft") ? [localStorage.getItem("rotateLeft")] : ['z'],
-			  [ACTIONS.ROTATE_RIGHT]: localStorage.getItem("rotateRight") ? [localStorage.getItem("rotateRight")] : ['x'],
+			  [ACTIONS.ROTATE_RIGHT]: localStorage.getItem("rotateRight") ? [localStorage.getItem("rotateRight")] : ['ArrowUp', 'x'],
 			  [ACTIONS.HARD_DROP]: localStorage.getItem("hardDrop") ? [localStorage.getItem("hardDrop")] : [' '],
 			  [ACTIONS.SOFT_DROP]: localStorage.getItem("softDrop") ? [localStorage.getItem("softDrop")] : ['ArrowDown'],
 			  [ACTIONS.HOLD]: localStorage.getItem("holdPiece") ? [localStorage.getItem("holdPiece")] : ['c'],
@@ -79,27 +73,23 @@ export default function RoomPage() {
 			ARR: parseInt(localStorage.getItem("ARR")) || 5,
 			DAS: parseInt(localStorage.getItem("DAS")) || 10,
 		  };
-		console.log("options: ", options);
-		socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options})
+		socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
 
 
 		socket.on('endGame', (msg) =>
 		{
-			console.log("Msg: ", msg)
 			setScores(msg.leaderboard.reverse())
-			console.log("Scores: " ,scores);
+
 			setAllGamesOver(true);
 		})
 
 		socket.on('join', (msg) => 
 		{
 			const startBtn = document.getElementById('Start');
-			console.log(msg)
 			if (startBtn && socket.id === msg.roomOwner)
 				startBtn.style.visibility = 'visible';
 			var otherBoards = msg.playerIds
 			var names = msg.playerNames
-			console.log("ID: " ,msg.playerIds)
 			for(var i = 0; i <= otherBoards.length; i++)
 			{
 				if(otherBoards[i] === socket.id || otherBoards[i] === undefined)
@@ -116,10 +106,8 @@ export default function RoomPage() {
 					otherBoard.id = otherBoards[i];
 					otherBoard.appendChild(nameLabel);
 					gameDraw.add_secondary_cells(otherBoard, 200);
-					console.log("i: %i   i%2 : %i", i, i%2);
 					if(div)
 					{
-						console.log("div: ", div)
 						div.appendChild(otherBoard)
 						div = null;
 					}
@@ -130,7 +118,18 @@ export default function RoomPage() {
 				}
 			}
 		})
+
+		socket.on('Error', (msg) =>
+		{
+			router.push("/game")
+			socket.disconnect();
+		});
+
 		socket.on('game', (msg) => {
+
+			if (document.hidden)
+				return;
+
 			if (!msg.running && msg.playerId === socket.id) 
 			{
 				scoreSave(msg.playerScore.score);
@@ -138,9 +137,11 @@ export default function RoomPage() {
 				return;
 			}
 			const field = msg.field;
-			var cells 
-			if (msg.playerId === socket.id) 
+			var cells
+			var own = 0;
+			if (msg.playerId === socket.id)
 			{
+				own = 1;
 				var j = 0;
 				var gLines = 0;
 				var score = document.getElementById('Score')
@@ -151,7 +152,7 @@ export default function RoomPage() {
 				cells = document.querySelectorAll('.game-bottle .cell');
 				const heldPiece = msg.holdPiece
 				const nextPiece = msg.nextPiece
-				gameDraw.garbage_cell('.garbage-bar',msg.targetManager.garbage);
+				gameDraw.garbage_cell('.garbage-bar',msg.targetManager.garbage, msg.level);
 				gameDraw.nextPieceDraw(nextPiece);
 				gameDraw.heldPieceDraw(heldPiece);
 				const lineClear = document.createElement('div');
@@ -189,40 +190,29 @@ export default function RoomPage() {
 					return
 				cells = otherBoard.querySelectorAll('.cell');
 			}
-			gameDraw.game(cells, field)
+			const topRow = document.querySelectorAll('.top-row .cell'); 
+			gameDraw.game(cells, field, topRow, own)
 		});
 
-		async function handleBeforeUnload() {
-			if (socket && socket.connected) {
-				await new Promise((resolve) => {
-					socket.emit('disconnection', { roomCode: roomCode }, resolve);
-				});
-				if (otherBoards && otherBoards.length) {
-					for (let i = 0; i < otherBoards.length; i++) {
-						const otherBoard = document.getElementById(otherBoards[i]);
-						if (otherBoard) otherBoard.remove();
-					}
-				}
-				socket.disconnect();
-			}
-		}
-		
-		// window.addEventListener('beforeunload', handleBeforeUnload);
-
-		document.addEventListener("keydown", e => {
-			socket.emit("keyDown", {key: e.key, roomCode: roomCode})
-		})
-		document.addEventListener("keyup", e => {
-			socket.emit("keyUp", {key: e.key, roomCode: roomCode})
-		})
+		document.addEventListener("keydown", handleKeyDown)
+	
+		document.addEventListener("keyup", handleKeyUp)
+	
 		
 		// const game22 = document.querySelector('.secondary-games');
 		// game22.innerHTML = '';
+		gameDraw.add_cells('.top-row', 10)
 		gameDraw.add_cells('.game-bottle', 200)
 		gameDraw.add_cells('.next-piece', 60)
 		gameDraw.add_cells('.held-piece', 30)
 		if (name) 
 			setUsername(name);
+		
+		return () => {
+			socket.disconnect();
+			document.removeEventListener("keydown", handleKeyDown);
+			document.removeEventListener("keyup", handleKeyUp);
+		  };
 	}, [name]);
 	
 	function resetGame()
@@ -243,7 +233,6 @@ export default function RoomPage() {
 			return;
 		setAllGamesOver(false);
 		gameDraw.add_cells('.held-piece', 30)
-		console.log(gameOver);
 		setIsDisabled(true);
 	  
 		// ************ Countdown Code ******************
@@ -288,7 +277,7 @@ export default function RoomPage() {
 
 			scores.sort((a, b) => b.score - a.score);
 	
-			const top5 = scores.slice(0, 5);
+			const top5 = scores.slice(0, 3);
 	
 			for (let i = 0; i < localStorage.length; i++) {
 				const key = localStorage.key(i);
@@ -303,9 +292,19 @@ export default function RoomPage() {
 		}
 	}
 	
+	function homeButton()
+	{
+		// socket.disconnect()
+		// document.removeEventListener("keydown", handleKeyDown)
+		// document.removeEventListener("keyup", handleKeyUp)
+		router.push("/game");
+	}
 
 	return (
 		<div>
+			<div className="logButton-cont">
+						<button onClick={homeButton} className="logButton">Home</button>
+				</div>
 				{gameOver && <div className='game-Over'>
 					Game Over
 
@@ -342,7 +341,9 @@ export default function RoomPage() {
 							<span className="held-label">Held Piece</span>
 							</div>
 							<div className='garbage-bar'></div>
-							<div className="game-bottle"></div>
+							<div className="game-bottle">
+								<div className='top-row'></div>
+							</div>
 							<div className="next-piece">
 							<span className="held-label">Next Pieces</span>
 							</div>

@@ -1,4 +1,4 @@
-export class PRNG {
+export default class PRNG {
 	constructor(seed) {
 		this.seed = seed
 		this.m = Math.pow(2, 31) - 1

@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
 import { useEffect} from 'react';
+import {SupportedKeys} from "../../../../common.js";
 
 export default function Keys() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function Keys() {
       left: localStorage.getItem("left") || 'ArrowLeft',
       right: localStorage.getItem("right") || 'ArrowRight',
       rotateLeft: localStorage.getItem("rotateLeft") || 'z',
-      rotateRight: localStorage.getItem("rotateRight") || 'x',
+      rotateRight: localStorage.getItem("rotateRight") || 'ArrowUp',
       hardDrop: localStorage.getItem("hardDrop") || ' ',
       softDrop: localStorage.getItem("softDrop") || 'ArrowDown',
       holdPiece: localStorage.getItem("holdPiece") || 'c',
@@ -36,15 +37,21 @@ export default function Keys() {
   
     const handler = (e) => {
       e.preventDefault();
+      var keyUsable = 0;
       if (e.key) {
-        console.log(e)
+        SupportedKeys.forEach(key => {
+          if(key == e.key)
+            keyUsable = 1;
+        });
         const keyInUse = Object.entries(keys).find(
           ([otherAction, value]) => value === e.key && otherAction !== action
         );
-  
-        if (keyInUse) {
+        if(!keyUsable)
+          alert(`Key "${e.key}" is not usable`);
+        else if (keyInUse) 
           alert(`Key "${e.key}" is already used for "${keyInUse[0]}"`);
-        } else {
+        else 
+        {
           setKeys((prev) => ({
             ...prev,
             [action]: e.key,
@@ -72,7 +79,7 @@ export default function Keys() {
         left: 'ArrowLeft',
         right: 'ArrowRight',
         rotateLeft: 'z',
-        rotateRight: 'x',
+        rotateRight: 'ArrowUp',
         hardDrop: ' ',
         softDrop: 'ArrowDown',
         holdPiece: 'c',

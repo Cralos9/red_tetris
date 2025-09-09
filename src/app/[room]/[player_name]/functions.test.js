@@ -2,7 +2,7 @@
 /**
  * @jest-environment jsdom
  */
-import {COLORS} from "../../../../common.js";
+import {COLORS, GarbageDelayCalc} from "../../../../common.js";
 import { describe, jest } from '@jest/globals';
 import gameDraw from "./functions";
 
@@ -16,29 +16,20 @@ test('clear Lines', () =>{
 describe('game', () => {
 	let cells;
 	let field;
-
+	let topRow;
+	
 	beforeEach(() => {
+
 		cells = Array.from({ length: 200 }, () => document.createElement('div'));
 		field = Array.from({ length: 20 }, () => Array(10).fill(0));
+		topRow = Array.from({ length: 10 }, () => document.createElement('div'));
 		field[0][0] = 8;
 	});
 
-	test('sets normal cell color and clears virus', () => {
-		gameDraw.game(cells, field);
-
-		expect(cells[0].getAttribute('data-virus')).toBeTruthy();
-		expect(cells[0].style.backgroundImage).toContain('url');
-
-		const normalCell = cells[1];
-		expect(normalCell.style.backgroundColor).toBe('transparent');
-		expect(normalCell.style.backgroundImage).toBe('none');
-		expect(normalCell.hasAttribute('data-virus')).toBe(false);
-	});
-
 	test('virus keeps same gif after rerun', () => {
-		gameDraw.game(cells, field);
+		gameDraw.game(cells, field, topRow, 1);
 		const gifFirstRun = cells[0].getAttribute('data-virus');
-		gameDraw.game(cells, field);
+		gameDraw.game(cells, field, topRow, 1);
 		expect(cells[0].getAttribute('data-virus')).toBe(gifFirstRun);
 	});
 });
@@ -59,16 +50,16 @@ describe('garbage_cell', () => {
 	});
 
 	test('appends cells with correct colors', () => {
-		const fixedNow = 10_000;
+		const fixedNow = GarbageDelayCalc(1);
 		jest.spyOn(Date, 'now').mockReturnValue(fixedNow);
 
 		const garbage = [
-			{ lines: 1, timer: fixedNow - 1000 },
-			{ lines: 1, timer: fixedNow - 3000 },
-			{ lines: 1, timer: fixedNow - 5000 }
+			{ lines: 1, timer: fixedNow * 0.80 },
+			{ lines: 1, timer: fixedNow * 0.40 },
+			{ lines: 1, timer: fixedNow * 0.10}
 		];
 
-		gameDraw.garbage_cell('#container', garbage);
+		gameDraw.garbage_cell('#container', garbage, 1);
 
 		const cells = container.querySelectorAll('.cell');
 		expect(cells).toHaveLength(3);

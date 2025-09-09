@@ -1,11 +1,13 @@
 import { ACTIONS } from "../../common.js"
+import Keyboard from "./Input.js"
 
-export class GameController {
-	constructor(keyboard, keybinds) {
-		this.keyboard = keyboard
+export default class GameController extends Keyboard {
+	constructor(keybinds) {
+		super()
 		this.actions = keybinds.actions
 		this.DAS = Number(keybinds.DAS)
 		this.ARR = Number(keybinds.ARR)
+		this.dasCounter = 0
 		this.pieceDir = []
 		this.consum = []
 	}
@@ -21,7 +23,7 @@ export class GameController {
 
 	consumeKey(action) {
 		const keys = this.actions[action]
-		const isPressed = this.keyboard.isPressed(keys)
+		const isPressed = this.isPressed(keys)
 
 		if (isPressed === false) {
 			this.consum = this.consum.filter(Caction => Caction !== action)
@@ -33,30 +35,24 @@ export class GameController {
 		return (true)
 	}
 
-	getMove(action) {
-		const isTap = this.keyboard.isTap(this.actions[action])
-		const heldtimer = this.keyboard.getHeldTime(this.actions[action])
+	getMove(action, frame) {
+		const isTap = this.isTap(this.actions[action], frame)
 
 		if (isTap === true) {
+			this.dasCounter = 0
 			return (true)
 		}
-
-		if (heldtimer < this.DAS) {
-			return (false)
-		}
-
-		if (((heldtimer - this.DAS) + this.ARR) % this.ARR) {
-			return (false)
-		}
-
+		this.dasCounter++
+		if (this.dasCounter < this.DAS) { return (false) }
+		this.dasCounter -= this.ARR
 		return (true)
 	}
 
-	getDir(actionArr) {
+	getDir(actionArr, frame) {
 		actionArr.forEach(action => {
 			const keys = this.actions[action]
-			const isPressed = this.keyboard.isPressed(keys)
-			const isTap = this.keyboard.isTap(keys)
+			const isPressed = this.isPressed(keys)
+			const isTap = this.isTap(keys, frame)
 
 			if (isPressed === false) {
 				this.pieceDir = this.pieceDir.filter(actions => action !== actions)
@@ -69,7 +65,7 @@ export class GameController {
 			return (0)
 		}
 		const moveAction = this.pieceDir[this.pieceDir.length - 1]
-		var move = this.getMove(moveAction)
+		var move = this.getMove(moveAction, frame)
 		if (moveAction === ACTIONS.MOVE_LEFT) {
 			move *= -1
 		} else if (moveAction === ACTIONS.MOVE_RIGHT) {
@@ -78,17 +74,15 @@ export class GameController {
 		return (move)
 	}
 
-	keyStates() {
+	keyStates(frame) {
 		const hardDrop = this.consumeKey(ACTIONS.HARD_DROP)
 		const hold = this.consumeKey(ACTIONS.HOLD)
-		const softDrop = this.keyboard.isPressed(this.actions[ACTIONS.SOFT_DROP]) ? 1 : 0
+		const softDrop = this.isPressed(this.actions[ACTIONS.SOFT_DROP]) ? 1 : 0
 		const rotateRight = this.consumeKey(ACTIONS.ROTATE_RIGHT)
 		const rotateLeft = this.consumeKey(ACTIONS.ROTATE_LEFT)
 
-		const move = this.getDir([ACTIONS.MOVE_LEFT, ACTIONS.MOVE_RIGHT])
+		const move = this.getDir([ACTIONS.MOVE_LEFT, ACTIONS.MOVE_RIGHT], frame)
 		const rot = this.axis(rotateLeft, rotateRight)
-
-		this.keyboard.update()
 
 		return {
 			move: move,

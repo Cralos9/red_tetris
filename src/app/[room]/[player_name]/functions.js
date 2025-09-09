@@ -1,4 +1,4 @@
-import {COLORS} from "../../../../common.js";
+import {COLORS, GarbageDelayCalc} from "../../../../common.js";
 
 const gifs = [
 	"/images/blue_virus2.gif",
@@ -6,35 +6,50 @@ const gifs = [
 	"/images/red_virus2.gif"
 ];
 
-function game(cells, field)
+function game(cells, field, topRow, own)
 {
-	for (let y = 0; y < 20; y++) 
+	for (let y = 0; y < field.length; y++) 
+	{
+		if (!own && y === 0) y++;
+		for (let x = 0; x < field[y].length; x++) 
 		{
-			for (let x = 0; x < 10; x++) 
+			let index = own ? y * 10 + x : (y - 1) * 10 + x;
+			const value = field[y][x];
+			const cell = cells[index];
+			if(y === 0 && value !== 8)
 			{
-			  const index = y * 10 + x;
-			  const value = field[y][x];
-			  const cell = cells[index];
-		  
-				if (value !== 8)
+				const top_cell = topRow[index];
+				top_cell.style.backgroundColor = gameDraw.getColor(value);
+				top_cell.style.backgroundImage = 'none';
+				top_cell.removeAttribute('data-virus');
+				if(value == 0)
 				{
-					cell.style.backgroundImage = 'none';
-					cell.style.backgroundColor = gameDraw.getColor(value);
-					cell.removeAttribute('data-virus');
-				} 
-				else 
-				{
-					if (!cell.hasAttribute('data-virus')) 
-					{
-						const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
-						cell.setAttribute('data-virus', randomGif);
-					}
-					const virusGif = cell.getAttribute('data-virus');
-					cell.style.backgroundImage = `url('${virusGif}')`;
-					cell.style.backgroundSize = "cover";
+					top_cell.style.boxShadow = "none";
+					top_cell.style.border = "none";
+					continue;
 				}
+				top_cell.style.boxShadow = "inset 4px 4px 0 rgba(19, 15, 15, 0.34), inset -4px -4px 0 #44444459";
+				top_cell.style.border = "2px solid #000000"
+			}
+			else if (value !== 8)
+			{
+				cell.removeAttribute('data-virus');
+				cell.style.backgroundColor = gameDraw.getColor(value);
+				cell.style.backgroundImage = 'none';
+			} 
+			else 
+			{
+				if (!cell.hasAttribute('data-virus')) 
+				{
+					const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
+					cell.setAttribute('data-virus', randomGif);
+				}
+				const virusGif = cell.getAttribute('data-virus');
+				cell.style.backgroundImage = `url('${virusGif}')`;
+				cell.style.backgroundSize = "cover";
 			}
 		}
+	}
 }
 
 function get_lines(linesCleared)
@@ -61,34 +76,35 @@ function add_secondary_cells(div,  amount)
 	}
 }
 
-	function garbage_cell(string, garbage)
+function garbage_cell(string, garbage, level)
+{
+	const div = document.querySelector(string);
+	Array.from(div.childNodes).forEach(child => {
+		if (!(child.tagName === 'SPAN')) {
+		div.removeChild(child);
+		}
+	});
+	const max_time = GarbageDelayCalc(level);
+	let glines = 0;
+	for(let i = 0; i < garbage.length; i++)
 	{
-		const div = document.querySelector(string);
-		Array.from(div.childNodes).forEach(child => {
-			if (!(child.tagName === 'SPAN')) {
-			div.removeChild(child);
-			}
-		});
-		let glines = 0;
-		for(let i = 0; i < garbage.length; i++)
+		glines += garbage[i].lines;
+		if (glines > 20)
+			return;
+		for(let j = 0; j < garbage[i].lines; j++)
 		{
-			glines += garbage[i].lines;
-			if (glines > 20)
-				return;
-			for(let j = 0; j < garbage[i].lines; j++)
-			{
-				const cell = document.createElement('div');
-				cell.className = 'cell';
-				if(Date.now() - garbage[i].timer >= 4000)
-					cell.style.backgroundColor = 'red';
-				else if(Date.now() - garbage[i].timer >= 2000)
-					cell.style.backgroundColor = 'yellow';
-				else
-					cell.style.backgroundColor = 'grey';
-				div.appendChild(cell);
-			}
+			const cell = document.createElement('div');
+			cell.className = 'cell';
+			if(Date.now() - garbage[i].timer >= max_time * 0.75)
+				cell.style.backgroundColor = 'red';
+			else if(Date.now() - garbage[i].timer >= max_time * 0.40)
+				cell.style.backgroundColor = 'yellow';
+			else
+				cell.style.backgroundColor = 'grey';
+			div.appendChild(cell);
 		}
 	}
+}
 
 
 	function add_cells(string,  amount)
@@ -96,14 +112,19 @@ function add_secondary_cells(div,  amount)
 		const div = document.querySelector(string);
 		
 		Array.from(div.childNodes).forEach(child => {
-			if (!(child.tagName === 'SPAN')) {
+			if (!(child.tagName === 'SPAN') && !(child.className === 'top-row')) {
 			div.removeChild(child);
 			}
 		});
 		for (let i = 0; i < amount; i++) 
 		{
 			const cell = document.createElement('div');
-				cell.className = 'cell';
+			cell.className = 'cell';
+			if(amount == 10)
+			{
+				cell.style.border = "none";
+				cell.style.boxShadow = "none";
+			}
 			div.appendChild(cell);
 		}
 	}

@@ -1,11 +1,13 @@
-import { GARBAGE_DELAY, GAME_EVENTS } from "./gameParams.js"
-import { Stack } from "../Stack.js"
+import { GAME_EVENTS } from "./gameParams.js"
+import { GarbageDelayCalc } from "../../common.js"
+import Stack from "../Utils/Stack.js"
 
-export class TargetManager {
-	constructor(garbageCallback, eventManager, targets) {
+export default class TargetManager {
+	constructor(garbageCallback, eventManager, targets, gbCalc) {
 		this.targets = targets
 		this.createGarbage = garbageCallback
 		this.garbageStack = new Stack()
+		this.gbCalc = gbCalc
 		eventManager.subscribe(GAME_EVENTS.LINE_CLEAR, this.receiveGarbage.bind(this))
 		eventManager.subscribe(GAME_EVENTS.LINE_CLEAR, this.sendGarbage.bind(this))
 	}
@@ -16,9 +18,9 @@ export class TargetManager {
 	sendGarbage(state) {
 		var linesCleared = state.linesCleared
 		const combo = state.combo
+		const pieceSpin = state.pieceSpin
 
-		linesCleared = this.cancelGarbage(linesCleared)
-		const garbageLines = (linesCleared - 1) + (combo - 1)
+		const garbageLines = this.gbCalc.execute(this, linesCleared, combo, pieceSpin)
 		if (garbageLines > 0) {
 			this.targets.forEach(target => {
 				const garbageInfo = {lines: garbageLines, timer: Date.now()}
@@ -34,28 +36,19 @@ export class TargetManager {
 			return
 		}
 
+		const level = state.level
 		const garbageArr = this.garbageStack.getArr()
+		const garbageDelay = GarbageDelayCalc(level)
 		var i = 0
 		while (i < garbageArr.length) {
 			const elapsedTime = Date.now() - garbageArr[i].timer
-			if (elapsedTime >= GARBAGE_DELAY) {
+			if (elapsedTime >= garbageDelay) {
 				this.createGarbage(garbageArr[i].lines)
 				this.garbageStack.pop()
 				continue
 			}
 			i++
 		}
-	}
-
-	cancelGarbage(linesCleared) {
-		while (this.garbageStack.empty() === false && linesCleared >= this.garbageStack.top().lines) {
-			linesCleared -= this.garbageStack.top().lines
-			this.garbageStack.pop()
-		}
-		if (this.garbageStack.size() > 0 && linesCleared > 0) {
-			this.garbageStack.top().lines -= linesCleared
-		}
-		return (linesCleared)
 	}
 
 	toObject() {

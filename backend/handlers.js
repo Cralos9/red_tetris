@@ -1,37 +1,42 @@
-import { Room } from "./Room.js"
-import { Player } from "./Player.js"
-import { log } from "./debug.js"
+import Room from "./Room.js"
+import Player from "./Player.js"
+import Debug from "debug"
+
+const log = Debug("Handlers:Log")
+const logError = Debug("Handlers:Error")
 
 // Map socket.id to Players
 export const playerHandlers = (io, socket, RoomsMap) => {
 	const findRoomBySocketId = (socketId) => {
 		for (const room of RoomsMap.values()) {
-			if (room.plMap.has(socketId)) return room
+			if (room.getPlMap().has(socketId)) return room
 		}
 		return null
 	}
-
 	const joinRoom = (payload) => {
 		var playerName = payload.playerName
 		const roomCode = payload.roomCode
 		const options = payload.options
+		const gamemode = payload.gameMode
 
-		log("Player:", playerName)
-		log("Joined Room:", roomCode)
 		if (!RoomsMap.has(roomCode)) {
-			RoomsMap.set(roomCode, new Room(roomCode, io))
+			RoomsMap.set(roomCode, new Room(roomCode, gamemode, io))
 		}
+
 		const room = RoomsMap.get(roomCode)
 
-		if (room.getNbrOfPlayers() == 0)
-			room.setOwner(socket.id)
+		if (room.getGamemode() !== gamemode) {
+			socket.emit('Error', {reason: "Wrong Gamemode"})
+			log("Player", playerName, "has the wrong gamemode")
+			return
+		}
+
 		const player = new Player(playerName, options, io, socket.id)
 
 		room.addPlayer(player)
 		socket.join(roomCode.toString())
 		io.to(roomCode).emit('join', room.toObject())
 	}
-
 	const disconnection = (reason) => {
 		const room = findRoomBySocketId(socket.id)
 		if (!room) {
@@ -42,55 +47,14 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 			return
 		}
 		room.leavePlayer(player)
+
 		if (room.getNbrOfPlayers() === 0) {
 			RoomsMap.delete(room.getCode())
 		}
-		socket.emit("Owner", {owner: room.getOwner()})
-		console.log("Disconnected:", reason)
+		log("%s, Disconnected:", socket.id, reason)
 	}
-
-	const heartbeatInterval = setInterval(() => {
-		const room = findRoomBySocketId(socket.id)
-		if (!room) return
-
-		const toRemove = []
-		for (const [sockId, player] of room.plMap.entries()) {
-			if (!player.isAlive) {
-				console.log("Player Remover")
-				toRemove.push(sockId)
-			} else {
-				player.isAlive = false
-				io.to(sockId).emit('ping-check')
-			}
-		}
-
-		for (const sockId of toRemove)  {
-			room.leavePlayer(room.getPlayer(sockId))
-		}
-		
-		if (room.getNbrOfPlayers() === 0) {
-			RoomsMap.delete(room.code)
-		}
-		socket.emit("Owner", {owner: room.getOwner()})
-	}, 7000)
-
-	socket.on('pong-check', () => {
-		const room = findRoomBySocketId(socket.id)
-		if (room) {
-			const player = room.getPlayer(socket.id)
-			if (player) {
-				player.isAlive = true
-			}
-		}
-	})
-
-	socket.on('disconnection', disconnection)
 	socket.on('joinRoom', joinRoom)
-
-	socket.on('disconnect', () => {
-		clearInterval(heartbeatInterval)
-		disconnection("manual disconnect")
-	})
+	socket.on('disconnect', disconnection)
 }
 
 export const gameHandlers = (io, socket, RoomsMap) => {
@@ -98,12 +62,17 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const key = payload.key
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
+
+		if (room === undefined) {
+			logError("Invalid Room code", payload)
+			return
+		}
 		const player = room.getPlayer(socket.id)
-		if (player && player.inGame === true) {
+		if (player && player.getInGame() === true) {
 			if (key === "Escape") {
 				player.stopGame()
 			} else {
-				player.keyboard.set(key, true)
+				player.getGameController().setPress(key, player.game.getFrames(), true)
 			}
 		}
 	}
@@ -111,20 +80,30 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 		const key = payload.key
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
+
+		if (room === undefined) {
+			logError("Invalid Room code", payload)
+			return
+		}
 		const player = room.getPlayer(socket.id)
-		if (player && player.inGame === true) {
-			player.keyboard.set(key, false)
+		if (player && player.getInGame() === true) {
+			player.getGameController().setRelease(key, 0, false)
 		}
 	}
 	const startGame = (payload) => {
 		const roomCode = payload.roomCode
 		const room = RoomsMap.get(roomCode)
-		if (room.owner != socket.id)
-		{
-			console.log("Not owner");
-			return;
+
+		if (room === undefined) {
+			logError("Invalid Room code", payload)
+			return
 		}
-		room.startGame()
+
+		try {
+			room.startGame(socket.id)
+		} catch (errorMsg) {
+			logError(errorMsg)
+		}
 	}
 	socket.on('startGame', startGame)
 	socket.on('keyDown', keyDown)

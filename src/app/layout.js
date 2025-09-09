@@ -1,13 +1,14 @@
 import './cssFiles/globals.css';
 import './cssFiles/buttons.css';
 import './cssFiles/board.css'
-import Link from 'next/link';
+import PopStateHandler from './components/popStateHandler';
 
 export const metadata = {
 	title: 'Dr Tetris',
 };
 
 export default function Page({ children }) {
+
 	return (
 		<html lang="en">
 			<head>
@@ -22,10 +23,9 @@ export default function Page({ children }) {
 				
 			</head>
 			<body>
+				<PopStateHandler/>
 				<div className="header">
-					<div className="logButton-cont">
-						<Link href="/game" className="logButton">Home</Link>
-					</div>
+					
 					<h1 className="title">Dr.Tetris</h1>
 				</div>
 				<img className="shroom-img" src="/images/shroom.png"></img>

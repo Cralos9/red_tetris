@@ -1,3 +1,5 @@
+import { GARBAGE_DELAY } from "./backend/Game/gameParams.js"
+
 export const ACTIONS = {
 	HARD_DROP: 1,
 	SOFT_DROP: 2,
@@ -20,6 +22,13 @@ export const COLORS = {
 	RED: 7,
 }
 
+export const GAMEMODES = {
+	Tetris: "Tetris",
+	Base: "42"
+}
+
+export const GarbageDelayCalc = (level) => GARBAGE_DELAY - (level * 400)
+
 export const Icoor = [ [-1,0], [0,0], [1,0], [2,0] ]
 export const Tcoor = [ [-1,0], [0,0], [0,-1], [1,0] ]
 export const Jcoor = [ [-1,0], [-1,-1], [0,0], [1,0] ]
@@ -27,3 +36,37 @@ export const Lcoor = [ [-1,0], [0,0], [1,0], [1,-1] ]
 export const Ocoor = [ [0,0], [0,-1], [1,0], [1,-1] ]
 export const Scoor = [ [-1,0], [0,0], [0,-1], [1,-1] ]
 export const Zcoor = [ [-1,-1], [0,-1], [0,0], [1,0] ]
+
+export const SupportedKeys = [
+	'q',
+	'w',
+	'e',
+	'r',
+	't',
+	'y',
+	'u',
+	'i',
+	'o',
+	'p',
+	'a',
+	's',
+	'd',
+	'f',
+	'g',
+	'h',
+	'j',
+	'k',
+	'l',
+	'z',
+	'x',
+	'c',
+	'v',
+	'b',
+	'n',
+	' ',
+	'm',
+	'ArrowLeft',
+	'ArrowRight',
+	'ArrowUp',
+	'ArrowDown',
+]
