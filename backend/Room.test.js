@@ -26,6 +26,7 @@ describe('Room Tests', () => {
 			expRoomPlayers.set(player1.getId(), player1)
 			const outRoomPlayers = room.plMap
 			expect(outRoomPlayers).toStrictEqual(expRoomPlayers)
+			expect(room.getOwner()).toBe(player1)
 		})
 
 		it('Add Player 2', () => {
@@ -33,11 +34,12 @@ describe('Room Tests', () => {
 			expRoomPlayers.set(player2.getId(), player2)
 			const outRoomPlayers = room.plMap
 			expect(outRoomPlayers).toStrictEqual(expRoomPlayers)
+			expect(room.getOwner()).not.toBe(player2)
 		})
 	})
 
 	it('Starting a Game', () => {
-		room.startGame()
+		room.startGame(player1.getId())
 		expect(room.getGameStatus()).toEqual(true)
 		expect(GameManager).toHaveBeenCalledTimes(1)
 		expect(room.getGameManager().startGame.mock.calls).toHaveLength(1)

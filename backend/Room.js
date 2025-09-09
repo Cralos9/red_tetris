@@ -36,15 +36,9 @@ export default class Room {
 		this.plMap.set(newPlayer.getId(), newPlayer)
 	}
 
-	startGame(issuedStart) {
-		if (this.getOwner().getId() !== issuedStart) {
-			this.log("Not Owner tried to start the Game")
-			return
-		}
-		if (this.gameRunning === true) {
-			this.log("There's already a Game running")
-			return
-		}
+	startGame(id) {
+		if (this.owner.getId() !== id) { throw "You're not the Owner" }
+		if (this.gameRunning === true) { throw "There's already a running Game" }
 		this.gameManager = new GameManager(this, Array.from(this.plMap.values()))
 		this.gameRunning = true
 		this.gameManager.startGame()
