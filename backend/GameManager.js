@@ -59,7 +59,6 @@ export default class GameManager {
 	handleLoss(player) {
 		this.leaderboard.push(player.toObject())
 
-		// Need a solution, this if statement runs 2 times, for the 2 last players.
 		if (this.leaderboard.length >= this.players.length - 1) {
 			this.players.forEach(player => {
 				player.stopGame()

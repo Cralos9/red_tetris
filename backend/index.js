@@ -11,6 +11,7 @@ const handler = app.getRequestHandler()
 
 const RoomsMap = new Map()
 
+
 app.prepare().then(() => {
 	const server = createServer(handler)
 	const io = new Server(server, { 'pingInterval': 7000, 'pingTimeout': 8000 })
@@ -23,4 +24,14 @@ app.prepare().then(() => {
 	server.listen(port, () => {
 		console.log(`Server running on port: ${port}`)
 	})
+
+	const shutdownServer = () => {
+		console.log("Closing the Server")
+		io.disconnectSockets()
+		server.closeAllConnections()
+		process.exit()
+	}
+
+	process.on("SIGINT", shutdownServer)
+	process.on("SIGTERM", shutdownServer)
 })
