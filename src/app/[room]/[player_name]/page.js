@@ -19,6 +19,14 @@ export default function RoomPage() {
 	const [isDisabled, setIsDisabled] = useState(false);
 	const [scores, setScores] = useState([]);
 
+	const handleKeyDown = (e) => {
+		socket.emit("keyDown", { key: e.key, roomCode });
+	  };
+	
+	  const handleKeyUp = (e) => {
+		socket.emit("keyUp", { key: e.key, roomCode });
+	  };
+
 	function end_game() {
 	  setIsDisabled(false);
 	  setGameOver(true);
@@ -186,36 +194,10 @@ export default function RoomPage() {
 			gameDraw.game(cells, field, topRow, own)
 		});
 
-		// async function handleBeforeUnload() {
-		// 	if (socket && socket.connected) {
-		// 		await new Promise((resolve) => {
-		// 			socket.emit('disconnection', { roomCode: roomCode }, resolve);
-		// 		});
-		// 		if (otherBoards && otherBoards.length) {
-		// 			for (let i = 0; i < otherBoards.length; i++) {
-		// 				const otherBoard = document.getElementById(otherBoards[i]);
-		// 				if (otherBoard) otherBoard.remove();
-		// 			}
-		// 		}
-		// 		socket.disconnect();
-		// 	}
-		// }
-		
-		// window.addEventListener('beforeunload', handleBeforeUnload);
-
-		// window.history.pushState(null, "", window.location.href);
-		// window.onpopstate = () => {
-		// 	window.history.go(1);
-		// };
+		document.addEventListener("keydown", handleKeyDown)
 	
-		document.addEventListener("keydown", e => 
-		{
-				socket.emit("keyDown", {key: e.key, roomCode: roomCode})
-		})
-		document.addEventListener("keyup", e => 
-		{
-			socket.emit("keyUp", {key: e.key, roomCode: roomCode})
-		})
+		document.addEventListener("keyup", handleKeyUp)
+	
 		
 		// const game22 = document.querySelector('.secondary-games');
 		// game22.innerHTML = '';
@@ -225,6 +207,12 @@ export default function RoomPage() {
 		gameDraw.add_cells('.held-piece', 30)
 		if (name) 
 			setUsername(name);
+		
+		return () => {
+			socket.disconnect();
+			document.removeEventListener("keydown", handleKeyDown);
+			document.removeEventListener("keyup", handleKeyUp);
+		  };
 	}, [name]);
 	
 	function resetGame()
@@ -306,8 +294,10 @@ export default function RoomPage() {
 	
 	function homeButton()
 	{
+		// socket.disconnect()
+		// document.removeEventListener("keydown", handleKeyDown)
+		// document.removeEventListener("keyup", handleKeyUp)
 		router.push("/game");
-		socket.disconnect()
 	}
 
 	return (
