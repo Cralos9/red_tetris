@@ -1,6 +1,7 @@
 import Room from "./Room.js"
 import Player from "./Player.js"
 import Debug from "debug"
+import { ACTIONS } from "../common.js"
 
 const log = Debug("Handlers:Log")
 const logError = Debug("Handlers:Error")
@@ -114,8 +115,18 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 			player.getGameController().setAction(action, true)
 		}
 	}
+	const KeyUp = (payload) => {
+		const action = payload.action
+		const room = RoomsMap.get(payload.roomCode)
+
+		const player = room.getPlayer(socket.id)
+		if (player.getInGame() === true) {
+			player.getGameController().setAction(action, false)
+		}
+	}
 	socket.on('startGame', startGame)
 	socket.on('keyDown', keyDown)
 	socket.on('keyUp', keyUp)
 	socket.on('KeyDown', KeyDown)
+	socket.on("KeyUp", KeyUp)
 }

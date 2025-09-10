@@ -139,8 +139,6 @@ export default class Game {
 	}
 
 	update() {
-		const actions = this.ctrl.keyStates(this.frames)
-
 		this.linesCleared = 0
 
 		// 1 to stop the game in the row below the pieces spawn
@@ -152,18 +150,20 @@ export default class Game {
 
 		this.Piece.undraw(this.field)
 
+		const move = this.ctrl.getMove()
+		const rot = this.ctrl.getRot()
 
-		if (actions.hold === true && this.holdLock === false) {
+		if (this.ctrl.getHold() === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
 		}
-		if (actions.move) {
-			this.Piece.move(this.field, actions.move)
+		if (move) {
+			this.Piece.move(this.field, move)
 		}
-		if (actions.rot) {
-			this.Piece.rotate(this.field, actions.rot)
+		if (rot) {
+			this.Piece.rotate(this.field, rot)
 		}
-		if (actions.hardDrop === true) {
+		if (this.ctrl.getHardDrop() === true) {
 			const dropRow = this.Piece.getRow()
 			this.Piece.hardDrop(this.field)
 			this.eventManager.notify({
@@ -173,7 +173,7 @@ export default class Game {
 			}, GAME_EVENTS.HARD_DROP)
 		}
 
-		if (actions.softDrop) {
+		if (this.ctrl.getSoftDrop()) {
 			const dropRow = this.Piece.getRow()
 			this.Piece.softDrop(this.field)
 			this.eventManager.notify({

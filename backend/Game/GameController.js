@@ -1,6 +1,11 @@
 import { ACTIONS } from "../../common.js"
 import Keyboard from "./Input.js"
 
+const info = {
+	press: false,
+	tap: false,
+}
+
 export default class GameController extends Keyboard {
 	constructor(keybinds) {
 		super()
@@ -11,9 +16,10 @@ export default class GameController extends Keyboard {
 		this.pieceDir = []
 		this.consum = []
 		this.ret = new Map()
-		this.ret.set(ACTIONS.HARD_DROP, 0)
-		this.ret.set(ACTIONS.MOVE_LEFT, 0)
-		this.ret.set(ACTIONS.MOVE_RIGHT, 0)
+		Object.values(ACTIONS).forEach(action => {
+			this.ret.set(action, Object.create(info))
+		})
+		this.lastTap = 0
 	}
 
 	axis(left, right){
@@ -97,13 +103,45 @@ export default class GameController extends Keyboard {
 		}
 	}
 
-	setAction(action, value) {
-		const actionValue = this.ret.get(action)
-		if (actionValue === undefined) {
-			return
-		}
-		actionValue = value
+	getRot() {
+		const left = this.consume(ACTIONS.ROTATE_LEFT)
+		const right = this.consume(ACTIONS.ROTATE_RIGHT)
+		
+		return (this.axis(left, right))
 	}
 
-	getRet() { return (this.ret) }
+	getHardDrop() {
+		return (this.consume(ACTIONS.HARD_DROP))
+	}
+
+	getHold() {
+		return (this.consume(ACTIONS.HOLD))
+	}
+
+	getSoftDrop() {
+		return (this.ret.get(ACTIONS.SOFT_DROP).press)
+	}
+
+	getMove() {
+		const left = this.consume(ACTIONS.MOVE_LEFT)
+		const right = this.consume(ACTIONS.MOVE_RIGHT)
+		
+		return (this.axis(left, right))
+	}
+
+	consume(action) {
+		const info = this.ret.get(action)
+		const ret = info.tap
+		info.tap = false
+		return (ret)
+	}
+
+	setAction(action, value) {
+		const info = this.ret.get(action)
+		if (info === undefined) {
+			return
+		}
+		info.press = value
+		info.tap = info.press && !info.tap
+	}
 }

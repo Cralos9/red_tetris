@@ -18,6 +18,7 @@ export default function RoomPage() {
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
 	const [scores, setScores] = useState([]);
+	const keySet = new Set()
 
 	const handleKeyDown = (e) => {
 		socket.emit("keyDown", { key: e.key, roomCode });
@@ -199,16 +200,35 @@ export default function RoomPage() {
 			const actions = options.actions
 			const key = e.key
 
-			if (actions[ACTIONS.HARD_DROP].some(keyHandler(key)) === true) {
-				console.log("HardDrop")
-				socket.emit("KeyDown", {
-					action: ACTIONS.HARD_DROP,
-					roomCode: roomCode
-				})
+			if (keySet.has(key) === true) {
+				return
 			}
+			keySet.add(key)
+			Object.values(ACTIONS).forEach(action => {
+				console.log(action, actions[action])
+				if (actions[action].some(keyHandler(key)) === true) {
+					socket.emit("KeyDown", {
+						action: action,
+						roomCode: roomCode
+					})
+				}
+			})
 		})
 	
-		document.addEventListener("keyup", handleKeyUp)
+		document.addEventListener("keyup", (e) => {
+			const actions = options.actions
+			const key = e.key
+
+			keySet.delete(key)
+			Object.values(ACTIONS).forEach(action => {
+				if (actions[action].some(keyHandler(key)) === true) {
+					socket.emit("KeyUp", {
+						action: action,
+						roomCode: roomCode
+					})
+				}
+			})
+		})
 	
 		
 		// const game22 = document.querySelector('.secondary-games');
