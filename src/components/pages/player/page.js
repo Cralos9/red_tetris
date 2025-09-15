@@ -1,13 +1,13 @@
 'use client';
-import { useParams } from 'next/navigation';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { socket } from "../../../socket";
 import  gameDraw  from "./functions";
 import {ACTIONS, SupportedKeys} from "../../../../common.js";
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router';
 
 export default function RoomPage() {
-	const router = useRouter()
+	const navigate = useNavigate()
 	const params = useParams();
 	const roomCode = params.room;
 	const [gameOver, setGameOver] = useState(false);
@@ -121,7 +121,7 @@ export default function RoomPage() {
 
 		socket.on('Error', (msg) =>
 		{
-			router.push("/game")
+			navigate("/game")
 			socket.disconnect();
 		});
 
@@ -215,11 +215,6 @@ export default function RoomPage() {
 		  };
 	}, [name]);
 	
-	function resetGame()
-	{
-		// socket.emit("keyDown", {key: "Escape"})
-		// setIsDisabled(false)
-	}
 
 	function startGame() 
 	{
@@ -294,10 +289,7 @@ export default function RoomPage() {
 	
 	function homeButton()
 	{
-		// socket.disconnect()
-		// document.removeEventListener("keydown", handleKeyDown)
-		// document.removeEventListener("keyup", handleKeyUp)
-		router.push("/game");
+		navigate("/game");
 	}
 
 	return (

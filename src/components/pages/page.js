@@ -1,11 +1,11 @@
 'use client';
 import {useState} from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Home() {
   const [username, setUsername] = useState();
-  const router = useRouter();
+  const navigate = useNavigate();
   function handleButton(e)
   {
 	e.preventDefault();
@@ -25,7 +25,7 @@ export default function Home() {
 		return;
 	}
 	localStorage.setItem("username", name.value);
-	router.push('/game');
+	navigate('/game');
   }
 
   return (

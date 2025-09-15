@@ -1,11 +1,11 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router';
 import { useState } from "react";
 import { useEffect} from 'react';
-import {SupportedKeys} from "../../../../common.js";
+import {SupportedKeys} from "../../../../../common.js";
 
 export default function Keys() {
-  const router = useRouter();
+  const navigate = useNavigate();
 
 
   const [keys, setKeys] = useState({
@@ -70,7 +70,7 @@ export default function Keys() {
   const apply_options = () => {
     for (const [action, key] of Object.entries(keys))
         localStorage.setItem(action, key)  
-    router.push('/options');
+    navigate('/options');
   };
 
   function reset_options()

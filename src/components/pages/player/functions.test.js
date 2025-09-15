@@ -4,7 +4,7 @@
  */
 import {COLORS, GarbageDelayCalc} from "../../../../common.js";
 import { describe, jest } from '@jest/globals';
-import gameDraw from "./functions";
+import gameDraw from "./functions.js";
 
 
 test('clear Lines', () =>{

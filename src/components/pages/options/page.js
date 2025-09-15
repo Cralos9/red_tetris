@@ -1,5 +1,5 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router';
 import { useState } from "react";
 import { useEffect} from 'react';
 
@@ -18,7 +18,8 @@ export default function Options()
 		if (savedARR !== null) 
 			setArrValue(Number(savedARR));
 	}, []);
-  	const router = useRouter();
+
+  	const navigate = useNavigate();
 
   	const maxDAS = 20;
 	const maxARR = 10;
@@ -27,12 +28,12 @@ export default function Options()
   	{
 		localStorage.setItem("DAS", value);
 		localStorage.setItem("ARR", arrValue);
-		router.push('/game');
+		navigate('/game');
   	}
 
 	function keysPush()
 	{
-		router.push('options/keys')
+		navigate('keys')
 	}
 
 	function reset_options()
