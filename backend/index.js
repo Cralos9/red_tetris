@@ -14,6 +14,12 @@ const io = new Server(server, { 'pingInterval': 7000, 'pingTimeout': 8000 })
 
 app.use(express.static("dist"))
 
+// Small fix for this to work (need to think more about it)
+app.get('/:room/:player_name', (req, res) => {
+	console.log(`Url request to ${req.params.room}/${req.params.player_name}`)
+	res.sendFile("/home/rumachad/red_tetris/dist/index.html")
+})
+
 io.on('connection', (socket) => {
 	console.log("New Connection:", socket.id)
 	playerHandlers(io, socket, RoomsMap)
