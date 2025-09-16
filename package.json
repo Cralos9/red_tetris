@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-	"srv-dev": "nodemon --env-file=.env backend",
+    "srv-dev": "nodemon --env-file=.env backend",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -14,12 +15,18 @@
     "colors": "^1.4.0",
     "debug": "^4.4.3",
     "express": "^5.1.0",
+    "jest": "^30.1.3",
+    "jest-environment-jsdom": "^30.1.2",
     "nodemon": "^3.1.10",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^6.30.1",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "transform": {}
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
