@@ -3,6 +3,19 @@ import './cssFiles/globals.css';
 import './cssFiles/buttons.css';
 import './cssFiles/board.css';
 import ClientRoutes from './clientLayout';
+import { StoreContext } from "./Contexts"
+import { createStore } from "./Store"
+
+const reducer = (state, action) => {
+	console.log("Received a state update", action)
+}
+
+const loggerMiddleWare = (action) => {
+	console.log("MiddleWare Intercepted an Action:", action.type, action.payload)
+}
+
+const store = createStore(reducer)
+store.applyMiddleWare(loggerMiddleWare)
 
 export default function Layout() {
   return (
@@ -15,7 +28,9 @@ export default function Layout() {
       <img className="piranha-img" src="/images/piranha.png" alt="Piranha" />
       <img className="mario-img" src="/images/images.png" alt="Mario" />
 
-      <ClientRoutes />
+	  <StoreContext value={store}>
+		<ClientRoutes />
+	  </StoreContext>
     </div>
   );
 }

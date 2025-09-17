@@ -1,11 +1,13 @@
 'use client';
-import {useState} from 'react';
+import {useState, useContext, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { StoreContext } from "../Contexts.js"
 
 export default function Home() {
   const [username, setUsername] = useState();
   const navigate = useNavigate();
+	const store = useContext(StoreContext)
+
   function handleButton(e)
   {
 	e.preventDefault();
@@ -24,6 +26,7 @@ export default function Home() {
 		name.value = "";
 		return;
 	}
+	store.dispatch({ type: "NAME",  payload: {value: "LOL"} })
 	localStorage.setItem("username", name.value);
 	navigate('/game');
   }
