@@ -5,17 +5,19 @@ import './cssFiles/board.css';
 import ClientRoutes from './clientLayout';
 import { StoreContext } from "./Contexts"
 import { createStore } from "./Store"
+import { socketMiddleWare } from "./socket"
 
 const reducer = (state, action) => {
 	console.log("Received a state update", action)
 }
 
-const loggerMiddleWare = (action) => {
+const loggerMiddleWare = (action, store) => {
 	console.log("MiddleWare Intercepted an Action:", action.type, action.payload)
 }
 
 const store = createStore(reducer)
 store.applyMiddleWare(loggerMiddleWare)
+store.applyMiddleWare(socketMiddleWare)
 
 export default function Layout() {
   return (

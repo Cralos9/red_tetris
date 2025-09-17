@@ -1,3 +1,5 @@
+"use client"
+
 export const createStore = (reducer, initState) => {
 	const store = {
 		state: initState,
@@ -7,7 +9,7 @@ export const createStore = (reducer, initState) => {
 			store.middlewares.push(middleware)
 		},
 		dispatch: (action) => {
-			store.middlewares.forEach(middleware => middleware(action))
+			store.middlewares.forEach(middleware => middleware(action, store))
 			store.state = reducer(store.state, action)
 			store.listeners.forEach(cb => { cb() })
 		},

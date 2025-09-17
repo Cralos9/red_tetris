@@ -1,10 +1,11 @@
 'use client';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { socket } from "../../socket.js";
+import { useEffect, useState, useContext } from 'react';
 import  gameDraw  from "./functions.js";
 import {ACTIONS, SupportedKeys} from "../../../common.js";
 import { useNavigate } from 'react-router';
+import { StoreContext } from "../../Contexts"
+import { SOCK_EVENTS } from "../../socket"
 
 export default function RoomPage() {
 	const navigate = useNavigate()
@@ -18,6 +19,7 @@ export default function RoomPage() {
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
 	const [scores, setScores] = useState([]);
+	const store = useContext(StoreContext)
 
 	const handleKeyDown = (e) => {
 		socket.emit("keyDown", { key: e.key, roomCode });
@@ -38,24 +40,25 @@ export default function RoomPage() {
 		return (n + (s[(v - 20) % 10] || s[v] || s[0]));
 	  }
 	useEffect(() => {
-		socket.connect();
-	  	
-		socket.on("Owner", (msg) =>
-		{
-			const startBtn = document.getElementById('Start');
-			if (startBtn && socket.id === msg.owner)
-				startBtn.style.visibility = 'visible';
-		});
+		store.dispatch({ type: SOCK_EVENTS.CONNECT, payload: {} })
+		//socket.connect();
+	  	//
+		//socket.on("Owner", (msg) =>
+		//{
+		//	const startBtn = document.getElementById('Start');
+		//	if (startBtn && socket.id === msg.owner)
+		//		startBtn.style.visibility = 'visible';
+		//});
 
-		socket.on("boardRemove", (msg) =>
-		{
-			var board = document.getElementById(msg.id)
-			if(!board)
-				return
-			div = board.parentElement;
-			if(board)
-				board.remove();
-		});
+		//socket.on("boardRemove", (msg) =>
+		//{
+		//	var board = document.getElementById(msg.id)
+		//	if(!board)
+		//		return
+		//	div = board.parentElement;
+		//	if(board)
+		//		board.remove();
+		//});
 	}, []);
 
 	useEffect(() => {
@@ -73,146 +76,146 @@ export default function RoomPage() {
 			ARR: parseInt(localStorage.getItem("ARR")) || 5,
 			DAS: parseInt(localStorage.getItem("DAS")) || 10,
 		  };
-		socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
+		//socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
 
 
-		socket.on('endGame', (msg) =>
-		{
-			setScores(msg.leaderboard.reverse())
+		//socket.on('endGame', (msg) =>
+		//{
+		//	setScores(msg.leaderboard.reverse())
 
-			setAllGamesOver(true);
-		})
+		//	setAllGamesOver(true);
+		//})
 
-		socket.on('join', (msg) => 
-		{
-			const startBtn = document.getElementById('Start');
-			if (startBtn && socket.id === msg.roomOwner)
-				startBtn.style.visibility = 'visible';
-			var otherBoards = msg.playerIds
-			var names = msg.playerNames
-			for(var i = 0; i <= otherBoards.length; i++)
-			{
-				if(otherBoards[i] === socket.id || otherBoards[i] === undefined)
-					continue;
-				let otherBoard = document.getElementById(otherBoards[i]);
-				if (!otherBoard) 
-				{
-					otherBoard = document.createElement('div');
-					let nameLabel = document.createElement('span');
-					nameLabel.className = 'held-label';
-					nameLabel.textContent = names[i];
-					nameLabel.id = name[i]
-					otherBoard.className = 'secondary-game';
-					otherBoard.id = otherBoards[i];
-					otherBoard.appendChild(nameLabel);
-					gameDraw.add_secondary_cells(otherBoard, 200);
-					if(div)
-					{
-						div.appendChild(otherBoard)
-						div = null;
-					}
-					else if((i - 1) % 2 == 0)
-						document.querySelector('.secondary-games').appendChild(otherBoard);
-					else
-						document.querySelector('.secondary-games-right').appendChild(otherBoard);
-				}
-			}
-		})
+		//socket.on('join', (msg) => 
+		//{
+		//	const startBtn = document.getElementById('Start');
+		//	if (startBtn && socket.id === msg.roomOwner)
+		//		startBtn.style.visibility = 'visible';
+		//	var otherBoards = msg.playerIds
+		//	var names = msg.playerNames
+		//	for(var i = 0; i <= otherBoards.length; i++)
+		//	{
+		//		if(otherBoards[i] === socket.id || otherBoards[i] === undefined)
+		//			continue;
+		//		let otherBoard = document.getElementById(otherBoards[i]);
+		//		if (!otherBoard) 
+		//		{
+		//			otherBoard = document.createElement('div');
+		//			let nameLabel = document.createElement('span');
+		//			nameLabel.className = 'held-label';
+		//			nameLabel.textContent = names[i];
+		//			nameLabel.id = name[i]
+		//			otherBoard.className = 'secondary-game';
+		//			otherBoard.id = otherBoards[i];
+		//			otherBoard.appendChild(nameLabel);
+		//			gameDraw.add_secondary_cells(otherBoard, 200);
+		//			if(div)
+		//			{
+		//				div.appendChild(otherBoard)
+		//				div = null;
+		//			}
+		//			else if((i - 1) % 2 == 0)
+		//				document.querySelector('.secondary-games').appendChild(otherBoard);
+		//			else
+		//				document.querySelector('.secondary-games-right').appendChild(otherBoard);
+		//		}
+		//	}
+		//})
 
-		socket.on('Error', (msg) =>
-		{
-			navigate("/game")
-			socket.disconnect();
-		});
+		//socket.on('Error', (msg) =>
+		//{
+		//	navigate("/game")
+		//	socket.disconnect();
+		//});
 
-		socket.on('game', (msg) => {
+		//socket.on('game', (msg) => {
 
-			if (document.hidden)
-				return;
+		//	if (document.hidden)
+		//		return;
 
-			if (!msg.running && msg.playerId === socket.id) 
-			{
-				scoreSave(msg.playerScore.score);
-				end_game();
-				return;
-			}
-			const field = msg.field;
-			var cells
-			var own = 0;
-			if (msg.playerId === socket.id)
-			{
-				own = 1;
-				var j = 0;
-				var gLines = 0;
-				var score = document.getElementById('Score')
-				score.textContent = msg.playerScore.score
-				var level = document.getElementById('Level');
-				level.textContent = msg.level
-				setGameOver(false)
-				cells = document.querySelectorAll('.game-bottle .cell');
-				const heldPiece = msg.holdPiece
-				const nextPiece = msg.nextPiece
-				gameDraw.garbage_cell('.garbage-bar',msg.targetManager.garbage, msg.level);
-				gameDraw.nextPieceDraw(nextPiece);
-				gameDraw.heldPieceDraw(heldPiece);
-				const lineClear = document.createElement('div');
-				const combo = document.createElement('div');
-				if (msg.linesCleared > 0) 
-				{
-					const existing = document.querySelector('.lineClear');
-					if (existing) existing.remove();
-					
-					const existing2 = document.querySelector('.combo');
-					if (existing2) existing2.remove();
+		//	if (!msg.running && msg.playerId === socket.id) 
+		//	{
+		//		scoreSave(msg.playerScore.score);
+		//		end_game();
+		//		return;
+		//	}
+		//	const field = msg.field;
+		//	var cells
+		//	var own = 0;
+		//	if (msg.playerId === socket.id)
+		//	{
+		//		own = 1;
+		//		var j = 0;
+		//		var gLines = 0;
+		//		var score = document.getElementById('Score')
+		//		score.textContent = msg.playerScore.score
+		//		var level = document.getElementById('Level');
+		//		level.textContent = msg.level
+		//		setGameOver(false)
+		//		cells = document.querySelectorAll('.game-bottle .cell');
+		//		const heldPiece = msg.holdPiece
+		//		const nextPiece = msg.nextPiece
+		//		gameDraw.garbage_cell('.garbage-bar',msg.targetManager.garbage, msg.level);
+		//		gameDraw.nextPieceDraw(nextPiece);
+		//		gameDraw.heldPieceDraw(heldPiece);
+		//		const lineClear = document.createElement('div');
+		//		const combo = document.createElement('div');
+		//		if (msg.linesCleared > 0) 
+		//		{
+		//			const existing = document.querySelector('.lineClear');
+		//			if (existing) existing.remove();
+		//			
+		//			const existing2 = document.querySelector('.combo');
+		//			if (existing2) existing2.remove();
 
-					lineClear.className = 'lineClear';
-					lineClear.textContent = gameDraw.get_lines(msg.linesCleared)
-					const sound = gameDraw.get_audio(msg.linesCleared)
-					void lineClear.offsetWidth;
-					if(msg.combo != 1)
-					{
-						combo.className = 'combo';
-						combo.textContent = "Combo x" + msg.combo;
-					}
-					document.body.appendChild(lineClear);
-					document.body.appendChild(combo);
-					setTimeout(() => {
-						combo.remove();
-						lineClear.remove();
-					}, 1000);
-					sound.play();
-				}
-			} 
-			else 
-			{
-				let otherBoard = document.getElementById(msg.playerId);
-				if(!otherBoard)
-					return
-				cells = otherBoard.querySelectorAll('.cell');
-			}
-			const topRow = document.querySelectorAll('.top-row .cell'); 
-			gameDraw.game(cells, field, topRow, own)
-		});
+		//			lineClear.className = 'lineClear';
+		//			lineClear.textContent = gameDraw.get_lines(msg.linesCleared)
+		//			const sound = gameDraw.get_audio(msg.linesCleared)
+		//			void lineClear.offsetWidth;
+		//			if(msg.combo != 1)
+		//			{
+		//				combo.className = 'combo';
+		//				combo.textContent = "Combo x" + msg.combo;
+		//			}
+		//			document.body.appendChild(lineClear);
+		//			document.body.appendChild(combo);
+		//			setTimeout(() => {
+		//				combo.remove();
+		//				lineClear.remove();
+		//			}, 1000);
+		//			sound.play();
+		//		}
+		//	} 
+		//	else 
+		//	{
+		//		let otherBoard = document.getElementById(msg.playerId);
+		//		if(!otherBoard)
+		//			return
+		//		cells = otherBoard.querySelectorAll('.cell');
+		//	}
+		//	const topRow = document.querySelectorAll('.top-row .cell'); 
+		//	gameDraw.game(cells, field, topRow, own)
+		//});
 
-		document.addEventListener("keydown", handleKeyDown)
+		//document.addEventListener("keydown", handleKeyDown)
 	
-		document.addEventListener("keyup", handleKeyUp)
+		//document.addEventListener("keyup", handleKeyUp)
 	
-		
-		// const game22 = document.querySelector('.secondary-games');
-		// game22.innerHTML = '';
-		gameDraw.add_cells('.top-row', 10)
-		gameDraw.add_cells('.game-bottle', 200)
-		gameDraw.add_cells('.next-piece', 60)
-		gameDraw.add_cells('.held-piece', 30)
-		if (name) 
-			setUsername(name);
-		
-		return () => {
-			socket.disconnect();
-			document.removeEventListener("keydown", handleKeyDown);
-			document.removeEventListener("keyup", handleKeyUp);
-		  };
+		//
+		//// const game22 = document.querySelector('.secondary-games');
+		//// game22.innerHTML = '';
+		//gameDraw.add_cells('.top-row', 10)
+		//gameDraw.add_cells('.game-bottle', 200)
+		//gameDraw.add_cells('.next-piece', 60)
+		//gameDraw.add_cells('.held-piece', 30)
+		//if (name) 
+		//	setUsername(name);
+		//
+		//return () => {
+		//	socket.disconnect();
+		//	document.removeEventListener("keydown", handleKeyDown);
+		//	document.removeEventListener("keyup", handleKeyUp);
+		//  };
 	}, [name]);
 	
 

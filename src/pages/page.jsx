@@ -26,7 +26,6 @@ export default function Home() {
 		name.value = "";
 		return;
 	}
-	store.dispatch({ type: "NAME",  payload: {value: "LOL"} })
 	localStorage.setItem("username", name.value);
 	navigate('/game');
   }
