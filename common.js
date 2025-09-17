@@ -1,4 +1,4 @@
-// import { GARBAGE_DELAY } from "./backend/Game/gameParams.js"
+import { GARBAGE_DELAY } from "./backend/Game/gameParams.js"
 
 export const ACTIONS = {
 	HARD_DROP: 1,
