@@ -1,30 +1,21 @@
 "use client"
 
 import { io } from "socket.io-client"
-
-export const SOCK_EVENTS = {
-	CONNECT: "Connect",
-	DISCONNECT: "Disconnect",
-	SEND: "Send"
-}
+import { connect, send } from "./Store"
 
 let socket
 
-const createSocket = (options) => {
-	socket = io(options)
+const createSocket = () => {
+	socket = io({ autoConnect: false })
 	console.log("Created socket")
 	return (socket)
 }
 
-export const socketMiddleWare = (action, store) => {
-	if (action.type === SOCK_EVENTS.CONNECT) {
+export const socketMiddleware = (storeAPI) => (next) => (action) => {
+	if (connect.match(action)) {
 		if (!socket) {
-			socket = createSocket({ autoConnect: false })
+			socket = createSocket()
 			socket.connect()
-
-			socket.on("Test", (msg) => {
-				store.dispatch({ type: "JOIN_ROOM", payload: msg})
-			})
 
 			socket.on("join", (msg) => {
 				console.log("Received join", msg)
@@ -56,12 +47,12 @@ export const socketMiddleWare = (action, store) => {
 		}
 	}
 
-	if (action.type === SOCK_EVENTS.SEND) {
-		socket.emit(action.payload.channel, action.payload.payload)
+	if (send.match(action)) {
+		socket.emit(action.payload.event, action.payload.msg)
 	}
 
-	//if (action.type === "SOCK_DISCONNECT") {
-	//	socket.disconnect()
-	//}
+	const result = next(action)
+
+	return (result)
 }
 

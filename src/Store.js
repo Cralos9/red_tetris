@@ -1,7 +1,7 @@
 "use client"
 
 import { configureStore, createSlice } from "@reduxjs/toolkit"
-import { SOCK_EVENTS } from "./socket"
+import { socketMiddleware } from "./socket"
 
 const slice = createSlice({
 	name: "ChangeName",
@@ -31,14 +31,14 @@ const socketSlice = createSlice({
 	initialState: {},
 	reducers:
 	{
-		[SOCK_EVENTS.CONNECT]: (state, action) => {
+		connect: (state, action) => {
 			return;
 		},
-		[SOCK_EVENTS.SEND]: (state, action) => 
+		send: (state, action) => 
 		{
 			return;
 		},
-		[SOCK_EVENTS.DISCONNECT] : (state, action) =>
+		disconnect: (state, action) =>
 		{
 			return;
 		},
@@ -47,10 +47,20 @@ const socketSlice = createSlice({
 
 export const { change } = slice.actions
 export const {changeRoom} = roomSlice.actions
+export const { connect, send, disconnect } = socketSlice.actions
+
+const logger = (storeAPI) => (next) => (action) => {
+	console.log("Dispatch called with action", action)
+	const result = next(action)
+	return (result)
+}
 
 export const store = configureStore({
 	reducer: {
 		name: slice.reducer,
 		room: roomSlice.reducer,
+		socket: socketSlice.reducer
 	},
+	middleware: (getDefaultMiddleware) => 
+		getDefaultMiddleware().prepend(logger).concat(socketMiddleware)
 })

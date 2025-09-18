@@ -1,11 +1,11 @@
 'use client';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
-import { SOCK_EVENTS } from '../../socket.js';
 import  gameDraw  from "./functions.js";
 import {ACTIONS, SupportedKeys} from "../../../common.js";
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from "react-redux"
+import { connect, send } from "../../Store"
 
 export default function RoomPage() {
 	const navigate = useNavigate()
@@ -39,6 +39,7 @@ export default function RoomPage() {
 		return (n + (s[(v - 20) % 10] || s[v] || s[0]));
 	  }
 	useEffect(() => {
+		dispatch(connect())
 		//socket.connect();
 	  	//
 		//socket.on("Owner", (msg) =>
