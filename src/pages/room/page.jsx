@@ -324,7 +324,7 @@ export default function RoomPage() {
 					</div>}
 					{/*<img className='game-over-image'src="/images/ripmario.gif"></img> */}
 				</div>}
-				<nav>
+				<nav >
 					<h1 className='room-info'>Room Code:{roomCode}      Username:{username}</h1>
 				</nav>
 				<div className='main-layout'>

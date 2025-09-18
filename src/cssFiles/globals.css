@@ -4,13 +4,17 @@ html, body, #root {
 	padding: 0;
 	box-sizing: border-box;
   }
-  
+
+
 .header {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	position: relative;
+	height: 5%;
+	max-height: 90px;
 }
+
 
 .input {
 	font-family: 'Press Start 2P';
@@ -58,6 +62,10 @@ html, body, #root {
 	cursor: pointer;
 }
 
+.app-container
+{
+	height: 100vh;
+}
   
 .usercard {
 	position: relative;
@@ -72,6 +80,9 @@ html, body, #root {
 	z-index: 99;
 	border-radius: 10px;
 	border: 10px solid #000000;
+	max-height: 40%;          /* relative to parent container height */
+	overflow-y: auto;         /* scroll internally if content too tall */
+	box-sizing: border-box;
   }
   
 
@@ -96,7 +107,7 @@ input[type="range"] {
 	cursor: pointer;
   }
 
-.main-container {
+  .main-container {
 	position: relative;
 	display: flex;
 	flex-direction: column;

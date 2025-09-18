@@ -8,6 +8,7 @@ html, body, #root {
 
 * {
   box-sizing: inherit;
+  font-size: 15px;
 }
 
 .held-label 
@@ -25,23 +26,18 @@ html, body, #root {
 	white-space: nowrap;
 }
 
-.room-info
-{
-	font-family: 'Press Start 2P';
-	width: 100%;
-	padding: 1em;
-	border-radius: 2px;
-	position: absolute;
-	text-align: center;
-	border-style: solid;
-	border-color: #ffffff;
-	color: #ffffff;
-	background: rgb(0, 0, 0);
-	outline: none;
-	transition: .4s;
-	gap: 10%;
-  
+.room-info {
+  font-family: 'Press Start 2P';
+  width: 100%;
+  padding: 1em; 
+  border-radius: 2px;
+  text-align: center;
+  color: #ffffff;
+  background: #000000;
+  outline: none;
+  font-size: 20px;
 }
+
 
 
 .main-layout {
@@ -99,7 +95,7 @@ html, body, #root {
   position: absolute;
   display: flex;
   justify-content: center;
-  top: 14%;
+  top: 8%;
   
 }
 
@@ -165,6 +161,7 @@ html, body, #root {
   padding: 0px;
   gap: 1px;
   position: relative;
+  height: 640px;
 }
 
 .garbage-bar {

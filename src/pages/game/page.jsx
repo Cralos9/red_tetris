@@ -60,37 +60,37 @@ export default function Game() {
   };
 
   return (
-    <div className="app-container">
+    <div className='app-container'>
 
-    <div className="main-container">
-      <form className="usercard" onSubmit={enterRooms}>
-        <h2 className='userTitle'>Game Mode</h2>
-        <button type='button' onClick={toggleGameMode} className="button">{gameMode}</button>
+      <div className="main-container">
+        <form className="usercard" onSubmit={enterRooms}>
+          <h2 className='userTitle'>Game Mode</h2>
+          <button type='button' onClick={toggleGameMode} className="button">{gameMode}</button>
 
-        <h2 className="userTitle">Game Code</h2>
-        <div>
-          <input ref={roomInputRef} className='input' placeholder='Enter room code' maxLength={16} />
-        </div>
-
-        <button type='submit' className="button">
-          <img className="mario-run" src="/images/mario.gif" />
-          <img className="goomba-run" src="/images/goomba2.gif" />
-          <span className='text-container'>Play</span>
-        </button>
-
-        <button type='button' className='button' onClick={options}>Options</button>
-      </form>
-
-      <div className="usercard">
-        <h2 className="userTitle">YOUR SCORES</h2>
-        {scores.map((s, idx) => (
-          <div key={idx}>
-            <h3 style={{ color: 'white' }}>{getOrdinal(idx + 1)} {s}</h3>
-            {idx !== scores.length - 1 && <hr style={{ color: 'white' }} />}
+          <h2 className="userTitle">Game Code</h2>
+          <div>
+            <input ref={roomInputRef} className='input' placeholder='Enter room code' maxLength={16} />
           </div>
-        ))}
-      </div>
-    </div>
+
+          <button type='submit' className="button">
+            <img className="mario-run" src="/images/mario.gif" />
+            <img className="goomba-run" src="/images/goomba2.gif" />
+            <span className='text-container'>Play</span>
+          </button>
+
+          <button type='button' className='button' onClick={options}>Options</button>
+        </form>
+
+        <div className="usercard">
+          <h2 className="userTitle">YOUR SCORES</h2>
+          {scores.map((s, idx) => (
+            <div key={idx}>
+              <h3 style={{ color: 'white' }}>{getOrdinal(idx + 1)} {s}</h3>
+              {idx !== scores.length - 1 && <hr style={{ color: 'white' }} />}
+            </div>
+          ))}
         </div>
+    </div>
+          </div>
   );
 }
