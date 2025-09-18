@@ -1,12 +1,14 @@
 'use client';
-import {useState, useContext, useReducer } from 'react';
+import { useDispatch, useSelector } from "react-redux"
+import { change } from "../Store"
+import {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StoreContext } from "../Contexts.js"
 
 export default function Home() {
   const [username, setUsername] = useState();
   const navigate = useNavigate();
-	const store = useContext(StoreContext)
+	const lol = useSelector((state) => state.name.msg)
+	const dispatch = useDispatch()
 
   function handleButton(e)
   {
@@ -27,6 +29,7 @@ export default function Home() {
 		return;
 	}
 	localStorage.setItem("username", name.value);
+	dispatch(change(name.value))
 	navigate('/game');
   }
 

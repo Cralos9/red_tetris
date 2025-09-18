@@ -3,21 +3,8 @@ import './cssFiles/globals.css';
 import './cssFiles/buttons.css';
 import './cssFiles/board.css';
 import ClientRoutes from './clientLayout';
-import { StoreContext } from "./Contexts"
-import { createStore } from "./Store"
-import { socketMiddleWare } from "./socket"
-
-const reducer = (state, action) => {
-	console.log("Received a state update", action)
-}
-
-const loggerMiddleWare = (action, store) => {
-	console.log("MiddleWare Intercepted an Action:", action.type, action.payload)
-}
-
-const store = createStore(reducer)
-store.applyMiddleWare(loggerMiddleWare)
-store.applyMiddleWare(socketMiddleWare)
+import { Provider } from 'react-redux'
+import { store } from "./Store"
 
 export default function Layout() {
   return (
@@ -30,9 +17,9 @@ export default function Layout() {
       <img className="piranha-img" src="/images/piranha.png" alt="Piranha" />
       <img className="mario-img" src="/images/images.png" alt="Mario" />
 
-	  <StoreContext value={store}>
+	  <Provider store={store}>
 		<ClientRoutes />
-	  </StoreContext>
+	  </Provider>
     </div>
   );
 }

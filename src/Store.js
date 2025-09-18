@@ -1,22 +1,21 @@
 "use client"
 
-export const createStore = (reducer, initState) => {
-	const store = {
-		state: initState,
-		middlewares: [],
-		listeners: [],
-		applyMiddleWare: (middleware) => {
-			store.middlewares.push(middleware)
-		},
-		dispatch: (action) => {
-			store.middlewares.forEach(middleware => middleware(action, store))
-			store.state = reducer(store.state, action)
-			store.listeners.forEach(cb => { cb() })
-		},
-		subscribe: (cb) => {
-			store.listeners.push(cb)
-		},
-		getState: () => store.state
+import { configureStore, createSlice } from "@reduxjs/toolkit"
+
+const slice = createSlice({
+	name: "ChangeName",
+	initialState: { msg: "POL" },
+	reducers: {
+		change: (state, action) => {
+			state.msg = action.payload
+		}
 	}
-	return (store)
-}
+})
+
+export const { change } = slice.actions
+
+export const store = configureStore({
+	reducer: {
+		name: slice.reducer
+	}
+})

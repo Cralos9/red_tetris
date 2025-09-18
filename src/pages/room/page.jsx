@@ -19,7 +19,6 @@ export default function RoomPage() {
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
 	const [scores, setScores] = useState([]);
-	const store = useContext(StoreContext)
 
 	const handleKeyDown = (e) => {
 		socket.emit("keyDown", { key: e.key, roomCode });
@@ -40,7 +39,6 @@ export default function RoomPage() {
 		return (n + (s[(v - 20) % 10] || s[v] || s[0]));
 	  }
 	useEffect(() => {
-		store.dispatch({ type: SOCK_EVENTS.CONNECT, payload: {} })
 		//socket.connect();
 	  	//
 		//socket.on("Owner", (msg) =>
