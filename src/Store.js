@@ -1,6 +1,7 @@
 "use client"
 
 import { configureStore, createSlice } from "@reduxjs/toolkit"
+import { SOCK_EVENTS } from "./socket"
 
 const slice = createSlice({
 	name: "ChangeName",
