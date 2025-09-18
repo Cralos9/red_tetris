@@ -1,19 +1,19 @@
 'use client';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
+import { SOCK_EVENTS } from '../../socket.js';
 import  gameDraw  from "./functions.js";
 import {ACTIONS, SupportedKeys} from "../../../common.js";
 import { useNavigate } from 'react-router';
-import { StoreContext } from "../../Contexts"
-import { SOCK_EVENTS } from "../../socket"
+import { useDispatch, useSelector } from "react-redux"
 
 export default function RoomPage() {
 	const navigate = useNavigate()
 	const params = useParams();
 	const roomCode = params.room;
+	const dispatch = useDispatch();
 	const [gameOver, setGameOver] = useState(false);
 	const [allGamesOver, setAllGamesOver] = useState(true);
-
 	var div;
 	const name = params.player_name;
 	const [username, setUsername] = useState('');
@@ -60,7 +60,8 @@ export default function RoomPage() {
 	}, []);
 
 	useEffect(() => {
-
+		if(name)
+			setUsername(name);
 		const options = {
 			actions: {
 			  [ACTIONS.MOVE_LEFT]: localStorage.getItem("left") ? [localStorage.getItem("left")] : ['ArrowLeft'],

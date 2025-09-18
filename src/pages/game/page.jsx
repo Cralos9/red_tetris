@@ -1,9 +1,13 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux"
+import { changeRoom } from "../../Store"
 
 export default function Game() {
   const navigate = useNavigate();
+	const dispatch = useDispatch()
+  const lol = useSelector((state) => state.room)
   const [scores, setScores] = useState([]);
   const [gameInt, setGameInt] = useState(0);
   const gameModes = ["42", "Tetris"];
@@ -48,6 +52,7 @@ export default function Game() {
     }
 
     localStorage.setItem("gameMode", gameMode);
+    dispatch(changeRoom({room: room, gameMode: gameMode}));
     navigate(`/${room}/${user}`);
   };
 
