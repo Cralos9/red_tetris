@@ -1,6 +1,6 @@
 'use client';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import  gameDraw  from "./functions.js";
 import {ACTIONS, SupportedKeys} from "../../../common.js";
 import { useNavigate } from 'react-router';
@@ -41,53 +41,55 @@ export default function RoomPage() {
 			  v = n % 100;
 		return (n + (s[(v - 20) % 10] || s[v] || s[0]));
 	  }
+
+	const bottleRef = useRef(null);
+	const topRowRef = useRef(null);
+	const startBtnRef = useRef(null);
+
 	useEffect(() => {
-		if(name)
-			setUsername(name);
-		const options = {
+	if(name)
+		setUsername(name);
+
+	const options = {
 			actions: {
-			  [ACTIONS.MOVE_LEFT]: localStorage.getItem("left") ? [localStorage.getItem("left")] : ['ArrowLeft'],
-			  [ACTIONS.MOVE_RIGHT]: localStorage.getItem("right") ? [localStorage.getItem("right")] : ['ArrowRight'],
-			  [ACTIONS.ROTATE_LEFT]: localStorage.getItem("rotateLeft") ? [localStorage.getItem("rotateLeft")] : ['z'],
-			  [ACTIONS.ROTATE_RIGHT]: localStorage.getItem("rotateRight") ? [localStorage.getItem("rotateRight")] : ['ArrowUp', 'x'],
-			  [ACTIONS.HARD_DROP]: localStorage.getItem("hardDrop") ? [localStorage.getItem("hardDrop")] : [' '],
-			  [ACTIONS.SOFT_DROP]: localStorage.getItem("softDrop") ? [localStorage.getItem("softDrop")] : ['ArrowDown'],
-			  [ACTIONS.HOLD]: localStorage.getItem("holdPiece") ? [localStorage.getItem("holdPiece")] : ['c'],
+				[ACTIONS.MOVE_LEFT]: localStorage.getItem("left") ? [localStorage.getItem("left")] : ['ArrowLeft'],
+				[ACTIONS.MOVE_RIGHT]: localStorage.getItem("right") ? [localStorage.getItem("right")] : ['ArrowRight'],
+				[ACTIONS.ROTATE_LEFT]: localStorage.getItem("rotateLeft") ? [localStorage.getItem("rotateLeft")] : ['z'],
+				[ACTIONS.ROTATE_RIGHT]: localStorage.getItem("rotateRight") ? [localStorage.getItem("rotateRight")] : ['ArrowUp', 'x'],
+				[ACTIONS.HARD_DROP]: localStorage.getItem("hardDrop") ? [localStorage.getItem("hardDrop")] : [' '],
+				[ACTIONS.SOFT_DROP]: localStorage.getItem("softDrop") ? [localStorage.getItem("softDrop")] : ['ArrowDown'],
+				[ACTIONS.HOLD]: localStorage.getItem("holdPiece") ? [localStorage.getItem("holdPiece")] : ['c'],
 			},
 			ARR: parseInt(localStorage.getItem("ARR")) || 5,
 			DAS: parseInt(localStorage.getItem("DAS")) || 10,
-		  };
+		};
 
-		const msg = sendSocketMsg("joinRoom", {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
-		dispatch(send(msg))
+	let msg = sendSocketMsg("joinRoom", { playerName: name, roomCode: roomCode, options:options, gameMode: "42" });
+	dispatch(send(msg));
 
-		gameDraw.add_cells('.top-row', 10)
-		gameDraw.add_cells('.game-bottle', 200)
-		gameDraw.add_cells('.next-piece', 60)
-		gameDraw.add_cells('.held-piece', 30)
-				
 
-		//socket.connect();
-	  	//
-		//socket.on("Owner", (msg) =>
-		//{
-		//	const startBtn = document.getElementById('Start');
-		//	if (startBtn && socket.id === msg.owner)
-		//		startBtn.style.visibility = 'visible';
-		//});
+	//   msg = sendSocketMsg("startGame", { roomCode });
+	//   console.log("TESTE")
+	//   dispatch(send(msg));
 
-		//socket.on("boardRemove", (msg) =>
-		//{
-		//	var board = document.getElementById(msg.id)
-		//	if(!board)
-		//		return
-		//	div = board.parentElement;
-		//	if(board)
-		//		board.remove();
-		//});
-	}, []);
+	gameDraw.add_cells('.next-piece', 60)
+	gameDraw.add_cells('.held-piece', 30)
+	gameDraw.add_cells('.top-row', 10);
+	gameDraw.add_cells('.game-bottle', 200);
+	}, [dispatch, name, roomCode]);
+
 
 	useEffect(() => {
+	if (!bottleRef.current || !topRowRef.current) return;
+	if (!tick.field || !Array.isArray(tick.field)) return;
+
+	const cells = bottleRef.current.querySelectorAll('.cell');
+	const topRowCells = topRowRef.current.querySelectorAll('.cell');
+
+	gameDraw.game(cells, tick.field, topRowCells, 1);
+	}, [tick.field]);
+
+// useEffect(() => {
 
 		//socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
 
@@ -228,7 +230,7 @@ export default function RoomPage() {
 		//	document.removeEventListener("keydown", handleKeyDown);
 		//	document.removeEventListener("keyup", handleKeyUp);
 		//  };
-	}, [name]);
+	// }, [name]);
 	
 
 	function startGame() 
@@ -348,8 +350,8 @@ export default function RoomPage() {
 							<span className="held-label">Held Piece</span>
 							</div>
 							<div className='garbage-bar'></div>
-							<div className="game-bottle">
-								<div className='top-row'></div>
+							<div className="game-bottle"ref={bottleRef}>
+								<div className='top-row' ref={topRowRef}></div>
 							</div>
 							<div className="next-piece">
 							<span className="held-label">Next Pieces</span>
@@ -359,7 +361,7 @@ export default function RoomPage() {
 						<div className='button-container'>
 							<div className='scoreCard'>
 							<span className='score'>Score</span>
-							<span className='score' style={{color :'orange'}} id='Score'>{tick.score.score}</span>
+							<span className='score' style={{color :'orange'}} id='Score'>0</span>
 							<span className='score'>Level</span>
 							<span className='score' style={{color :'orange'}} id='Level'>{tick.level}</span>
 							</div>
