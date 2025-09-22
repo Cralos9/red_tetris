@@ -11,14 +11,16 @@ import { sendSocketMsg } from "../../socket"
 export default function RoomPage() {
 	const navigate = useNavigate()
 	const dispatch = useDispatch();
+	const params = useParams()
+	const name = params.player_name
+	const roomCode = params.room
 	const [gameOver, setGameOver] = useState(false);
 	const [allGamesOver, setAllGamesOver] = useState(true);
 	var div;
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
 	const [scores, setScores] = useState([]);
-	const player = useSelector((state) => state.player)
-	const roomCode = player.room.code
+	const tick = useSelector((state) => state.game)
 
 	const handleKeyDown = (e) => {
 		socket.emit("keyDown", { key: e.key, roomCode });
@@ -39,6 +41,35 @@ export default function RoomPage() {
 		return (n + (s[(v - 20) % 10] || s[v] || s[0]));
 	  }
 	useEffect(() => {
+		if(name)
+			setUsername(name);
+		const options = {
+			actions: {
+			  [ACTIONS.MOVE_LEFT]: localStorage.getItem("left") ? [localStorage.getItem("left")] : ['ArrowLeft'],
+			  [ACTIONS.MOVE_RIGHT]: localStorage.getItem("right") ? [localStorage.getItem("right")] : ['ArrowRight'],
+			  [ACTIONS.ROTATE_LEFT]: localStorage.getItem("rotateLeft") ? [localStorage.getItem("rotateLeft")] : ['z'],
+			  [ACTIONS.ROTATE_RIGHT]: localStorage.getItem("rotateRight") ? [localStorage.getItem("rotateRight")] : ['ArrowUp', 'x'],
+			  [ACTIONS.HARD_DROP]: localStorage.getItem("hardDrop") ? [localStorage.getItem("hardDrop")] : [' '],
+			  [ACTIONS.SOFT_DROP]: localStorage.getItem("softDrop") ? [localStorage.getItem("softDrop")] : ['ArrowDown'],
+			  [ACTIONS.HOLD]: localStorage.getItem("holdPiece") ? [localStorage.getItem("holdPiece")] : ['c'],
+			},
+			ARR: parseInt(localStorage.getItem("ARR")) || 5,
+			DAS: parseInt(localStorage.getItem("DAS")) || 10,
+		  };
+
+		let msg = sendSocketMsg("joinRoom", {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
+		dispatch(send(msg))
+		const startBtn = document.getElementById('Start');
+		startBtn.style.visibility = 'visible';
+		msg = sendSocketMsg("startGame", {roomCode: roomCode})
+		dispatch(send(msg))
+
+		gameDraw.add_cells('.top-row', 10)
+		gameDraw.add_cells('.game-bottle', 200)
+		gameDraw.add_cells('.next-piece', 60)
+		gameDraw.add_cells('.held-piece', 30)
+				
+
 		//socket.connect();
 	  	//
 		//socket.on("Owner", (msg) =>
@@ -60,24 +91,8 @@ export default function RoomPage() {
 	}, []);
 
 	useEffect(() => {
-		if(name)
-			setUsername(name);
-		const options = {
-			actions: {
-			  [ACTIONS.MOVE_LEFT]: localStorage.getItem("left") ? [localStorage.getItem("left")] : ['ArrowLeft'],
-			  [ACTIONS.MOVE_RIGHT]: localStorage.getItem("right") ? [localStorage.getItem("right")] : ['ArrowRight'],
-			  [ACTIONS.ROTATE_LEFT]: localStorage.getItem("rotateLeft") ? [localStorage.getItem("rotateLeft")] : ['z'],
-			  [ACTIONS.ROTATE_RIGHT]: localStorage.getItem("rotateRight") ? [localStorage.getItem("rotateRight")] : ['ArrowUp', 'x'],
-			  [ACTIONS.HARD_DROP]: localStorage.getItem("hardDrop") ? [localStorage.getItem("hardDrop")] : [' '],
-			  [ACTIONS.SOFT_DROP]: localStorage.getItem("softDrop") ? [localStorage.getItem("softDrop")] : ['ArrowDown'],
-			  [ACTIONS.HOLD]: localStorage.getItem("holdPiece") ? [localStorage.getItem("holdPiece")] : ['c'],
-			},
-			ARR: parseInt(localStorage.getItem("ARR")) || 5,
-			DAS: parseInt(localStorage.getItem("DAS")) || 10,
-		  };
 
 		//socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
-
 
 		//socket.on('endGame', (msg) =>
 		//{

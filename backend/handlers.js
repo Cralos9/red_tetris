@@ -35,6 +35,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 
 		room.addPlayer(player)
 		socket.join(roomCode.toString())
+		socket.emit("Owner", {})
 		io.to(roomCode).emit('join', room.toObject())
 	}
 	const disconnection = (reason) => {

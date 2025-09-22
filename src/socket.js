@@ -1,7 +1,7 @@
 "use client"
 
 import { io } from "socket.io-client"
-import { send } from "./Store"
+import { send, tick } from "./Store"
 
 let socket
 
@@ -41,6 +41,7 @@ export const socketMiddleware = (storeAPI) => (next) => (action) => {
 
 		socket.on("game", (msg) => {
 			console.log("Received game", msg)
+			storeAPI.dispatch(tick(msg))
 		})
 
 		socket.on("Error", (msg) => {

@@ -19,6 +19,30 @@ const playerSlice = createSlice({
 	}
 })
 
+const gameSlice = createSlice({
+	name: "Game",
+	initialState: {
+		field: null,
+		nextPiece: null,
+		heldPiece: null,
+		combo: null,
+		linesCleared: null,
+		level: null,
+		playerId: null,
+	},
+	reducers: {
+		tick: (state, action) => {
+			state.field = action.payload.field
+			state.nextPiece = action.payload.nextPiece
+			state.heldPiece = action.payload.heldPiece
+			state.combo = action.payload.combo
+			state.linesCleared = action.payload.linesCleared
+			state.level = action.payload.level
+			state.playerId = action.payload.playerId
+		}
+	}
+})
+
 const socketSlice = createSlice({
 	name: "Socket",
 	initialState: {},
@@ -36,7 +60,8 @@ const socketSlice = createSlice({
 })
 
 export const { setName, setRoom } = playerSlice.actions
-export const { send, disconnect } = socketSlice.actions
+export const { send, disconnect, owner } = socketSlice.actions
+export const { tick } = gameSlice.actions
 
 const logger = (storeAPI) => (next) => (action) => {
 	console.log("Dispatch called with action", action)
@@ -47,7 +72,8 @@ const logger = (storeAPI) => (next) => (action) => {
 export const store = configureStore({
 	reducer: {
 		player: playerSlice.reducer,
-		socket: socketSlice.reducer
+		socket: socketSlice.reducer,
+		game: gameSlice.reducer
 	},
 	middleware: (getDefaultMiddleware) => 
 		getDefaultMiddleware().prepend(logger).concat(socketMiddleware)
