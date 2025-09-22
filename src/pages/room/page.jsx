@@ -21,6 +21,7 @@ export default function RoomPage() {
 	const [isDisabled, setIsDisabled] = useState(false);
 	const [scores, setScores] = useState([]);
 	const tick = useSelector((state) => state.game)
+	const player = useSelector((state) => state.player)
 
 	const handleKeyDown = (e) => {
 		socket.emit("keyDown", { key: e.key, roomCode });
@@ -57,11 +58,7 @@ export default function RoomPage() {
 			DAS: parseInt(localStorage.getItem("DAS")) || 10,
 		  };
 
-		let msg = sendSocketMsg("joinRoom", {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
-		dispatch(send(msg))
-		const startBtn = document.getElementById('Start');
-		startBtn.style.visibility = 'visible';
-		msg = sendSocketMsg("startGame", {roomCode: roomCode})
+		const msg = sendSocketMsg("joinRoom", {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
 		dispatch(send(msg))
 
 		gameDraw.add_cells('.top-row', 10)
@@ -265,8 +262,8 @@ export default function RoomPage() {
 		// }, 1000);
 		// if (time == 0)
 		// ***********************************************
-		socket.emit("startGame", {roomCode: roomCode});
-
+		const msg = sendSocketMsg("startGame", { roomCode: roomCode })
+		dispatch(send(msg))
 	}
 
 	function scoreSave(score)
@@ -362,11 +359,12 @@ export default function RoomPage() {
 						<div className='button-container'>
 							<div className='scoreCard'>
 							<span className='score'>Score</span>
-							<span className='score' style={{color :'orange'}} id='Score'>0</span>
+							<span className='score' style={{color :'orange'}} id='Score'>{tick.score.score}</span>
 							<span className='score'>Level</span>
-							<span className='score' style={{color :'orange'}} id='Level'>0</span>
+							<span className='score' style={{color :'orange'}} id='Level'>{tick.level}</span>
 							</div>
-							<button onClick={startGame} className='buttons' disabled={isDisabled} style={{ visibility: 'hidden' }} id='Start'>Start</button>
+							<button onClick={startGame} className='buttons' disabled={isDisabled} 
+								style={player.isOwner ? {visibility: 'visible'} : { visibility: 'hidden' }} id='Start'>Start</button>
 						</div>
 
 					<div className='secondary-games-right'></div>

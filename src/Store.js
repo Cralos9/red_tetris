@@ -6,8 +6,9 @@ import { socketMiddleware } from "./socket"
 const playerSlice = createSlice({
 	name: "Player",
 	initialState: {
-		name: undefined,
-		room: undefined
+		name: null,
+		room: null,
+		isOwner: false
 	},
 	reducers: {
 		setName: (state, action) => {
@@ -15,6 +16,23 @@ const playerSlice = createSlice({
 		},
 		setRoom: (state, action) => {
 			state.room = action.payload
+		},
+		setOwner: (state, action) => {
+			state.isOwner = action.payload
+		}
+	}
+})
+
+const opponentGame = createSlice({
+	name: "Opponents",
+	initialState: {
+		field: null,
+		id: null,
+	},
+	reducers: {
+		opponents: (state, action) => {
+			state.field = action.payload.field
+			state.id = action.payload.playerId
 		}
 	}
 })
@@ -28,18 +46,19 @@ const gameSlice = createSlice({
 		combo: null,
 		linesCleared: null,
 		level: null,
-		playerId: null,
+		id: null,
 	},
 	reducers: {
 		tick: (state, action) => {
 			state.field = action.payload.field
 			state.nextPiece = action.payload.nextPiece
 			state.heldPiece = action.payload.heldPiece
+			state.score = action.payload.playerScore
 			state.combo = action.payload.combo
 			state.linesCleared = action.payload.linesCleared
 			state.level = action.payload.level
-			state.playerId = action.payload.playerId
-		}
+			state.id = action.payload.id
+		},
 	}
 })
 
@@ -59,7 +78,8 @@ const socketSlice = createSlice({
  	}
 })
 
-export const { setName, setRoom } = playerSlice.actions
+export const { opponents } = opponentGame.actions
+export const { setName, setRoom, setOwner } = playerSlice.actions
 export const { send, disconnect, owner } = socketSlice.actions
 export const { tick } = gameSlice.actions
 
@@ -73,7 +93,8 @@ export const store = configureStore({
 	reducer: {
 		player: playerSlice.reducer,
 		socket: socketSlice.reducer,
-		game: gameSlice.reducer
+		game: gameSlice.reducer,
+		opponents: opponentGame.reducer
 	},
 	middleware: (getDefaultMiddleware) => 
 		getDefaultMiddleware().prepend(logger).concat(socketMiddleware)
