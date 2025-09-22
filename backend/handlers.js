@@ -35,7 +35,6 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 
 		room.addPlayer(player)
 		socket.join(roomCode.toString())
-		socket.emit("Owner", {owner: player.getId()})
 		io.to(roomCode).emit('join', room.toObject())
 	}
 	const disconnection = (reason) => {
@@ -54,7 +53,15 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		}
 		log("%s, Disconnected:", socket.id, reason)
 	}
+	const leaveRoom = (payload) => {
+		const roomCode = payload.roomCode
+		const room = RoomsMap.get(roomCode)
+
+		log(socket.id, "Leaved room", roomCode)
+		room.leavePlayer(room.getPlayer(socket.id))
+	}
 	socket.on('joinRoom', joinRoom)
+	socket.on('leaveRoom', leaveRoom)
 	socket.on('disconnect', disconnection)
 }
 

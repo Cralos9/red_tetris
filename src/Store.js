@@ -44,9 +44,9 @@ const gameSlice = createSlice({
 		nextPiece: null,
 		heldPiece: null,
 		score: null,
-		combo: null,
-		linesCleared: null,
-		level: null,
+		combo: 0,
+		linesCleared: 0,
+		level: 0,
 		id: null,
 	},
 	reducers: {

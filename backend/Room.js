@@ -32,6 +32,7 @@ export default class Room {
 		this.log("Player %s joined", newPlayer.toString())
 		if (this.getNbrOfPlayers() == 0) {
 			this.setOwner(newPlayer)
+			newPlayer.io.emit("Owner", { owner: newPlayer.getId() })
 		}
 		this.plMap.set(newPlayer.getId(), newPlayer)
 	}
@@ -63,7 +64,7 @@ export default class Room {
 		if (leaverPlayer === this.owner) {
 			this.setOwner(this.plMap.values().next().value)
 			if (this.owner !== undefined) {
-				this.owner.io.emit("Owner", {owner: this.owner.getId()})
+				this.owner.io.emit("Owner", { owner: this.owner.getId() })
 			}
 		}
 		this.io.to(this.code).emit("boardRemove", {id: leaverPlayer.getId()})

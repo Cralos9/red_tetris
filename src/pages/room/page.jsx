@@ -24,14 +24,6 @@ export default function RoomPage() {
 	const tick = useSelector((state) => state.game)
 	const player = useSelector((state) => state.player)
 
-	const handleKeyDown = (e) => {
-		socket.emit("keyDown", { key: e.key, roomCode });
-	  };
-	
-	  const handleKeyUp = (e) => {
-		socket.emit("keyUp", { key: e.key, roomCode });
-	  };
-
 	function end_game() {
 	  setIsDisabled(false);
 	  setGameOver(true);
@@ -41,17 +33,17 @@ export default function RoomPage() {
 		const s = ["th", "st", "nd", "rd"],
 			  v = n % 100;
 		return (n + (s[(v - 20) % 10] || s[v] || s[0]));
-	  }
+	}
 
 	const bottleRef = useRef(null);
 	const topRowRef = useRef(null);
 	const startBtnRef = useRef(null);
 
 	useEffect(() => {
-	if(name)
-		setUsername(name);
+		if(name)
+			setUsername(name);
 
-	const options = {
+		const options = {
 			actions: {
 				[ACTIONS.MOVE_LEFT]: localStorage.getItem("left") ? [localStorage.getItem("left")] : ['ArrowLeft'],
 				[ACTIONS.MOVE_RIGHT]: localStorage.getItem("right") ? [localStorage.getItem("right")] : ['ArrowRight'],
@@ -65,29 +57,27 @@ export default function RoomPage() {
 			DAS: parseInt(localStorage.getItem("DAS")) || 10,
 		};
 
-	let msg = sendSocketMsg("joinRoom", { playerName: name, roomCode: roomCode, options:options, gameMode: "42" });
-	dispatch(send(msg));
+		let msg = sendSocketMsg("joinRoom", { playerName: name, roomCode: roomCode, options:options, gameMode: "42" });
+		dispatch(send(msg));
 
-
-	//   msg = sendSocketMsg("startGame", { roomCode });
-	//   console.log("TESTE")
-	//   dispatch(send(msg));
-
-	gameDraw.add_cells('.next-piece', 60)
-	gameDraw.add_cells('.held-piece', 30)
-	gameDraw.add_cells('.top-row', 10);
-	gameDraw.add_cells('.game-bottle', 200);
+		gameDraw.add_cells('.next-piece', 60)
+		gameDraw.add_cells('.held-piece', 30)
+		gameDraw.add_cells('.top-row', 10);
+		gameDraw.add_cells('.game-bottle', 200);
+		return () => {
+			dispatch(send(sendSocketMsg("leaveRoom", { roomCode: roomCode })))
+		}
 	}, [dispatch, name, roomCode]);
 
 
 	useEffect(() => {
-	if (!bottleRef.current || !topRowRef.current) return;
-	if (!tick.field || !Array.isArray(tick.field)) return;
+		if (!bottleRef.current || !topRowRef.current) return;
+		if (!tick.field || !Array.isArray(tick.field)) return;
 
-	const cells = bottleRef.current.querySelectorAll('.cell');
-	const topRowCells = topRowRef.current.querySelectorAll('.cell');
+		const cells = bottleRef.current.querySelectorAll('.cell');
+		const topRowCells = topRowRef.current.querySelectorAll('.cell');
 
-	gameDraw.game(cells, tick.field, topRowCells, 1);
+		gameDraw.game(cells, tick.field, topRowCells, 1);
 	}, [tick.field]);
 
 // useEffect(() => {
@@ -223,11 +213,6 @@ export default function RoomPage() {
 		//if (name) 
 		//	setUsername(name);
 		//
-		//return () => {
-		//	socket.disconnect();
-		//	document.removeEventListener("keydown", handleKeyDown);
-		//	document.removeEventListener("keyup", handleKeyUp);
-		//  };
 	// }, [name]);
 	
 
