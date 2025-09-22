@@ -1,4 +1,5 @@
 'use client';
+import Inputs from "./Inputs"
 import { useParams } from 'react-router-dom';
 import { useEffect, useState, useContext, useRef } from 'react';
 import  gameDraw  from "./functions.js";
@@ -90,9 +91,6 @@ export default function RoomPage() {
 	}, [tick.field]);
 
 // useEffect(() => {
-
-		//socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
-
 		//socket.on('endGame', (msg) =>
 		//{
 		//	setScores(msg.leaderboard.reverse())
@@ -344,17 +342,18 @@ export default function RoomPage() {
 					<h1 className='room-info'>Room Code:{roomCode}      Username:{username}</h1>
 				</nav>
 				<div className='main-layout'>
+					<Inputs>
 						<div className='secondary-games'></div>
 						<div className="game-wrapper">
 							<div className="held-piece">
-							<span className="held-label">Held Piece</span>
+								<span className="held-label">Held Piece</span>
 							</div>
 							<div className='garbage-bar'></div>
 							<div className="game-bottle"ref={bottleRef}>
 								<div className='top-row' ref={topRowRef}></div>
 							</div>
 							<div className="next-piece">
-							<span className="held-label">Next Pieces</span>
+								<span className="held-label">Next Pieces</span>
 							</div>
 						</div>
 
@@ -368,8 +367,8 @@ export default function RoomPage() {
 							<button onClick={startGame} className='buttons' disabled={isDisabled} 
 								style={player.isOwner ? {visibility: 'visible'} : { visibility: 'hidden' }} id='Start'>Start</button>
 						</div>
-
-					<div className='secondary-games-right'></div>
+						<div className='secondary-games-right'></div>
+					</Inputs>
 				</div>
 		</div>
 	);
