@@ -361,7 +361,7 @@ export default function RoomPage() {
 						<div className='button-container'>
 							<div className='scoreCard'>
 							<span className='score'>Score</span>
-							<span className='score' style={{color :'orange'}} id='Score'>0</span>
+							<span className='score' style={{color :'orange'}} id='Score'>{tick.score?.score ?? 0}</span>
 							<span className='score'>Level</span>
 							<span className='score' style={{color :'orange'}} id='Level'>{tick.level}</span>
 							</div>

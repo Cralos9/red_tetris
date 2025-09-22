@@ -43,6 +43,7 @@ const gameSlice = createSlice({
 		field: null,
 		nextPiece: null,
 		heldPiece: null,
+		score: null,
 		combo: null,
 		linesCleared: null,
 		level: null,
