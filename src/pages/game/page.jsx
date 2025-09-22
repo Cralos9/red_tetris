@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux"
-import { changeRoom } from "../../Store"
+import { setRoom } from "../../Store"
 
 export default function Game() {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ export default function Game() {
     }
 
     localStorage.setItem("gameMode", gameMode);
-    dispatch(changeRoom({room: room, gameMode: gameMode}));
+    dispatch(setRoom({code: room, gameMode: gameMode}));
     navigate(`/${room}/${user}`);
   };
 

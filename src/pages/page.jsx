@@ -1,13 +1,12 @@
 'use client';
 import { useDispatch, useSelector } from "react-redux"
-import { change } from "../Store"
+import { setName } from "../Store"
 import {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
   const [username, setUsername] = useState();
   const navigate = useNavigate();
-	const lol = useSelector((state) => state.name.msg)
 	const dispatch = useDispatch()
 
   function handleButton(e)
@@ -29,7 +28,7 @@ export default function Home() {
 		return;
 	}
 	localStorage.setItem("username", name.value);
-	dispatch(change(name.value))
+	dispatch(setName(name.value))
 	navigate('/game');
   }
 

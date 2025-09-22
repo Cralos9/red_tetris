@@ -5,20 +5,20 @@ import  gameDraw  from "./functions.js";
 import {ACTIONS, SupportedKeys} from "../../../common.js";
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from "react-redux"
-import { connect, send } from "../../Store"
+import { send } from "../../Store"
+import { sendSocketMsg } from "../../socket"
 
 export default function RoomPage() {
 	const navigate = useNavigate()
-	const params = useParams();
-	const roomCode = params.room;
 	const dispatch = useDispatch();
 	const [gameOver, setGameOver] = useState(false);
 	const [allGamesOver, setAllGamesOver] = useState(true);
 	var div;
-	const name = params.player_name;
 	const [username, setUsername] = useState('');
 	const [isDisabled, setIsDisabled] = useState(false);
 	const [scores, setScores] = useState([]);
+	const player = useSelector((state) => state.player)
+	const roomCode = player.room.code
 
 	const handleKeyDown = (e) => {
 		socket.emit("keyDown", { key: e.key, roomCode });
@@ -39,7 +39,6 @@ export default function RoomPage() {
 		return (n + (s[(v - 20) % 10] || s[v] || s[0]));
 	  }
 	useEffect(() => {
-		dispatch(connect())
 		//socket.connect();
 	  	//
 		//socket.on("Owner", (msg) =>
@@ -76,6 +75,7 @@ export default function RoomPage() {
 			ARR: parseInt(localStorage.getItem("ARR")) || 5,
 			DAS: parseInt(localStorage.getItem("DAS")) || 10,
 		  };
+
 		//socket.emit('joinRoom', {playerName: name, roomCode: roomCode, options: options, gameMode: localStorage.getItem("gameMode") || "42"})
 
 

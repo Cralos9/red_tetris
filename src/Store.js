@@ -3,25 +3,18 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit"
 import { socketMiddleware } from "./socket"
 
-const slice = createSlice({
-	name: "ChangeName",
-	initialState: { msg: "POL" },
+const playerSlice = createSlice({
+	name: "Player",
+	initialState: {
+		name: undefined,
+		room: undefined
+	},
 	reducers: {
-		change: (state, action) => {
-			state.msg = action.payload
-		}
-	}
-})
-
-const roomSlice = createSlice({
-	name: "RoomCode",
-	initialState: {room: "void", gameMode:"void"},
-	reducers:
-	{
-		changeRoom:(state, action) =>
-		{
-			state.room = action.payload.room
-			state.gameMode = action.payload.gameMode 
+		setName: (state, action) => {
+			state.name = action.payload
+		},
+		setRoom: (state, action) => {
+			state.room = action.payload
 		}
 	}
 })
@@ -31,9 +24,6 @@ const socketSlice = createSlice({
 	initialState: {},
 	reducers:
 	{
-		connect: (state, action) => {
-			return;
-		},
 		send: (state, action) => 
 		{
 			return;
@@ -45,9 +35,8 @@ const socketSlice = createSlice({
  	}
 })
 
-export const { change } = slice.actions
-export const {changeRoom} = roomSlice.actions
-export const { connect, send, disconnect } = socketSlice.actions
+export const { setName, setRoom } = playerSlice.actions
+export const { send, disconnect } = socketSlice.actions
 
 const logger = (storeAPI) => (next) => (action) => {
 	console.log("Dispatch called with action", action)
@@ -57,8 +46,7 @@ const logger = (storeAPI) => (next) => (action) => {
 
 export const store = configureStore({
 	reducer: {
-		name: slice.reducer,
-		room: roomSlice.reducer,
+		player: playerSlice.reducer,
 		socket: socketSlice.reducer
 	},
 	middleware: (getDefaultMiddleware) => 
