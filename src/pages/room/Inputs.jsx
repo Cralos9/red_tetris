@@ -6,6 +6,7 @@ import {ACTIONS} from "../../../common.js"
 
 export default function Inputs({ roomCode, children }) {
 	const dispatch = useDispatch()
+	const keybinds = useSelector((state) => state.player.keybinds)
 	const set = new Set()
 
 	const options = {
@@ -27,32 +28,36 @@ export default function Inputs({ roomCode, children }) {
 			options.keys[key] = action
 		}
 	}
-	const keyDown = (e) => {
-		const key = e.key
-		if (set.has(key)) {
+
+	const keyHandler = (action, event) => {
+		const msg = sendSocketMsg(event, { roomCode: roomCode, action: action })
+		dispatch(send(msg))
+	}
+
+	const down = (e) => {
+		const action = options.keys[e.key]
+		if (set.has(action)) {
 			return
 		}
-		const msg = sendSocketMsg("keyDown", { roomCode: roomCode, key: key })
-		dispatch(send(msg))
-		set.add(key)
+		keyHandler(action, "down")
+		set.add(action)
 	}
-	const keyUp = (e) => {
-		const key = e.key
-		set.delete(key)
-		const msg = sendSocketMsg("keyUp", { roomCode: roomCode, key: key })
-		dispatch(send(msg))
+
+	const up = (e) => {
+		const action = options.keys[e.key]
+		set.delete(action)
+		keyHandler(action, "up")
 	}
 
 	useEffect(() => {
-		console.log("RoomCode:", roomCode)
-		window.addEventListener("keydown", keyDown)
-		window.addEventListener("keyup", keyUp)
+		window.addEventListener("keydown", down)
+		window.addEventListener("keyup", up)
 
 		return () => {
-			window.removeEventListener("keyup", keyUp)
-			window.removeEventListener("keydown", keyDown)
+			window.removeEventListener("keyup", up)
+			window.removeEventListener("keydown", down)
 		}
-	}, [])
+	})
 
 	return (
 		<>{ children }</>

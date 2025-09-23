@@ -139,7 +139,7 @@ export default class Game {
 	}
 
 	update() {
-		const actions = this.ctrl.keyStates(this.frames)
+		const ret = this.ctrl.getRet()
 
 		this.linesCleared = 0
 
@@ -152,18 +152,17 @@ export default class Game {
 
 		this.Piece.undraw(this.field)
 
-
-		if (actions.hold === true && this.holdLock === false) {
+		if (ret.hold === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
 		}
-		if (actions.move) {
-			this.Piece.move(this.field, actions.move)
+		if (ret.move) {
+			this.Piece.move(this.field, ret.move)
 		}
-		if (actions.rot) {
-			this.Piece.rotate(this.field, actions.rot)
+		if (ret.rot) {
+			this.Piece.rotate(this.field, ret.rot)
 		}
-		if (actions.hardDrop === true) {
+		if (ret.hardDrop === true) {
 			const dropRow = this.Piece.getRow()
 			this.Piece.hardDrop(this.field)
 			this.eventManager.notify({
@@ -173,7 +172,7 @@ export default class Game {
 			}, GAME_EVENTS.HARD_DROP)
 		}
 
-		if (actions.softDrop) {
+		if (ret.softDrop) {
 			const dropRow = this.Piece.getRow()
 			this.Piece.softDrop(this.field)
 			this.eventManager.notify({

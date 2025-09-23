@@ -124,7 +124,7 @@ const socketSlice = createSlice({
 
 export const { opponents } = opponentGame.actions
 export const { setId, setName, setRoom, setOwner } = playerSlice.actions
-export const { send, disconnect, owner } = socketSlice.actions
+export const { send, disconnect } = socketSlice.actions
 export const { tick, endGame, boardRem } = gameSlice.actions
 export const { joiners } = joinSlice.actions
 

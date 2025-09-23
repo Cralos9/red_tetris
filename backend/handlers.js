@@ -113,6 +113,38 @@ export const gameHandlers = (io, socket, RoomsMap) => {
 			logError(errorMsg)
 		}
 	}
+
+	const down = (payload) => {
+		const action = payload.action
+		const roomCode = payload.roomCode
+		const room = RoomsMap.get(roomCode)
+
+		if (room === undefined) {
+			logError("Invalid Room code")
+			return
+		}
+		const player = room.getPlayer(socket.id)
+		if (player && player.getInGame() === true) { 
+			player.getGameController().setAction(action, true)
+		}
+	}
+
+	const up = (payload) => {
+		const action = payload.action
+		const roomCode = payload.roomCode
+		const room = RoomsMap.get(roomCode)
+
+		if (room === undefined) {
+			logError("Invalid Room code")
+			return
+		}
+		const player = room.getPlayer(socket.id)
+		if (player && player.getInGame() === true) { 
+			player.getGameController().setAction(action, false)
+		}
+	}
+	socket.on("down", down)
+	socket.on("up", up)
 	socket.on('startGame', startGame)
 	socket.on('keyDown', keyDown)
 	socket.on('keyUp', keyUp)
