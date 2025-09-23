@@ -71,6 +71,7 @@ export default function RoomPage() {
 
 
 	useEffect(() => {
+		console.log("Player:", player.id)
 		if (!bottleRef.current || !topRowRef.current) return;
 		if (!tick.field || !Array.isArray(tick.field)) return;
 

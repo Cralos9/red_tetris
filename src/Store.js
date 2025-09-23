@@ -2,15 +2,29 @@
 
 import { configureStore, createSlice } from "@reduxjs/toolkit"
 import { socketMiddleware } from "./socket"
+import { ACTIONS } from "../common"
 
 const playerSlice = createSlice({
 	name: "Player",
 	initialState: {
+		id: null,
 		name: null,
 		room: null,
-		isOwner: false
+		isOwner: false,
+		keybinds: {
+			" ": ACTIONS.HARD_DROP,
+			"c": ACTIONS.HOLD,
+			"ArrowLeft": ACTIONS.MOVE_LEFT,
+			"ArrowRight": ACTIONS.MOVE_RIGHT,
+			"ArrowUp": ACTIONS.ROTATE_RIGHT,
+			"z": ACTIONS.ROTATE_LEFT,
+			"ArrowDown": ACTIONS.SOFT_DROP,
+		}
 	},
 	reducers: {
+		setId: (state, action) => {
+			state.id = action.payload
+		},
 		setName: (state, action) => {
 			state.name = action.payload
 		},
@@ -19,6 +33,9 @@ const playerSlice = createSlice({
 		},
 		setOwner: (state, action) => {
 			state.isOwner = action.payload
+		},
+		setKeys: (state, action) => {
+			
 		}
 	}
 })
@@ -48,6 +65,8 @@ const gameSlice = createSlice({
 		linesCleared: 0,
 		level: 0,
 		id: null,
+		running: false,
+		leaderboard: null
 	},
 	reducers: {
 		tick: (state, action) => {
@@ -59,7 +78,11 @@ const gameSlice = createSlice({
 			state.linesCleared = action.payload.linesCleared
 			state.level = action.payload.level
 			state.id = action.payload.id
+			state.running = action.payload.running
 		},
+		endGame: (state, action) => {
+			state.leaderboard = action.payload.leaderboard.reverse()
+		}
 	}
 })
 
@@ -80,9 +103,9 @@ const socketSlice = createSlice({
 })
 
 export const { opponents } = opponentGame.actions
-export const { setName, setRoom, setOwner } = playerSlice.actions
+export const { setId, setName, setRoom, setOwner } = playerSlice.actions
 export const { send, disconnect, owner } = socketSlice.actions
-export const { tick } = gameSlice.actions
+export const { tick, endGame } = gameSlice.actions
 
 const logger = (storeAPI) => (next) => (action) => {
 	console.log("Dispatch called with action", action)
