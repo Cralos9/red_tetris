@@ -129,6 +129,7 @@ export const { tick, endGame, boardRem } = gameSlice.actions
 export const { joiners } = joinSlice.actions
 
 const logger = (storeAPI) => (next) => (action) => {
+	console.log("Dispatched", action)
 	const result = next(action)
 	return (result)
 }
@@ -142,5 +143,5 @@ export const store = configureStore({
 		opponents: opponentGame.reducer
 	},
 	middleware: (getDefaultMiddleware) => 
-		getDefaultMiddleware().prepend(logger).concat(socketMiddleware)
+		getDefaultMiddleware().concat(socketMiddleware)
 })

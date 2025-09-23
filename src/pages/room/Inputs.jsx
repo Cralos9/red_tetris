@@ -25,7 +25,7 @@ export default function Inputs({ roomCode, children }) {
 	{
 		for (const key of keys) 
 		{
-			options.keys[key] = action
+			options.keys[key] = parseInt(action)
 		}
 	}
 
@@ -34,28 +34,28 @@ export default function Inputs({ roomCode, children }) {
 		dispatch(send(msg))
 	}
 
-	const down = (e) => {
+	const keydown = (e) => {
 		const action = options.keys[e.key]
 		if (set.has(action)) {
 			return
 		}
-		keyHandler(action, "down")
+		keyHandler(action, "keyDown")
 		set.add(action)
 	}
 
-	const up = (e) => {
+	const keyup = (e) => {
 		const action = options.keys[e.key]
 		set.delete(action)
-		keyHandler(action, "up")
+		keyHandler(action, "keyUp")
 	}
 
 	useEffect(() => {
-		window.addEventListener("keydown", down)
-		window.addEventListener("keyup", up)
+		window.addEventListener("keydown", keydown)
+		window.addEventListener("keyup", keyup)
 
 		return () => {
-			window.removeEventListener("keyup", up)
-			window.removeEventListener("keydown", down)
+			window.removeEventListener("keydown", keydown)
+			window.removeEventListener("keyup", keyup)
 		}
 	})
 
