@@ -3,10 +3,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { send } from "../../Store"
 import { sendSocketMsg } from "../../socket"
 
-export default function Inputs({ children }) {
+export default function Inputs({ roomCode, children }) {
 	const dispatch = useDispatch()
 	const set = new Set()
-	const roomCode = "123" // Get the room Code from somewhere
 
 	const keyDown = (e) => {
 		const key = e.key
@@ -25,6 +24,7 @@ export default function Inputs({ children }) {
 	}
 
 	useEffect(() => {
+		console.log("RoomCode:", roomCode)
 		window.addEventListener("keydown", keyDown)
 		window.addEventListener("keyup", keyUp)
 

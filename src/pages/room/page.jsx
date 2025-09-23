@@ -6,7 +6,7 @@ import  gameDraw  from "./functions.js";
 import {ACTIONS, SupportedKeys} from "../../../common.js";
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from "react-redux"
-import { send } from "../../Store"
+import { send, setName, setRoom } from "../../Store"
 import { sendSocketMsg } from "../../socket"
 
 export default function RoomPage() {
@@ -327,7 +327,7 @@ export default function RoomPage() {
 					<h1 className='room-info'>Room Code:{roomCode}      Username:{username}</h1>
 				</nav>
 				<div className='main-layout'>
-					<Inputs>
+					<Inputs roomCode={roomCode} />
 						<div className='secondary-games'></div>
 						<div className="game-wrapper">
 							<div className="held-piece">
@@ -353,7 +353,6 @@ export default function RoomPage() {
 								style={player.isOwner ? {visibility: 'visible'} : { visibility: 'hidden' }} id='Start'>Start</button>
 						</div>
 						<div className='secondary-games-right'></div>
-					</Inputs>
 				</div>
 		</div>
 	);
