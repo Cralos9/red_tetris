@@ -25,6 +25,7 @@ export default function RoomPage() {
 	const opponents = useSelector((state) => state.opponents)
 	const joiners = useSelector((state) => state.join)
 	const player = useSelector((state) => state.player)
+	const endGame = useSelector((state) => state.game)
 
 	function end_game() {
 	  setIsDisabled(false);
@@ -123,7 +124,7 @@ export default function RoomPage() {
 		setGameOver(false)
 		const holdPiece = tick.holdPiece
 		const nextPiece = tick.nextPiece
-		// gameDraw.garbage_cell('.garbage-bar',msg.targetManager.garbage, game.level);
+		// gameDraw.garbage_cell('.garbage-bar',tick.targetManager.garbage, tick.level);
 		gameDraw.nextPieceDraw(nextPiece);
 		gameDraw.heldPieceDraw(holdPiece);
 		const lineClear = document.createElement('div');
@@ -167,7 +168,18 @@ export default function RoomPage() {
 		gameDraw.game(cells, opponents.field, topRowCells, own);
 	}, [opponents.field]);
 
-// useEffect(() => {
+	useEffect(() =>
+	{
+		if(!endGame.leaderboard) return;
+		setScores(endGame.leaderboard)
+		console.log("leaderboard: ",endGame.leaderboard)
+		setAllGamesOver(true);
+		end_game();
+		console.log(allGamesOver);
+	}, [endGame.leaderboard, allGamesOver])
+
+
+	// useEffect(() => {
 		//socket.on('endGame', (msg) =>
 		//{
 		//	setScores(msg.leaderboard.reverse())
@@ -306,17 +318,15 @@ export default function RoomPage() {
 	function startGame() 
 	{
 		let time = 3;
-	  
-		if (gameOver === true) {
-		  end_game();
-		  setGameOver(false);
-		}
+		console.log("StartGame All gmaes: ", allGamesOver)
 		if(allGamesOver == false)
 			return;
 		setAllGamesOver(false);
 		gameDraw.add_cells('.held-piece', 30)
 		setIsDisabled(true);
-	  
+		
+		const msg = sendSocketMsg("startGame", { roomCode: roomCode })
+		dispatch(send(msg))
 		// ************ Countdown Code ******************
 		// var countdown = document.createElement('div');
 		// countdown.className = 'countdown';
@@ -334,8 +344,6 @@ export default function RoomPage() {
 		// }, 1000);
 		// if (time == 0)
 		// ***********************************************
-		const msg = sendSocketMsg("startGame", { roomCode: roomCode })
-		dispatch(send(msg))
 	}
 
 	function scoreSave(score)
