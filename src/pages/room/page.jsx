@@ -26,6 +26,7 @@ export default function RoomPage() {
 	const joiners = useSelector((state) => state.join)
 	const player = useSelector((state) => state.player)
 	const endGame = useSelector((state) => state.game)
+	const boardRem = useSelector((state) => state.game)
 
 	function end_game() {
 	  setIsDisabled(false);
@@ -178,6 +179,17 @@ export default function RoomPage() {
 		console.log(allGamesOver);
 	}, [endGame.leaderboard, allGamesOver])
 
+	useEffect(() =>
+	{
+		console.log("BoardRem: ", boardRem.id)
+		if(!boardRem.id) return;
+		var board = document.getElementById(boardRem.id)
+		if(!board)
+			return
+		div = board.parentElement;
+		if(board)
+			board.remove();
+	}, [boardRem.id]);
 
 	// useEffect(() => {
 		//socket.on('endGame', (msg) =>

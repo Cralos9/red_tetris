@@ -1,7 +1,7 @@
 "use client"
 
 import { io } from "socket.io-client"
-import { send, tick, setOwner, opponents, endGame, setId, joiners } from "./Store"
+import { send, tick, setOwner, opponents, endGame, setId, joiners, boardRem } from "./Store"
 
 let socket
 
@@ -40,6 +40,7 @@ export const socketMiddleware = (storeAPI) => (next) => (action) => {
 
 		socket.on("boardRemove", (msg) => {
 			console.log("Received boardRemove", msg)
+			storeAPI.dispatch(boardRem(msg));
 		})
 
 		socket.on("endGame", (msg) => {

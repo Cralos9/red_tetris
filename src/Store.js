@@ -99,6 +99,9 @@ const gameSlice = createSlice({
 		},
 		endGame: (state, action) => {
 			state.leaderboard = action.payload.leaderboard.reverse()
+		},
+		boardRem: (state, action) =>{
+			state.id = action.payload.id;
 		}
 	}
 })
@@ -122,7 +125,7 @@ const socketSlice = createSlice({
 export const { opponents } = opponentGame.actions
 export const { setId, setName, setRoom, setOwner } = playerSlice.actions
 export const { send, disconnect, owner } = socketSlice.actions
-export const { tick, endGame } = gameSlice.actions
+export const { tick, endGame, boardRem } = gameSlice.actions
 export const { joiners } = joinSlice.actions
 
 const logger = (storeAPI) => (next) => (action) => {
