@@ -36,7 +36,7 @@ const playerSlice = createSlice({
 			state.isOwner = action.payload
 		},
 		setKeys: (state, action) => {
-			
+			console.log("teste")	
 		}
 	}
 })

@@ -3,7 +3,6 @@ import Inputs from "./Inputs"
 import { useParams } from 'react-router-dom';
 import { useEffect, useState, useContext, useRef } from 'react';
 import  gameDraw  from "./functions.js";
-import {ACTIONS, SupportedKeys} from "../../../common.js";
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from "react-redux"
 import { opponents, send, setName, setRoom } from "../../Store"
@@ -48,19 +47,9 @@ export default function RoomPage() {
 			setUsername(name);
 
 		const options = {
-			actions: {
-				[ACTIONS.MOVE_LEFT]: localStorage.getItem("left") ? [localStorage.getItem("left")] : ['ArrowLeft'],
-				[ACTIONS.MOVE_RIGHT]: localStorage.getItem("right") ? [localStorage.getItem("right")] : ['ArrowRight'],
-				[ACTIONS.ROTATE_LEFT]: localStorage.getItem("rotateLeft") ? [localStorage.getItem("rotateLeft")] : ['z'],
-				[ACTIONS.ROTATE_RIGHT]: localStorage.getItem("rotateRight") ? [localStorage.getItem("rotateRight")] : ['ArrowUp', 'x'],
-				[ACTIONS.HARD_DROP]: localStorage.getItem("hardDrop") ? [localStorage.getItem("hardDrop")] : [' '],
-				[ACTIONS.SOFT_DROP]: localStorage.getItem("softDrop") ? [localStorage.getItem("softDrop")] : ['ArrowDown'],
-				[ACTIONS.HOLD]: localStorage.getItem("holdPiece") ? [localStorage.getItem("holdPiece")] : ['c'],
-			},
 			ARR: parseInt(localStorage.getItem("ARR")) || 5,
 			DAS: parseInt(localStorage.getItem("DAS")) || 10,
 		};
-
 		let msg = sendSocketMsg("joinRoom", { playerName: name, roomCode: roomCode, options:options, gameMode: "42" });
 		dispatch(send(msg));
 
