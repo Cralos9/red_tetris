@@ -3,6 +3,7 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit"
 import { socketMiddleware } from "./socket"
 import { ACTIONS } from "../common"
+import { names } from "debug/src/browser"
 
 const playerSlice = createSlice({
 	name: "Player",
@@ -54,12 +55,28 @@ const opponentGame = createSlice({
 	}
 })
 
+const joinSlice = createSlice({
+	name: "Join",
+	initialState: {
+		playerIds: null,
+		playerNames: null,
+	},
+	reducers:{
+		joiners: (state, action) =>
+		{
+			state.playerIds = action.payload.playerIds;
+			state.playerNames = action.payload.playerNames;
+		}
+	}
+
+})
+
 const gameSlice = createSlice({
 	name: "Game",
 	initialState: {
 		field: null,
 		nextPiece: null,
-		heldPiece: null,
+		holdPiece: 0,
 		score: null,
 		combo: 0,
 		linesCleared: 0,
@@ -72,7 +89,7 @@ const gameSlice = createSlice({
 		tick: (state, action) => {
 			state.field = action.payload.field
 			state.nextPiece = action.payload.nextPiece
-			state.heldPiece = action.payload.heldPiece
+			state.holdPiece = action.payload.holdPiece
 			state.score = action.payload.playerScore
 			state.combo = action.payload.combo
 			state.linesCleared = action.payload.linesCleared
@@ -106,15 +123,16 @@ export const { opponents } = opponentGame.actions
 export const { setId, setName, setRoom, setOwner } = playerSlice.actions
 export const { send, disconnect, owner } = socketSlice.actions
 export const { tick, endGame } = gameSlice.actions
+export const { joiners } = joinSlice.actions
 
 const logger = (storeAPI) => (next) => (action) => {
-	console.log("Dispatch called with action", action)
 	const result = next(action)
 	return (result)
 }
 
 export const store = configureStore({
 	reducer: {
+		join: joinSlice.reducer,
 		player: playerSlice.reducer,
 		socket: socketSlice.reducer,
 		game: gameSlice.reducer,

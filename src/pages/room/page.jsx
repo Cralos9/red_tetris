@@ -6,7 +6,7 @@ import  gameDraw  from "./functions.js";
 import {ACTIONS, SupportedKeys} from "../../../common.js";
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from "react-redux"
-import { send, setName, setRoom } from "../../Store"
+import { opponents, send, setName, setRoom } from "../../Store"
 import { sendSocketMsg } from "../../socket"
 
 export default function RoomPage() {
@@ -22,6 +22,8 @@ export default function RoomPage() {
 	const [isDisabled, setIsDisabled] = useState(false);
 	const [scores, setScores] = useState([]);
 	const tick = useSelector((state) => state.game)
+	const opponents = useSelector((state) => state.opponents)
+	const joiners = useSelector((state) => state.join)
 	const player = useSelector((state) => state.player)
 
 	function end_game() {
@@ -37,7 +39,7 @@ export default function RoomPage() {
 
 	const bottleRef = useRef(null);
 	const topRowRef = useRef(null);
-	const startBtnRef = useRef(null);
+	const startButtonRef = useRef(null);
 
 	useEffect(() => {
 		if(name)
@@ -64,11 +66,48 @@ export default function RoomPage() {
 		gameDraw.add_cells('.held-piece', 30)
 		gameDraw.add_cells('.top-row', 10);
 		gameDraw.add_cells('.game-bottle', 200);
+		const startBtn = startButtonRef;
+		// if (startBtn)
+		// 	startBtn.style.visibility = 'visible';
 		return () => {
 			dispatch(send(sendSocketMsg("leaveRoom", { roomCode: roomCode })))
 		}
 	}, [dispatch, name, roomCode]);
 
+
+	useEffect(() =>
+	{
+		if(!joiners.playerIds) return;
+		var otherBoards = joiners.playerIds
+		var names = joiners.playerNames
+		for(var i = 0; i <= otherBoards.length; i++)
+		{
+			if(otherBoards[i] === player.id || otherBoards[i] === undefined)
+				continue;
+			let otherBoard = document.getElementById(otherBoards[i]);
+			if (!otherBoard) 
+			{
+				otherBoard = document.createElement('div');
+				let nameLabel = document.createElement('span');
+				nameLabel.className = 'held-label';
+				nameLabel.textContent = names[i];
+				nameLabel.id = name[i]
+				otherBoard.className = 'secondary-game';
+				otherBoard.id = otherBoards[i];
+				otherBoard.appendChild(nameLabel);
+				gameDraw.add_secondary_cells(otherBoard, 200);
+				if(div)
+				{
+					div.appendChild(otherBoard)
+					div = null;
+				}
+				else if((i - 1) % 2 == 0)
+					document.querySelector('.secondary-games').appendChild(otherBoard);
+				else
+					document.querySelector('.secondary-games-right').appendChild(otherBoard);
+			}
+		}
+	}, [joiners]);
 
 	useEffect(() => {
 		console.log("Player:", player.id)
@@ -78,8 +117,55 @@ export default function RoomPage() {
 		const cells = bottleRef.current.querySelectorAll('.cell');
 		const topRowCells = topRowRef.current.querySelectorAll('.cell');
 
-		gameDraw.game(cells, tick.field, topRowCells, 1);
+		var own = 1;
+		var j = 0;
+		var gLines = 0;
+		setGameOver(false)
+		const holdPiece = tick.holdPiece
+		const nextPiece = tick.nextPiece
+		// gameDraw.garbage_cell('.garbage-bar',msg.targetManager.garbage, game.level);
+		gameDraw.nextPieceDraw(nextPiece);
+		gameDraw.heldPieceDraw(holdPiece);
+		const lineClear = document.createElement('div');
+		const combo = document.createElement('div');
+		if (tick.linesCleared > 0) 
+		{
+			const existing = document.querySelector('.lineClear');
+			if (existing) existing.remove();
+			
+			const existing2 = document.querySelector('.combo');
+			if (existing2) existing2.remove();
+			lineClear.className = 'lineClear';
+			lineClear.textContent = gameDraw.get_lines(tick.linesCleared)
+			const sound = gameDraw.get_audio(tick.linesCleared)
+			void lineClear.offsetWidth;
+			if(tick.combo != 1)
+			{
+				combo.className = 'combo';
+				combo.textContent = "Combo x" + tick.combo;
+			}
+			document.body.appendChild(lineClear);
+			document.body.appendChild(combo);
+			setTimeout(() => {
+				combo.remove();
+				lineClear.remove();
+			}, 1000);
+			sound.play();
+		}
+		gameDraw.game(cells, tick.field, topRowCells, own);
 	}, [tick.field]);
+
+	useEffect(() =>
+	{
+		var own = 0;
+		let otherBoard = document.getElementById(opponents.id);
+		console.log(opponents.id);
+		if(!otherBoard)
+			return
+		const cells = otherBoard.querySelectorAll('.cell');
+		const topRowCells = topRowRef.current.querySelectorAll('.cell');
+		gameDraw.game(cells, opponents.field, topRowCells, own);
+	}, [opponents.field]);
 
 // useEffect(() => {
 		//socket.on('endGame', (msg) =>
@@ -91,38 +177,38 @@ export default function RoomPage() {
 
 		//socket.on('join', (msg) => 
 		//{
-		//	const startBtn = document.getElementById('Start');
-		//	if (startBtn && socket.id === msg.roomOwner)
-		//		startBtn.style.visibility = 'visible';
-		//	var otherBoards = msg.playerIds
-		//	var names = msg.playerNames
-		//	for(var i = 0; i <= otherBoards.length; i++)
-		//	{
-		//		if(otherBoards[i] === socket.id || otherBoards[i] === undefined)
-		//			continue;
-		//		let otherBoard = document.getElementById(otherBoards[i]);
-		//		if (!otherBoard) 
-		//		{
-		//			otherBoard = document.createElement('div');
-		//			let nameLabel = document.createElement('span');
-		//			nameLabel.className = 'held-label';
-		//			nameLabel.textContent = names[i];
-		//			nameLabel.id = name[i]
-		//			otherBoard.className = 'secondary-game';
-		//			otherBoard.id = otherBoards[i];
-		//			otherBoard.appendChild(nameLabel);
-		//			gameDraw.add_secondary_cells(otherBoard, 200);
-		//			if(div)
-		//			{
-		//				div.appendChild(otherBoard)
-		//				div = null;
-		//			}
-		//			else if((i - 1) % 2 == 0)
-		//				document.querySelector('.secondary-games').appendChild(otherBoard);
-		//			else
-		//				document.querySelector('.secondary-games-right').appendChild(otherBoard);
-		//		}
-		//	}
+			// const startBtn = document.getElementById('Start');
+			// if (startBtn)
+			// 	startBtn.style.visibility = 'visible';
+			// var otherBoards = joiners.playerIds
+			// var names = joiners.playerNames
+			// for(var i = 0; i <= otherBoards.length; i++)
+			// {
+			// 	if(otherBoards[i] === id.id || otherBoards[i] === undefined)
+			// 		continue;
+			// 	let otherBoard = document.getElementById(otherBoards[i]);
+			// 	if (!otherBoard) 
+			// 	{
+			// 		otherBoard = document.createElement('div');
+			// 		let nameLabel = document.createElement('span');
+			// 		nameLabel.className = 'held-label';
+			// 		nameLabel.textContent = names[i];
+			// 		nameLabel.id = name[i]
+			// 		otherBoard.className = 'secondary-game';
+			// 		otherBoard.id = otherBoards[i];
+			// 		otherBoard.appendChild(nameLabel);
+			// 		gameDraw.add_secondary_cells(otherBoard, 200);
+			// 		if(div)
+			// 		{
+			// 			div.appendChild(otherBoard)
+			// 			div = null;
+			// 		}
+			// 		else if((i - 1) % 2 == 0)
+			// 			document.querySelector('.secondary-games').appendChild(otherBoard);
+			// 		else
+			// 			document.querySelector('.secondary-games-right').appendChild(otherBoard);
+			// 	}
+			// }
 		//})
 
 		//socket.on('Error', (msg) =>
@@ -350,7 +436,7 @@ export default function RoomPage() {
 							<span className='score'>Level</span>
 							<span className='score' style={{color :'orange'}} id='Level'>{tick.level}</span>
 							</div>
-							<button onClick={startGame} className='buttons' disabled={isDisabled} 
+							<button onClick={startGame} ref={startButtonRef} className='buttons' disabled={isDisabled} 
 								style={player.isOwner ? {visibility: 'visible'} : { visibility: 'hidden' }} id='Start'>Start</button>
 						</div>
 						<div className='secondary-games-right'></div>

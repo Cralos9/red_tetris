@@ -1,7 +1,7 @@
 "use client"
 
 import { io } from "socket.io-client"
-import { send, tick, setOwner, opponents, endGame, setId } from "./Store"
+import { send, tick, setOwner, opponents, endGame, setId, joiners } from "./Store"
 
 let socket
 
@@ -29,11 +29,12 @@ export const socketMiddleware = (storeAPI) => (next) => (action) => {
 		})
 
 		socket.on("join", (msg) => {
-			console.log("Received join", msg)
+			// console.log("Received join", msg)
+			storeAPI.dispatch(joiners(msg));
 		})
 
 		socket.on("Owner", (msg) => {
-			console.log("Received Owner", msg)
+			// console.log("Received Owner", msg)
 			storeAPI.dispatch(setOwner(true))
 		})
 
@@ -47,7 +48,7 @@ export const socketMiddleware = (storeAPI) => (next) => (action) => {
 		})
 
 		socket.on("game", (msg) => {
-			console.log("Received game", msg)
+			// console.log("Received game", msg)
 			if (socket.id === msg.playerId) {
 				storeAPI.dispatch(tick(msg))
 			} else {
