@@ -18,8 +18,9 @@ export default class Player {
 		this.id = id
 		this.io = io
 		this.isAlive = true
-		this.ctrl = new GameController(keybinds)
+		this.ctrl = new GameController()
 		this.inGame = false
+		this.keybinds = keybinds
 		this.log = Debug(`Player:${this.name}`)
 	}
 
@@ -32,15 +33,15 @@ export default class Player {
 	changeLevel() { this.game.changeLevel() }
 
 	startGame(seed, gameManager, roomCode) {
-		this.ctrl.reset()
 		this.eventManager = new EventDispatcher()
 		const gamemode = gameManager.getGamemode()
 		this.game = new Game(
 			this.ctrl, 
 			this.eventManager,
 			seed,
+			this.keybinds,
 			gamemode.createGarbage, 
-			gamemode.patternMatch, 
+			gamemode.patternMatch,
 		)
 		this.targetManager = new TargetManager(
 			this.game.createGarbage.bind(this.game),

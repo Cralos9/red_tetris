@@ -36,7 +36,7 @@ const playerSlice = createSlice({
 			state.isOwner = action.payload
 		},
 		setKeys: (state, action) => {
-			
+			console.log("teste")	
 		}
 	}
 })
@@ -124,11 +124,12 @@ const socketSlice = createSlice({
 
 export const { opponents } = opponentGame.actions
 export const { setId, setName, setRoom, setOwner } = playerSlice.actions
-export const { send, disconnect, owner } = socketSlice.actions
+export const { send, disconnect } = socketSlice.actions
 export const { tick, endGame, boardRem } = gameSlice.actions
 export const { joiners } = joinSlice.actions
 
 const logger = (storeAPI) => (next) => (action) => {
+	console.log("Dispatched", action)
 	const result = next(action)
 	return (result)
 }
@@ -142,5 +143,5 @@ export const store = configureStore({
 		opponents: opponentGame.reducer
 	},
 	middleware: (getDefaultMiddleware) => 
-		getDefaultMiddleware().prepend(logger).concat(socketMiddleware)
+		getDefaultMiddleware().concat(socketMiddleware)
 })

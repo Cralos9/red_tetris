@@ -1,10 +1,11 @@
 import Bag from "./Bag.js"
+import { ACTIONS } from "../../common.js"
 import { ROWS, COLUMNS, GAME_EVENTS, BEGIN_LEVEL } from "./gameParams.js"
 import { LevelTable } from "./gameParams.js"
 import Debug from "debug"
 
 export default class Game {
-	constructor(ctrl, eventManager, seed, createGarbage, patternMatch) {
+	constructor(ctrl, eventManager, seed, keybinds, createGarbage, patternMatch) {
 		this.Bag = new Bag(seed)
 		this.field = Array(ROWS)
 		this.ctrl = ctrl
@@ -30,11 +31,13 @@ export default class Game {
 		this.cgStrat = createGarbage
 		this.pmStrat = patternMatch
 
-		this.frames = 0
+		this.DAS = Number(keybinds.DAS)
+		this.ARR = Number(keybinds.ARR)
+		this.dasCounter = 0
+		this.moveDir = []
 		this.log = Debug("Game")
 	}
 
-	getFrames() { return (this.frames) }
 	getField() { return (this.field) }
 	getLevel() { return (this.level) }
 
@@ -138,32 +141,21 @@ export default class Game {
 		this.Piece.reset()
 	}
 
-	update() {
-		const actions = this.ctrl.keyStates(this.frames)
+	actions() {
+		const hold = this.ctrl.getAction(ACTIONS.HOLD)
+		const hardDrop = this.ctrl.getAction(ACTIONS.HARD_DROP)
+		const softDrop = this.ctrl.getAction(ACTIONS.SOFT_DROP)
+		const leftMove = this.ctrl.getAction(ACTIONS.MOVE_LEFT)
+		const rightMove = this.ctrl.getAction(ACTIONS.MOVE_RIGHT)
+		const leftRot = this.ctrl.getAction(ACTIONS.ROTATE_LEFT)
+		const rightRot = this.ctrl.getAction(ACTIONS.ROTATE_RIGHT)
 
-		this.linesCleared = 0
-
-		// 1 to stop the game in the row below the pieces spawn
-		if (this.stackHeight <= 0) {
-			this.log("Game Over")
-			this.running = false
-			return
-		}
-
-		this.Piece.undraw(this.field)
-
-
-		if (actions.hold === true && this.holdLock === false) {
+		if (hold.isTap() === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
 		}
-		if (actions.move) {
-			this.Piece.move(this.field, actions.move)
-		}
-		if (actions.rot) {
-			this.Piece.rotate(this.field, actions.rot)
-		}
-		if (actions.hardDrop === true) {
+
+		if (hardDrop.isTap() === true) {
 			const dropRow = this.Piece.getRow()
 			this.Piece.hardDrop(this.field)
 			this.eventManager.notify({
@@ -173,7 +165,7 @@ export default class Game {
 			}, GAME_EVENTS.HARD_DROP)
 		}
 
-		if (actions.softDrop) {
+		if (softDrop.isPressed() === true) {
 			const dropRow = this.Piece.getRow()
 			this.Piece.softDrop(this.field)
 			this.eventManager.notify({
@@ -186,6 +178,52 @@ export default class Game {
 			this.Piece.softDrop(this.field)
 			this.gravity = 0
 		}
+
+		if (this.moveDir.length > 0) {
+			const move = this.moveDir[this.moveDir.length - 1]
+			this.dasCounter++
+			if (this.dasCounter >= this.DAS) {
+				this.Piece.move(this.field, move)
+				this.dasCounter -= this.ARR
+			}
+
+		} else {
+			this.dasCounter = 0
+		}
+
+		if (leftMove.isTap()) {
+			this.moveDir.push(-1)
+			this.Piece.move(this.field, -1)
+		} else if (!leftMove.isPressed()) {
+			this.moveDir = this.moveDir.filter(dir => dir !== -1)
+		}
+
+		if (rightMove.isTap()) {
+			this.moveDir.push(1)
+			this.Piece.move(this.field, 1)
+		} else if (!rightMove.isPressed()) {
+			this.moveDir = this.moveDir.filter(dir => dir !== 1)
+		}
+
+		const rot = leftRot.isTap() * -1 || rightRot.isTap() * 1
+		if (rot) {
+			this.Piece.rotate(this.field, rot)
+		}
+	}
+
+	update() {
+		this.linesCleared = 0
+
+		// 1 to stop the game in the row below the pieces spawn
+		if (this.stackHeight <= 0) {
+			this.log("Game Over")
+			this.running = false
+			return
+		}
+
+		this.Piece.undraw(this.field)
+
+		this.actions()
 
 		if (this.Piece.getLock() === true) {
 			const spin = this.patternSpin()
@@ -208,7 +246,6 @@ export default class Game {
 
 		this.Piece.draw(this.field)
 
-		this.frames += 1
 		this.gravity += 1
 	}
 

@@ -2,37 +2,62 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { send } from "../../Store"
 import { sendSocketMsg } from "../../socket"
+import {ACTIONS} from "../../../common.js"
 
 export default function Inputs({ roomCode, children }) {
 	const dispatch = useDispatch()
+	const keybinds = useSelector((state) => state.player.keybinds)
 	const set = new Set()
 
-	const keyDown = (e) => {
-		const key = e.key
-		if (set.has(key)) {
+	const options = {
+		actions: {
+			[ACTIONS.MOVE_LEFT]: localStorage.getItem("left") ? [localStorage.getItem("left")] : ['ArrowLeft'],
+			[ACTIONS.MOVE_RIGHT]: localStorage.getItem("right") ? [localStorage.getItem("right")] : ['ArrowRight'],
+			[ACTIONS.ROTATE_LEFT]: localStorage.getItem("rotateLeft") ? [localStorage.getItem("rotateLeft")] : ['z'],
+			[ACTIONS.ROTATE_RIGHT]: localStorage.getItem("rotateRight") ? [localStorage.getItem("rotateRight")] : ['ArrowUp', 'x'],
+			[ACTIONS.HARD_DROP]: localStorage.getItem("hardDrop") ? [localStorage.getItem("hardDrop")] : [' '],
+			[ACTIONS.SOFT_DROP]: localStorage.getItem("softDrop") ? [localStorage.getItem("softDrop")] : ['ArrowDown'],
+			[ACTIONS.HOLD]: localStorage.getItem("holdPiece") ? [localStorage.getItem("holdPiece")] : ['c'],
+		},
+	}
+	options.keys = {}
+	for (const [action, keys] of Object.entries(options.actions)) 
+	{
+		for (const key of keys) 
+		{
+			options.keys[key] = parseInt(action)
+		}
+	}
+
+	const keyHandler = (action, event) => {
+		const msg = sendSocketMsg(event, { roomCode: roomCode, action: action })
+		dispatch(send(msg))
+	}
+
+	const keydown = (e) => {
+		const action = options.keys[e.key]
+		if (set.has(action)) {
 			return
 		}
-		const msg = sendSocketMsg("keyDown", { roomCode: roomCode, key: key })
-		dispatch(send(msg))
-		set.add(key)
+		keyHandler(action, "keyDown")
+		set.add(action)
 	}
-	const keyUp = (e) => {
-		const key = e.key
-		set.delete(key)
-		const msg = sendSocketMsg("keyUp", { roomCode: roomCode, key: key })
-		dispatch(send(msg))
+
+	const keyup = (e) => {
+		const action = options.keys[e.key]
+		set.delete(action)
+		keyHandler(action, "keyUp")
 	}
 
 	useEffect(() => {
-		console.log("RoomCode:", roomCode)
-		window.addEventListener("keydown", keyDown)
-		window.addEventListener("keyup", keyUp)
+		window.addEventListener("keydown", keydown)
+		window.addEventListener("keyup", keyup)
 
 		return () => {
-			window.removeEventListener("keyup", keyUp)
-			window.removeEventListener("keydown", keyDown)
+			window.removeEventListener("keydown", keydown)
+			window.removeEventListener("keyup", keyup)
 		}
-	}, [])
+	})
 
 	return (
 		<>{ children }</>
