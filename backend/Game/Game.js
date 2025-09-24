@@ -1,10 +1,11 @@
 import Bag from "./Bag.js"
+import { ACTIONS } from "../../common.js"
 import { ROWS, COLUMNS, GAME_EVENTS, BEGIN_LEVEL } from "./gameParams.js"
 import { LevelTable } from "./gameParams.js"
 import Debug from "debug"
 
 export default class Game {
-	constructor(ctrl, eventManager, seed, createGarbage, patternMatch) {
+	constructor(ctrl, eventManager, seed, keybinds, createGarbage, patternMatch) {
 		this.Bag = new Bag(seed)
 		this.field = Array(ROWS)
 		this.ctrl = ctrl
@@ -30,11 +31,13 @@ export default class Game {
 		this.cgStrat = createGarbage
 		this.pmStrat = patternMatch
 
+		this.DAS = Number(keybinds.DAS)
+		this.ARR = Number(keybinds.ARR)
+		this.dasCounter = 0
 		this.frames = 0
 		this.log = Debug("Game")
 	}
 
-	getFrames() { return (this.frames) }
 	getField() { return (this.field) }
 	getLevel() { return (this.level) }
 
@@ -138,31 +141,12 @@ export default class Game {
 		this.Piece.reset()
 	}
 
-	update() {
-		const ret = this.ctrl.getRet()
-
-		this.linesCleared = 0
-
-		// 1 to stop the game in the row below the pieces spawn
-		if (this.stackHeight <= 0) {
-			this.log("Game Over")
-			this.running = false
-			return
-		}
-
-		this.Piece.undraw(this.field)
-
-		if (ret.hold === true && this.holdLock === false) {
+	actions() {
+		if (this.ctrl.isTap(ACTIONS.HOLD) === true && this.holdLock === false) {
 			this.holdPiece()
 			this.holdLock = true
 		}
-		if (ret.move) {
-			this.Piece.move(this.field, ret.move)
-		}
-		if (ret.rot) {
-			this.Piece.rotate(this.field, ret.rot)
-		}
-		if (ret.hardDrop === true) {
+		if (this.ctrl.isTap(ACTIONS.HARD_DROP) === true) {
 			const dropRow = this.Piece.getRow()
 			this.Piece.hardDrop(this.field)
 			this.eventManager.notify({
@@ -171,8 +155,7 @@ export default class Game {
 				pieceRow: this.Piece.getRow()
 			}, GAME_EVENTS.HARD_DROP)
 		}
-
-		if (ret.softDrop) {
+		if (this.ctrl.isPressed(ACTIONS.SOFT_DROP) === true) {
 			const dropRow = this.Piece.getRow()
 			this.Piece.softDrop(this.field)
 			this.eventManager.notify({
@@ -185,6 +168,33 @@ export default class Game {
 			this.Piece.softDrop(this.field)
 			this.gravity = 0
 		}
+
+		const move = this.ctrl.isTap(ACTIONS.MOVE_LEFT) * -1
+			|| this.ctrl.isTap(ACTIONS.MOVE_RIGHT) * 1
+		if (move) {
+			this.Piece.move(this.field, move)
+		}
+
+		const rot = this.ctrl.isTap(ACTIONS.ROTATE_RIGHT) * 1
+			|| this.ctrl.isTap(ACTIONS.ROTATE_LEFT) * -1
+		if (rot) {
+			this.Piece.rotate(this.field, rot)
+		}
+	}
+
+	update() {
+		this.linesCleared = 0
+
+		// 1 to stop the game in the row below the pieces spawn
+		if (this.stackHeight <= 0) {
+			this.log("Game Over")
+			this.running = false
+			return
+		}
+
+		this.Piece.undraw(this.field)
+
+		this.actions()
 
 		if (this.Piece.getLock() === true) {
 			const spin = this.patternSpin()
@@ -207,7 +217,6 @@ export default class Game {
 
 		this.Piece.draw(this.field)
 
-		this.frames += 1
 		this.gravity += 1
 	}
 

@@ -1,5 +1,4 @@
 import { ACTIONS } from "../../common.js"
-import Keyboard from "./Input.js"
 
 class Info {
 	constructor() {
@@ -12,26 +11,18 @@ class Info {
 	}
 
 	isTap() {
-		return (this.pressed && !this.consumed)
+		const ret = this.pressed && !this.consumed
+		this.consumed = this.pressed
+		return (ret)
 	}
 
 	isPressed() {
 		return (this.pressed)
 	}
-
-	consume() {
-		this.consumed = this.pressed
-	}
 }
 
-export default class GameController extends Keyboard {
-	constructor(keybinds) {
-		super()
-		this.DAS = Number(keybinds.DAS)
-		this.ARR = Number(keybinds.ARR)
-		this.dasCounter = 0
-		this.pieceDir = []
-		this.consum = []
+export default class GameController {
+	constructor() {
 		this.inputs = new Map()
 		Object.values(ACTIONS).forEach(action => {
 			this.inputs.set(action, new Info())
@@ -39,67 +30,52 @@ export default class GameController extends Keyboard {
 		this.moveStack = []
 	}
 
-	axis(left, right){
-		if (left === true && right === false) {
-			return (-1)
-		} else if (right === true && left === false) {
-			return (1)
-		}
-		return (0)
-	}
-
-	consumeAction(action) {
+	checkMove(action, scale) {
 		const info = this.getAction(action)
-		const ret = info.isTap()
-		info.consume()
-		return (ret)
-	}
 
-	rotation() {
-		const left = this.consumeAction(ACTIONS.ROTATE_LEFT)
-		const right = this.consumeAction(ACTIONS.ROTATE_RIGHT)
-		return (this.axis(left, right))
+		if (!info.isPressed()) {
+			this.moveStack.filter(dir => dir !== scale)
+			return(0)
+		}
+		
+		if (info.isTap()) {
+			this.moveStack.push(scale)
+		}
+		return (scale)
 	}
 
 	move() {
-		const left = this.getAction(ACTIONS.MOVE_LEFT)
-		const right = this.getAction(ACTIONS.MOVE_RIGHT)
+		const left = this.checkMove(ACTIONS.MOVE_LEFT, -1)
+		const right = this.checkMove(ACTIONS.MOVE_RIGHT, 1)
 
-		if (left.pressed === false) {
-			this.moveStack = this.moveStack.filter(dir => dir !== -1)
-			return (0)
-		} else if (right.pressed === false) {
-			this.moveStack = this.moveStack.filter(dir => dir !== 1)
-			return (0)
-		}
-
-		const tapLeft = left.isTap()
-		const tapRight = right.isTap()
-
-		const dir = this.axis(tapLeft, tapRight)
-		if (dir) {
-			this.moveStack.push(dir)
-			this.dasCounter++
+		if (left && right) {
 			return (this.moveStack[this.moveStack.length - 1])
 		}
+		return (left || right)
+	}
 
-		this.dasCounter++
-		if (this.dasCounter < this.DAS) {
-			return (0)
-		}
-		this.dasCounter -= this.ARR
-
-		return (this.moveStack[this.moveStack.length - 1])
+	rotation() {
+		const left = this.getAction(ACTIONS.ROTATE_LEFT).isTap() * -1
+		const right = this.getAction(ACTIONS.ROTATE_RIGHT).isTap() * 1
+		return (left || right)
 	}
 
 	getRet() {
 		return {
 			rot: this.rotation(),
-			hardDrop: this.consumeAction(ACTIONS.HARD_DROP),
-			hold: this.consumeAction(ACTIONS.HOLD),
-			softDrop: this.getAction(ACTIONS.SOFT_DROP).isPressed(),
 			move: this.move(),
+			hardDrop: this.getAction(ACTIONS.HARD_DROP).isTap(),
+			hold: this.getAction(ACTIONS.HOLD).isTap(),
+			softDrop: this.getAction(ACTIONS.SOFT_DROP).isPressed(),
 		}
+	}
+
+	isTap(action) {
+		return (this.getAction(action).isTap())
+	}
+
+	isPressed(action) {
+		return (this.getAction(action).isPressed())
 	}
 
 	getAction(action) { return (this.inputs.get(action)) }
