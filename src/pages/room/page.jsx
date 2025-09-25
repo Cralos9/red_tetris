@@ -5,7 +5,7 @@ import { useEffect, useState, useContext, useRef } from 'react';
 import  gameDraw  from "./functions.js";
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from "react-redux"
-import { opponents, send, setName, setRoom } from "../../Store"
+import { opponents, send, setName, setRoom, setOwner } from "../../Store"
 import { sendSocketMsg } from "../../socket"
 
 export default function RoomPage() {
@@ -62,6 +62,7 @@ export default function RoomPage() {
 		// 	startBtn.style.visibility = 'visible';
 		return () => {
 			dispatch(send(sendSocketMsg("leaveRoom", { roomCode: roomCode })))
+			dispatch(setOwner(false))
 		}
 	}, [dispatch, name, roomCode]);
 

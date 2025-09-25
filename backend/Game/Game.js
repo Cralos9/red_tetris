@@ -176,7 +176,6 @@ export default class Game {
 				this.Piece.move(this.field, move)
 				this.dasCounter -= this.ARR
 			}
-
 		}
 
 		if (leftMove.isTap()) {

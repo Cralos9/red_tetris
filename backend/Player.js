@@ -8,14 +8,14 @@ import Debug from "debug"
 import EventDispatcher from "./Utils/EventDispatcher.js"
 
 export default class Player {
-	constructor(name, keybinds, io, id) {
+	constructor(name, keybinds, io, socket) {
 		this.gameInterval = null
 		this.game = null
 		this.targetManager = null
 		this.score = null
 		this.eventManager = null
 		this.name = name
-		this.id = id
+		this.socket = socket
 		this.io = io
 		this.isAlive = true
 		this.ctrl = new GameController()
@@ -24,13 +24,17 @@ export default class Player {
 		this.log = Debug(`Player:${this.name}`)
 	}
 
-	getId() { return (this.id) }
+	getId() { return (this.socket.id) }
 	getName() { return (this.name) }
 	getInGame() { return (this.inGame) }
 	getTargetManager() { return (this.targetManager) }
 	getGameController() { return (this.ctrl) }
 
 	changeLevel() { this.game.changeLevel() }
+
+	socketEmit(event, payload) {
+		this.socket.emit(event, payload)
+	}
 
 	startGame(seed, gameManager, roomCode) {
 		this.eventManager = new EventDispatcher()
@@ -55,7 +59,7 @@ export default class Player {
 		this.gameInterval = setInterval(() => {
 			this.game.update()
 			const payload = this.game.toObject()
-			payload["playerId"] = this.id
+			payload["playerId"] = this.getId()
 			payload["playerScore"] = this.score.toObject()
 			payload["targetManager"] = this.targetManager.toObject(),
 			this.io.to(roomCode).emit('game', payload)
@@ -78,8 +82,8 @@ export default class Player {
 
 	toObject() {
 		return {
-			playerId: this.id,
-			playerName: this.name
+			playerId: this.getId(),
+			playerName: this.getName()
 		}
 	}
 }

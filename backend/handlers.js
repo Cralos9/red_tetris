@@ -31,7 +31,7 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 			return
 		}
 
-		const player = new Player(playerName, options, io, socket.id)
+		const player = new Player(playerName, options, io, socket)
 
 		room.addPlayer(player)
 		socket.join(roomCode.toString())
