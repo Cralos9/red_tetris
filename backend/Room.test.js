@@ -1,4 +1,6 @@
-import { jest } from "@jest/globals"
+import { beforeEach, jest } from "@jest/globals"
+
+jest.mock("socket.io")
 
 jest.unstable_mockModule('./Game/GameController.js', () => ({
 	default: jest.fn(),
@@ -13,12 +15,19 @@ jest.unstable_mockModule('./GameManager.js', () => ({
 const GameManager = (await import('./GameManager.js')).default
 const Room = (await import('./Room.js')).default
 const Player = (await import('./Player.js')).default
+const Server = (await import("socket.io")).Server
+
+const io = new Server()
 
 describe('Room Tests', () => {
-	const room = new Room(123, null)
-	const player1 = new Player("Lol", null, null, 123)
-	const player2 = new Player("Pol", null, null, 124)
+	const room = new Room(123, null, io)
+	const player1 = new Player("Lol", null, io, 123)
+	const player2 = new Player("Pol", null, io, 124)
 	const expRoomPlayers = new Map()
+
+	beforeEach(() => {
+		io.emit.mockClear()
+	})
 
 	describe('Adding/Remove Players', () => {
 		it('Add Player1', () => {
@@ -27,6 +36,7 @@ describe('Room Tests', () => {
 			const outRoomPlayers = room.plMap
 			expect(outRoomPlayers).toStrictEqual(expRoomPlayers)
 			expect(room.getOwner()).toBe(player1)
+			expect(io.emit).toHaveBeenCalledTimes(1)
 		})
 
 		it('Add Player 2', () => {
@@ -35,6 +45,7 @@ describe('Room Tests', () => {
 			const outRoomPlayers = room.plMap
 			expect(outRoomPlayers).toStrictEqual(expRoomPlayers)
 			expect(room.getOwner()).not.toBe(player2)
+			expect(io.emit).toHaveBeenCalledTimes(0)
 		})
 	})
 

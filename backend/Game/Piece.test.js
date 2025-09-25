@@ -9,7 +9,7 @@ describe('Piece Tests', () => {
 	var piece, game
 
 	beforeEach(() => {
-		game = new Game(null, null, 1)
+		game = new Game(null, null, 1, {}, null, null)
 		piece = new Piece(Tcoor, JLTSZoffsets, COLORS.PURPLE)
 	})
 

@@ -32,6 +32,11 @@ const fillLines = (arr, end) => {
 	}
 }
 
+const keybinds = {
+	DAS: 10,
+	ARR: 5
+}
+
 describe('Game Tests', () => {
 	let game
 
@@ -44,6 +49,7 @@ describe('Game Tests', () => {
 			gameCtrl,
 			eventManager,
 			seed,
+			keybinds,
 			createGarbageTetris,
 			patternMatchTetris
 		)

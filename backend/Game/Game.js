@@ -155,16 +155,6 @@ export default class Game {
 			this.holdLock = true
 		}
 
-		if (hardDrop.isTap() === true) {
-			const dropRow = this.Piece.getRow()
-			this.Piece.hardDrop(this.field)
-			this.eventManager.notify({
-				dropType: GAME_EVENTS.HARD_DROP,
-				dropRow: dropRow,
-				pieceRow: this.Piece.getRow()
-			}, GAME_EVENTS.HARD_DROP)
-		}
-
 		if (softDrop.isPressed() === true) {
 			const dropRow = this.Piece.getRow()
 			this.Piece.softDrop(this.field)
@@ -182,18 +172,17 @@ export default class Game {
 		if (this.moveDir.length > 0) {
 			const move = this.moveDir[this.moveDir.length - 1]
 			this.dasCounter++
-			if (this.dasCounter >= this.DAS) {
+			while (this.dasCounter >= this.DAS) {
 				this.Piece.move(this.field, move)
 				this.dasCounter -= this.ARR
 			}
 
-		} else {
-			this.dasCounter = 0
 		}
 
 		if (leftMove.isTap()) {
 			this.moveDir.push(-1)
 			this.Piece.move(this.field, -1)
+			this.dasCounter = 0
 		} else if (!leftMove.isPressed()) {
 			this.moveDir = this.moveDir.filter(dir => dir !== -1)
 		}
@@ -201,6 +190,7 @@ export default class Game {
 		if (rightMove.isTap()) {
 			this.moveDir.push(1)
 			this.Piece.move(this.field, 1)
+			this.dasCounter = 0
 		} else if (!rightMove.isPressed()) {
 			this.moveDir = this.moveDir.filter(dir => dir !== 1)
 		}
@@ -208,6 +198,16 @@ export default class Game {
 		const rot = leftRot.isTap() * -1 || rightRot.isTap() * 1
 		if (rot) {
 			this.Piece.rotate(this.field, rot)
+		}
+
+		if (hardDrop.isTap() === true) {
+			const dropRow = this.Piece.getRow()
+			this.Piece.hardDrop(this.field)
+			this.eventManager.notify({
+				dropType: GAME_EVENTS.HARD_DROP,
+				dropRow: dropRow,
+				pieceRow: this.Piece.getRow()
+			}, GAME_EVENTS.HARD_DROP)
 		}
 	}
 
