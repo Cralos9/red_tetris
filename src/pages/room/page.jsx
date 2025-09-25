@@ -50,7 +50,7 @@ export default function RoomPage() {
 			ARR: parseInt(localStorage.getItem("ARR")) || 5,
 			DAS: parseInt(localStorage.getItem("DAS")) || 10,
 		};
-		let msg = sendSocketMsg("joinRoom", { playerName: name, roomCode: roomCode, options:options, gameMode: "42" });
+		let msg = sendSocketMsg("joinRoom", { playerName: name, roomCode: roomCode, options:options, gameMode: player.room.gameMode});
 		dispatch(send(msg));
 
 		gameDraw.add_cells('.next-piece', 60)

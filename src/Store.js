@@ -10,7 +10,7 @@ const playerSlice = createSlice({
 	initialState: {
 		id: null,
 		name: null,
-		room: null,
+		room: {code: null, gameMode: "42"},
 		isOwner: false,
 		keybinds: {
 			" ": ACTIONS.HARD_DROP,
