@@ -2,7 +2,7 @@
 /**
  * @jest-environment jsdom
  */
-import {COLORS, GarbageDelayCalc} from "../../../../common.js";
+import {COLORS, GarbageDelayCalc} from "../../../common.js";
 import { describe, jest } from '@jest/globals';
 import gameDraw from "./functions.js";
 
