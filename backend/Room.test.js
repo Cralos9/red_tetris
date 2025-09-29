@@ -21,8 +21,8 @@ const io = new Server()
 
 describe('Room Tests', () => {
 	const room = new Room(123, null, io)
-	const player1 = new Player("Lol", null, io, 123)
-	const player2 = new Player("Pol", null, io, 124)
+	const player1 = new Player("Lol", null, null, io)
+	const player2 = new Player("Pol", null, null, io)
 	const expRoomPlayers = new Map()
 
 	beforeEach(() => {
