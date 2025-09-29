@@ -24,13 +24,6 @@ export const playerHandlers = (io, socket, RoomsMap) => {
 		}
 
 		const room = RoomsMap.get(roomCode)
-
-		if (room.getGamemode() !== gamemode) {
-			socket.emit('Error', {reason: "Wrong Gamemode"})
-			log("Player", playerName, "has the wrong gamemode")
-			return
-		}
-
 		const player = new Player(playerName, options, io, socket)
 
 		room.addPlayer(player)

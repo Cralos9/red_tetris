@@ -30,8 +30,6 @@ export default class Player {
 	getTargetManager() { return (this.targetManager) }
 	getGameController() { return (this.ctrl) }
 
-	changeLevel() { this.game.changeLevel() }
-
 	socketEmit(event, payload) {
 		this.socket.emit(event, payload)
 	}
