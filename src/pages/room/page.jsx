@@ -114,7 +114,7 @@ export default function RoomPage() {
 		setGameOver(false)
 		const holdPiece = tick.holdPiece
 		const nextPiece = tick.nextPiece
-		// gameDraw.garbage_cell('.garbage-bar',tick.targetManager.garbage, tick.level);
+		gameDraw.garbage_cell('.garbage-bar',tick.targetManager.garbage, tick.level);
 		gameDraw.nextPieceDraw(nextPiece);
 		gameDraw.heldPieceDraw(holdPiece);
 		const lineClear = document.createElement('div');

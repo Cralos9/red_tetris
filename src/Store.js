@@ -83,7 +83,8 @@ const gameSlice = createSlice({
 		level: 0,
 		id: null,
 		running: false,
-		leaderboard: null
+		leaderboard: null,
+		targetManager: null
 	},
 	reducers: {
 		tick: (state, action) => {
@@ -96,6 +97,7 @@ const gameSlice = createSlice({
 			state.level = action.payload.level
 			state.id = action.payload.id
 			state.running = action.payload.running
+			state.targetManager = action.payload.targetManager
 		},
 		endGame: (state, action) => {
 			state.leaderboard = action.payload.leaderboard.reverse()
