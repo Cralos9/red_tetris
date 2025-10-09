@@ -155,20 +155,6 @@ export default class Game {
 			this.holdLock = true
 		}
 
-		if (softDrop.isPressed() === true) {
-			const dropRow = this.Piece.getRow()
-			this.Piece.softDrop(this.field)
-			this.eventManager.notify({
-				dropType: GAME_EVENTS.SOFT_DROP,
-				pieceRow: this.Piece.getRow(),
-				dropRow: dropRow
-			}, GAME_EVENTS.SOFT_DROP)
-			this.gravity = 0
-		} else if (this.Piece.getCollision() === true || this.gravity >= LevelTable[this.level]) {
-			this.Piece.softDrop(this.field)
-			this.gravity = 0
-		}
-
 		if (this.moveDir.length > 0) {
 			const move = this.moveDir[this.moveDir.length - 1]
 			this.dasCounter++
@@ -197,6 +183,20 @@ export default class Game {
 		const rot = leftRot.isTap() * -1 || rightRot.isTap() * 1
 		if (rot) {
 			this.Piece.rotate(this.field, rot)
+		}
+
+		if (softDrop.isPressed() === true) {
+			const dropRow = this.Piece.getRow()
+			this.Piece.softDrop(this.field)
+			this.eventManager.notify({
+				dropType: GAME_EVENTS.SOFT_DROP,
+				pieceRow: this.Piece.getRow(),
+				dropRow: dropRow
+			}, GAME_EVENTS.SOFT_DROP)
+			this.gravity = 0
+		} else if (this.Piece.getCollision() === true || this.gravity >= LevelTable[this.level]) {
+			this.Piece.softDrop(this.field)
+			this.gravity = 0
 		}
 
 		if (hardDrop.isTap() === true) {

@@ -59,13 +59,15 @@ export default class Player {
 			const payload = this.game.toObject()
 			payload["playerId"] = this.getId()
 			payload["playerScore"] = this.score.toObject()
-			payload["targetManager"] = this.targetManager.toObject(),
-			this.io.to(roomCode).emit('game', payload)
+			payload["targetManager"] = this.targetManager.toObject()
 			if (this.game.running === false) {
+				this.io.to(roomCode).emit('game', payload)
 				this.log("Lost Game")
 				gameManager.handleLoss(this)
 				this.inGame = false
 				clearInterval(this.gameInterval)
+			} else {
+				this.io.to(roomCode).emit('game', payload)
 			}
 		}, DELTA_TIME)
 	}
