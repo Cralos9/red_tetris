@@ -104,6 +104,20 @@ const gameSlice = createSlice({
 		},
 		boardRem: (state, action) =>{
 			state.id = action.payload.id;
+		},
+		clearGame: (state) =>
+		{
+			state.field = null;
+			state.nextPiece = null;
+			state.holdPiece = 0;
+			state.score = null;
+			state.combo = 0;
+			state.linesCleared = 0;
+			state.level = 0;
+			state.id = null;
+			state.running = false;
+			state.leaderboard = null;
+			state.targetManager = null;
 		}
 	}
 })
@@ -127,7 +141,7 @@ const socketSlice = createSlice({
 export const { opponents } = opponentGame.actions
 export const { setId, setName, setRoom, setOwner } = playerSlice.actions
 export const { send, disconnect } = socketSlice.actions
-export const { tick, endGame, boardRem } = gameSlice.actions
+export const { tick, endGame, boardRem, clearGame} = gameSlice.actions
 export const { joiners } = joinSlice.actions
 
 const logger = (storeAPI) => (next) => (action) => {
