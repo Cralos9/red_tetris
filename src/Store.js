@@ -66,6 +66,11 @@ const joinSlice = createSlice({
 		{
 			state.playerIds = action.payload.playerIds;
 			state.playerNames = action.payload.playerNames;
+		},
+		clearJoiners: (state) =>
+		{
+			state.playerIds = null;
+			state.playerNames = null;
 		}
 	}
 
@@ -142,7 +147,7 @@ export const { opponents } = opponentGame.actions
 export const { setId, setName, setRoom, setOwner } = playerSlice.actions
 export const { send, disconnect } = socketSlice.actions
 export const { tick, endGame, boardRem, clearGame} = gameSlice.actions
-export const { joiners } = joinSlice.actions
+export const { joiners, clearJoiners} = joinSlice.actions
 
 const logger = (storeAPI) => (next) => (action) => {
 	console.log("Dispatched", action)

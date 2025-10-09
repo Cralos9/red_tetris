@@ -5,7 +5,7 @@ import { useEffect, useState, useContext, useRef } from 'react';
 import  gameDraw  from "./functions.js";
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from "react-redux"
-import { opponents, send, setName, setRoom, setOwner, clearGame } from "../../Store"
+import { opponents, send, setName, setRoom, setOwner, clearGame, clearJoiners } from "../../Store"
 import { sendSocketMsg } from "../../socket"
 
 export default function RoomPage() {
@@ -30,6 +30,8 @@ export default function RoomPage() {
 	function end_game() {
 	  setIsDisabled(false);
 	  setGameOver(true);
+	  if(tick.score)
+	  	scoreSave(tick.score.score)
 	}
 
 	function getOrdinal(n) {
@@ -63,8 +65,10 @@ export default function RoomPage() {
 		return () => {
 			dispatch(send(sendSocketMsg("leaveRoom", { roomCode: roomCode })))
 			dispatch(clearGame())
-			setAllGamesOver(true);
 			dispatch(setOwner(false))
+			dispatch(clearJoiners())
+			setGameOver(false);
+			setAllGamesOver(false);
 		}
 	}, [dispatch, name, roomCode]);
 
@@ -152,7 +156,6 @@ export default function RoomPage() {
 	{
 		var own = 0;
 		let otherBoard = document.getElementById(opponents.id);
-		console.log(opponents.id);
 		if(!otherBoard)
 			return
 		const cells = otherBoard.querySelectorAll('.cell');
@@ -164,15 +167,12 @@ export default function RoomPage() {
 	{
 		if(!endGame.leaderboard) return;
 		setScores(endGame.leaderboard)
-		console.log("leaderboard: ",endGame.leaderboard)
 		setAllGamesOver(true);
 		end_game();
-		console.log(allGamesOver);
 	}, [endGame.leaderboard, allGamesOver])
 
 	useEffect(() =>
 	{
-		console.log("BoardRem: ", boardRem.id)
 		if(!boardRem.id) return;
 		var board = document.getElementById(boardRem.id)
 		if(!board)
@@ -182,146 +182,10 @@ export default function RoomPage() {
 			board.remove();
 	}, [boardRem.id]);
 
-	// useEffect(() => {
-		//socket.on('endGame', (msg) =>
-		//{
-		//	setScores(msg.leaderboard.reverse())
-
-		//	setAllGamesOver(true);
-		//})
-
-		//socket.on('join', (msg) => 
-		//{
-			// const startBtn = document.getElementById('Start');
-			// if (startBtn)
-			// 	startBtn.style.visibility = 'visible';
-			// var otherBoards = joiners.playerIds
-			// var names = joiners.playerNames
-			// for(var i = 0; i <= otherBoards.length; i++)
-			// {
-			// 	if(otherBoards[i] === id.id || otherBoards[i] === undefined)
-			// 		continue;
-			// 	let otherBoard = document.getElementById(otherBoards[i]);
-			// 	if (!otherBoard) 
-			// 	{
-			// 		otherBoard = document.createElement('div');
-			// 		let nameLabel = document.createElement('span');
-			// 		nameLabel.className = 'held-label';
-			// 		nameLabel.textContent = names[i];
-			// 		nameLabel.id = name[i]
-			// 		otherBoard.className = 'secondary-game';
-			// 		otherBoard.id = otherBoards[i];
-			// 		otherBoard.appendChild(nameLabel);
-			// 		gameDraw.add_secondary_cells(otherBoard, 200);
-			// 		if(div)
-			// 		{
-			// 			div.appendChild(otherBoard)
-			// 			div = null;
-			// 		}
-			// 		else if((i - 1) % 2 == 0)
-			// 			document.querySelector('.secondary-games').appendChild(otherBoard);
-			// 		else
-			// 			document.querySelector('.secondary-games-right').appendChild(otherBoard);
-			// 	}
-			// }
-		//})
-
-		//socket.on('Error', (msg) =>
-		//{
-		//	navigate("/game")
-		//	socket.disconnect();
-		//});
-
-		//socket.on('game', (msg) => {
-
-		//	if (document.hidden)
-		//		return;
-
-		//	if (!msg.running && msg.playerId === socket.id) 
-		//	{
-		//		scoreSave(msg.playerScore.score);
-		//		end_game();
-		//		return;
-		//	}
-		//	const field = msg.field;
-		//	var cells
-		//	var own = 0;
-		//	if (msg.playerId === socket.id)
-		//	{
-		//		own = 1;
-		//		var j = 0;
-		//		var gLines = 0;
-		//		var score = document.getElementById('Score')
-		//		score.textContent = msg.playerScore.score
-		//		var level = document.getElementById('Level');
-		//		level.textContent = msg.level
-		//		setGameOver(false)
-		//		cells = document.querySelectorAll('.game-bottle .cell');
-		//		const heldPiece = msg.holdPiece
-		//		const nextPiece = msg.nextPiece
-		//		gameDraw.garbage_cell('.garbage-bar',msg.targetManager.garbage, msg.level);
-		//		gameDraw.nextPieceDraw(nextPiece);
-		//		gameDraw.heldPieceDraw(heldPiece);
-		//		const lineClear = document.createElement('div');
-		//		const combo = document.createElement('div');
-		//		if (msg.linesCleared > 0) 
-		//		{
-		//			const existing = document.querySelector('.lineClear');
-		//			if (existing) existing.remove();
-		//			
-		//			const existing2 = document.querySelector('.combo');
-		//			if (existing2) existing2.remove();
-
-		//			lineClear.className = 'lineClear';
-		//			lineClear.textContent = gameDraw.get_lines(msg.linesCleared)
-		//			const sound = gameDraw.get_audio(msg.linesCleared)
-		//			void lineClear.offsetWidth;
-		//			if(msg.combo != 1)
-		//			{
-		//				combo.className = 'combo';
-		//				combo.textContent = "Combo x" + msg.combo;
-		//			}
-		//			document.body.appendChild(lineClear);
-		//			document.body.appendChild(combo);
-		//			setTimeout(() => {
-		//				combo.remove();
-		//				lineClear.remove();
-		//			}, 1000);
-		//			sound.play();
-		//		}
-		//	} 
-		//	else 
-		//	{
-		//		let otherBoard = document.getElementById(msg.playerId);
-		//		if(!otherBoard)
-		//			return
-		//		cells = otherBoard.querySelectorAll('.cell');
-		//	}
-		//	const topRow = document.querySelectorAll('.top-row .cell'); 
-		//	gameDraw.game(cells, field, topRow, own)
-		//});
-
-		//document.addEventListener("keydown", handleKeyDown)
-	
-		//document.addEventListener("keyup", handleKeyUp)
-	
-		//
-		//// const game22 = document.querySelector('.secondary-games');
-		//// game22.innerHTML = '';
-		//gameDraw.add_cells('.top-row', 10)
-		//gameDraw.add_cells('.game-bottle', 200)
-		//gameDraw.add_cells('.next-piece', 60)
-		//gameDraw.add_cells('.held-piece', 30)
-		//if (name) 
-		//	setUsername(name);
-		//
-	// }, [name]);
-	
 
 	function startGame() 
 	{
 		let time = 3;
-		console.log("StartGame All gmaes: ", allGamesOver)
 		if(allGamesOver == false)
 			return;
 		setAllGamesOver(false);
@@ -370,8 +234,8 @@ export default function RoomPage() {
 
 			scores.sort((a, b) => b.score - a.score);
 	
-			const top5 = scores.slice(0, 3);
-	
+			const top3 = scores.slice(0, 3);
+			
 			for (let i = 0; i < localStorage.length; i++) {
 				const key = localStorage.key(i);
 				if (key && key.startsWith("Score")) {
@@ -379,7 +243,8 @@ export default function RoomPage() {
 					i = -1;
 				}
 			}
-			top5.forEach((entry, index) => {
+			top3.forEach((entry, index) => {
+				console.log(index, entry.name, entry.score);
 				localStorage.setItem(`Score${index + 1}`, `${entry.name} ${entry.score}`);
 			});
 		}
