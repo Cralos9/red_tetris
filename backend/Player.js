@@ -61,7 +61,7 @@ export default class Player {
 			payload["playerScore"] = this.score.toObject()
 			payload["targetManager"] = this.targetManager.toObject()
 			if (this.game.running === false) {
-				this.io.to(roomCode).emit('game', payload)
+				//this.io.to(roomCode).emit('game', payload)
 				this.log("Lost Game")
 				gameManager.handleLoss(this)
 				this.inGame = false
